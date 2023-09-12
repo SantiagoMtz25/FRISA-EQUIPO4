@@ -1,14 +1,11 @@
 package com.example.loginpagetest.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.loginpagetest.screens.homepage.HomePage
-import com.example.loginpagetest.screens.loginpage.LoginPage
+import com.example.loginpagetest.screens.loginpage.myLoginApp
 
 @Composable
 fun PageNagivation () {

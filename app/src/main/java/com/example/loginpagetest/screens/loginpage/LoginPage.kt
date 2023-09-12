@@ -29,11 +29,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.loginpagetest.R
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
-import com.example.loginpagetest.navigation.PageNagivation
 
 @Composable
-fun myLoginApp(content: @Composable () -> Unit) {
+fun myLoginApp(content: NavHostController) {
     LoginPageTestTheme {
         // A surface container using the 'background' color from the theme
         Surface(
