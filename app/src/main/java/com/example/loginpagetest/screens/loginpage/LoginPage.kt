@@ -34,22 +34,21 @@ import com.example.loginpagetest.R
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 
 @Composable
-fun myLoginApp(content: NavHostController) {
+fun myLoginApp(navController: NavHostController) {
     LoginPageTestTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            mainLoginPage()
+            mainLoginPage(navController)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun mainLoginPage() {
+fun mainLoginPage(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,14 +93,16 @@ fun mainLoginPage() {
         Spacer(Modifier.height(16.dp))
         // Login button
         Button(onClick = {
-            println("Email: $email, Password: $password")
+            // println("Email: $email, Password: $password")
+            navController.navigate("home")
         }) {
             Text("Login")
         }
         Spacer(Modifier.height(16.dp))
         // Create Account button
         Button(onClick = {
-            println("Create Account button clicked")
+            // println("Create Account button clicked")
+            navController.navigate("create_account")
         }) {
             Text("Create Account")
         }

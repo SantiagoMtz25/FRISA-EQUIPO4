@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.loginpagetest.screens.homepage.HomePage
+import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 import com.example.loginpagetest.screens.loginpage.myLoginApp
+import com.example.loginpagetest.screens.createaccount.CreateAccount
 
 @Composable
 fun PageNagivation () {
@@ -15,7 +16,10 @@ fun PageNagivation () {
             myLoginApp(navController)
         }
         composable("home") {
-            HomePage(navController)
+            OrganizationsCatalogue(navController)
+        }
+        composable("create_account") {
+            CreateAccount(navController)
         }
     }
 }
