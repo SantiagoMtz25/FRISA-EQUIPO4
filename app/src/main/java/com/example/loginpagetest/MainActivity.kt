@@ -26,92 +26,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.loginpagetest.navigation.PageNagivation
+import com.example.loginpagetest.screens.loginpage.myLoginApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             myLoginApp {
-
+                PageNagivation()
             }
         }
     }
 }
-
-@Composable
-fun myLoginApp(content: @Composable () -> Unit) {
-    LoginPageTestTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            mainLoginPage()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@Preview
-fun mainLoginPage() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-
-        // FRISA Logo
-        val image: Painter = painterResource(id = R.drawable.frisa)
-        Image(
-            painter = image,
-            contentDescription = null,
-            modifier = Modifier
-                .size(200.dp, 200.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        Text (text = "Bienvenid@")
-        Spacer(modifier = Modifier.height(16.dp))
-        // Email input
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email)
-        )
-        Spacer (modifier = Modifier.height(16.dp))
-        // Password input
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            )
-        )
-        Spacer(Modifier.height(16.dp))
-        // Login button
-        Button(onClick = {
-            println("Email: $email, Password: $password")
-        }) {
-            Text("Login")
-        }
-        Spacer(Modifier.height(16.dp))
-        // Create Account button
-        Button(onClick = {
-            println("Create Account button clicked")
-        }) {
-            Text("Create Account")
-        }
-    }
-}
-
-
-
