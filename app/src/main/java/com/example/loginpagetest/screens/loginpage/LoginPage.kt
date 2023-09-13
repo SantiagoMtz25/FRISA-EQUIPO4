@@ -23,13 +23,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
@@ -69,8 +73,17 @@ fun mainLoginPage(navController: NavHostController) {
                 .size(200.dp, 200.dp)
                 .align(Alignment.CenterHorizontally)
         )
-        Text (text = "Bienvenid@")
+        // Welcome text
+        Text(
+            text = "Bienvenid@",
+            style = TextStyle(
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        )
         Spacer(modifier = Modifier.height(16.dp))
+
         // Email input
         TextField(
             value = email,
@@ -79,7 +92,8 @@ fun mainLoginPage(navController: NavHostController) {
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email)
         )
-        Spacer (modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Password input
         TextField(
             value = password,
@@ -91,7 +105,7 @@ fun mainLoginPage(navController: NavHostController) {
                 imeAction = ImeAction.Done
             )
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         // Login button
         Button(onClick = {
             // println("Email: $email, Password: $password")
@@ -99,7 +113,7 @@ fun mainLoginPage(navController: NavHostController) {
         }) {
             Text("Login")
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         // Create Account button
         Button(onClick = {
             // println("Create Account button clicked")
