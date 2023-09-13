@@ -22,6 +22,10 @@ object DataProvider {
             Organization("Derechos Humanos Org 1"),
             Organization("Derechos Humanos Org 2"),
             Organization("Derechos Humanos Org 3")
-        ))
+        )),
+        Category("Derechos LGBT+", listOf()),
+        Category("Deportes", listOf()),
+        Category("Violencia de Género", listOf()),
+        Category("Discapacidad", listOf())
     )
 }
