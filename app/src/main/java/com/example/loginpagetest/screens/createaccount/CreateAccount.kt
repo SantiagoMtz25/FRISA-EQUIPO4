@@ -53,8 +53,12 @@ fun CreateAccount(navController: NavHostController) {
                 var phoneNumber by rememberSaveable { mutableStateOf("") }
                 var state by rememberSaveable { mutableStateOf("") }
                 var city by rememberSaveable { mutableStateOf("") }
+
                 var isMunicipalityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-                var availableMunicipalities by rememberSaveable { mutableStateOf(listOf<String>()) }
+
+                var filteredStates by rememberSaveable { mutableStateOf(listOf<String>()) }
+                var filteredMunicipalities by remember { mutableStateOf(listOf<String>()) }
+
                 val chihuahuaMunicipalities = listOf(
                     "Ahumada", "Aldama", "Allende", "Aquiles Serdán", "Ascensión",
                     "Bachíniva", "Balleza", "Batopilas", "Bocoyna", "Buenaventura",
