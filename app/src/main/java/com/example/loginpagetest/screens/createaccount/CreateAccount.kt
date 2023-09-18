@@ -1,6 +1,7 @@
 package com.example.loginpagetest.screens.createaccount
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,8 +25,11 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun CreateAccount(navController: NavHostController) {
@@ -51,11 +55,11 @@ fun CreateAccount(navController: NavHostController) {
                 var password by rememberSaveable { mutableStateOf("") }
                 var confirmPassword by rememberSaveable { mutableStateOf("") }
                 var phoneNumber by rememberSaveable { mutableStateOf("") }
-                var mappedCity by rememberSaveable { mutableStateOf("") }
                 var selectedState by rememberSaveable { mutableStateOf("") }
                 var selectedCity by remember { mutableStateOf("") }
                 var isStateDropdownExpanded by rememberSaveable { mutableStateOf(false) }
                 var isCityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
+                var showSnackbar by rememberSaveable { mutableStateOf(false) }
 
                 val chihuahuaMunicipalities = listOf(
                     "Ahumada", "Aldama", "Allende", "Aquiles Serdán", "Ascensión",
@@ -402,9 +406,10 @@ fun CreateAccount(navController: NavHostController) {
                 CreateAccountTextField(value = name, onValueChange = { name = it }, label = "Name")
                 CreateAccountTextField(value = lastName, onValueChange = { lastName = it }, label = "Last Name")
                 CreateAccountTextField(value = email, onValueChange = { email = it }, label = "Email", keyboardType = KeyboardType.Email)
-                CreateAccountTextField(value = password, onValueChange = { password = it }, label = "Password", keyboardType = KeyboardType.Password)
-                CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password)
+                CreateAccountTextField(value = password, onValueChange = { password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
+                CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
                 CreateAccountTextField(value = phoneNumber, onValueChange = { phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone)
+
                 // CreateAccountTextField(value = state, onValueChange = { state = it }, label = "State"),
                 // For State
                 Box(
@@ -467,13 +472,45 @@ fun CreateAccount(navController: NavHostController) {
                         }
                     }
                 }
-
+                LaunchedEffect(showSnackbar) {
+                    // If snackbar is shown, scroll all the way down
+                    if (showSnackbar) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
+                }
                 // CreateAccountTextField(value = city, onValueChange = { city = it }, label = "Municipality")
                 Button(onClick = {
-                    // println("Create Account button clicked")
-                    navController.navigate("login")
+                    if (name.isNotEmpty() &&
+                        lastName.isNotEmpty() &&
+                        email.isNotEmpty() &&
+                        selectedCity.isNotEmpty() &&
+                        selectedState.isNotEmpty() &&
+                        phoneNumber.isNotEmpty() &&
+                        password.isNotEmpty() &&
+                        password == confirmPassword
+                        ) {
+                        navController.navigate("login")
+                    } else {
+                        showSnackbar = true
+                    }
                 }) {
                     Text("Create Account")
+                }
+                if (showSnackbar) {
+                    Snackbar(
+                        modifier = Modifier.padding(16.dp).background(Color.Red),
+                        action = {
+                            TextButton(onClick = { showSnackbar = false }) {
+                                Text(
+                                    "Dismiss",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    ) {
+                        Text("Fill all fields and ensure passwords match", color = Color.White)
+                    }
                 }
             }
         }
@@ -482,7 +519,13 @@ fun CreateAccount(navController: NavHostController) {
 
 
 @Composable
-fun CreateAccountTextField(value: String, onValueChange: (String) -> Unit, label: String, keyboardType: KeyboardType = KeyboardType.Text) {
+fun CreateAccountTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -491,6 +534,7 @@ fun CreateAccountTextField(value: String, onValueChange: (String) -> Unit, label
             keyboardType = keyboardType,
             imeAction = ImeAction.Done
         ),
+        visualTransformation = visualTransformation,
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp)
