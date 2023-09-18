@@ -54,10 +54,12 @@ fun CreateAccount(navController: NavHostController) {
                 var state by rememberSaveable { mutableStateOf("") }
                 var city by rememberSaveable { mutableStateOf("") }
 
+                var selectedState by rememberSaveable { mutableStateOf("") }
+                var isCityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
                 var isMunicipalityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
 
                 var filteredStates by rememberSaveable { mutableStateOf(listOf<String>()) }
-                var filteredMunicipalities by remember { mutableStateOf(listOf<String>()) }
+                var filteredMunicipalities by rememberSaveable { mutableStateOf(listOf<String>()) }
 
                 val chihuahuaMunicipalities = listOf(
                     "Ahumada", "Aldama", "Allende", "Aquiles Serdán", "Ascensión",
@@ -408,6 +410,7 @@ fun CreateAccount(navController: NavHostController) {
                 CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password)
                 CreateAccountTextField(value = phoneNumber, onValueChange = { phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone)
                 // CreateAccountTextField(value = state, onValueChange = { state = it }, label = "State"),
+                // For States dropdown
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -416,7 +419,7 @@ fun CreateAccount(navController: NavHostController) {
                     OutlinedTextField(
                         value = state,
                         readOnly = true,
-                        onValueChange = {},
+                        onValueChange = { },
                         label = { Text("State") },
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
@@ -442,18 +445,63 @@ fun CreateAccount(navController: NavHostController) {
                         expanded = isDropdownExpanded,
                         onDismissRequest = { isDropdownExpanded = false }
                     ) {
-                        mapStates.forEach { dropdownState ->
+                        mapStates.keys.forEach { dropdownState ->
                             DropdownMenuItem(onClick = {
-                                state = dropdownState.toString()
+                                state = dropdownState
+                                selectedState = dropdownState
                                 isDropdownExpanded = false
                             }) {
-                                Text(text = "$dropdownState")
+                                Text(text = dropdownState)
+                            }
+                        }
+                    }
+                }
+                // Municipality dropdown
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = city,
+                        onValueChange = { },
+                        label = { Text("Municipality") },
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                // Hide the keyboard
+                                focusManager.clearFocus()
+                            }
+                        ),
+                        trailingIcon = {
+                            // Dropdown Arrow
+                            Text(
+                                text = "▼",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.clickable { isDropdownExpanded = true }
+                            )
+                        },
+                        modifier = Modifier
+                            .clickable { isDropdownExpanded = true }
+                            .fillMaxWidth()
+                    )
+
+                    DropdownMenu(
+                        expanded = isCityDropdownExpanded,
+                        onDismissRequest = { isCityDropdownExpanded = false }
+                    ) {
+                        mapStates[selectedState]?.forEach { municipality ->
+                            DropdownMenuItem(onClick = {
+                                city = municipality
+                                isCityDropdownExpanded = false
+                            }) {
+                                Text(text = municipality)
                             }
                         }
                     }
                 }
 
-                CreateAccountTextField(value = city, onValueChange = { city = it }, label = "Municipality")
+                // CreateAccountTextField(value = city, onValueChange = { city = it }, label = "Municipality")
                 Button(onClick = {
                     // println("Create Account button clicked")
                     navController.navigate("login")
