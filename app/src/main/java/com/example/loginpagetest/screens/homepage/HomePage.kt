@@ -20,7 +20,7 @@ import com.example.loginpagetest.navigation.CustomTopBar
 @Composable
 fun OrganizationsCatalogue(content: NavHostController) {
     Column {
-        CustomTopBar(title = "Welocome (persone name here)", navController = content, screen = "login")
+        CustomTopBar(title = "Welocome (person name here)", navController = content, screen = "login")
         val query = remember { mutableStateOf(TextFieldValue()) }
         BasicTextField(
             value = query.value,
