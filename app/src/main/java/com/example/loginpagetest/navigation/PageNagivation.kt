@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 import com.example.loginpagetest.screens.loginpage.myLoginApp
 import com.example.loginpagetest.screens.createaccount.CreateAccount
+import com.example.loginpagetest.screens.oscpage.OSCPage
 
 @Composable
 fun PageNagivation () {
@@ -20,6 +21,9 @@ fun PageNagivation () {
         }
         composable("create_account") {
             CreateAccount(navController)
+        }
+        composable("OSCpage") {
+            OSCPage(navController)
         }
     }
 }

@@ -4,5 +4,6 @@ enum class Screens {
 
     myLoginApp,
     OrganizationsCatalogue,
-    CreateAccount;
+    CreateAccount,
+    OSCpage;
 }
