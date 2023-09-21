@@ -109,7 +109,7 @@ fun mainLoginPage(navController: NavHostController) {
         // Login button
         Button(onClick = {
             // println("Email: $email, Password: $password")
-            navController.navigate("home")
+            navController.navigate("testScreen")
         }) {
             Text("Login")
         }
