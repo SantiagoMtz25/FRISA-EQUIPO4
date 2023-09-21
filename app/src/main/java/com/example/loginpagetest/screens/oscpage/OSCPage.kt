@@ -21,7 +21,7 @@ import com.example.loginpagetest.navigation.CustomTopBar
 @Composable
 fun OSCPage(content: NavHostController) {
     Column {
-        CustomTopBar(title = "OSC Page", navController = content, screen = "home")
+        CustomTopBar(title = "OSC Page", navController = content, screen = "testScreen")
 
         Card(
             modifier = Modifier

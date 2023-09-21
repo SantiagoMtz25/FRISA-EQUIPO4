@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="logoRed">#C2012E</color>
+    <color name="logoGray">#87888C</color>
+    <color name="lightgray_beige">#F1E5E5</color>
+    <color name="lightred_pink">#DC8F96</color>
+    <color name="darkgray">#7C7C84</color>
+    <color name="beige">#D2BFC4</color>
+    <color name="almostlogored">#CC3C4C</color>
 </resources>

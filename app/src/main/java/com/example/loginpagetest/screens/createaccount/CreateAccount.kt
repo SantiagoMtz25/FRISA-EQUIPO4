@@ -24,9 +24,12 @@ import com.example.loginpagetest.navigation.CustomTopBar
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -35,9 +38,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 fun CreateAccount(navController: NavHostController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = colorScheme.background
     ) {
         val scrollState = rememberScrollState()
+        val myColor = colorResource(id = R.color.logoRed)
         Column {
             CustomTopBar(title = "Create User Account", navController = navController, screen = "login")
             Column(
@@ -479,37 +483,41 @@ fun CreateAccount(navController: NavHostController) {
                     }
                 }
                 // CreateAccountTextField(value = city, onValueChange = { city = it }, label = "Municipality")
-                Button(onClick = {
-                    if (name.isNotEmpty() &&
-                        lastName.isNotEmpty() &&
-                        email.isNotEmpty() &&
-                        selectedCity.isNotEmpty() &&
-                        selectedState.isNotEmpty() &&
-                        phoneNumber.isNotEmpty() &&
-                        password.isNotEmpty() &&
-                        password == confirmPassword
+                MaterialTheme (
+                    colorScheme = MaterialTheme.colorScheme.copy(primary = myColor, onPrimary = Color.White)
+                ) {
+                    Button(onClick = {
+                        if (name.isNotEmpty() &&
+                            lastName.isNotEmpty() &&
+                            email.isNotEmpty() &&
+                            selectedCity.isNotEmpty() &&
+                            selectedState.isNotEmpty() &&
+                            phoneNumber.isNotEmpty() &&
+                            password.isNotEmpty() &&
+                            password == confirmPassword
                         ) {
-                        navController.navigate("login")
-                    } else {
-                        showSnackbar = true
-                    }
-                }) {
-                    Text("Create Account")
-                }
-                if (showSnackbar) {
-                    Snackbar(
-                        modifier = Modifier.padding(16.dp).background(Color.Red),
-                        action = {
-                            TextButton(onClick = { showSnackbar = false }) {
-                                Text(
-                                    "Dismiss",
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
+                            navController.navigate("login")
+                        } else {
+                            showSnackbar = true
                         }
-                    ) {
-                        Text("Fill all fields and ensure passwords match", color = Color.White)
+                    }) {
+                        Text("Create Account", color = Color.White)
+                    }
+                    if (showSnackbar) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp).background(Color.Red),
+                            action = {
+                                TextButton(onClick = { showSnackbar = false }) {
+                                    Text(
+                                        "Dismiss",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        ) {
+                            Text("Fill all fields and ensure passwords match", color = Color.White)
+                        }
                     }
                 }
             }

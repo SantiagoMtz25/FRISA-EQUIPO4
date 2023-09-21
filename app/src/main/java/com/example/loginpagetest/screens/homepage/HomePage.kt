@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.loginpagetest.navigation.CustomTopBar
-import com.example.loginpagetest.navigation.CustomTopBar2
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -40,7 +39,7 @@ fun OrganizationsCatalogue(content: NavHostController) {
     }.sortedBy { it != searchQuery }
 
     Column {
-        CustomTopBar(title = "Welcome (person name here)", navController = content, screen = "login")
+        // CustomTopBar(title = "Welcome (person name here)", navController = content, screen = "login")
 
         OutlinedTextField(
             value = searchQuery,
