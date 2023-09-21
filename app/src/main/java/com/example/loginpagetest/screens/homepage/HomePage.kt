@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.loginpagetest.navigation.CustomTopBar
+import com.example.loginpagetest.navigation.CustomTopBar2
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

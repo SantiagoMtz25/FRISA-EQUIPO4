@@ -8,6 +8,7 @@ import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 import com.example.loginpagetest.screens.loginpage.myLoginApp
 import com.example.loginpagetest.screens.createaccount.CreateAccount
 import com.example.loginpagetest.screens.oscpage.OSCPage
+import com.example.loginpagetest.screens.test.MainScreen
 
 @Composable
 fun PageNagivation () {
@@ -24,6 +25,9 @@ fun PageNagivation () {
         }
         composable("OSCpage") {
             OSCPage(navController)
+        }
+        composable("testScreen") {
+            MainScreen(navController)
         }
     }
 }
