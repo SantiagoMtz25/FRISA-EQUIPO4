@@ -47,12 +47,18 @@ fun myFavourites(content: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
+    val organizationsMap = mapOf(
+        "Salud" to listOf("Org salud 1", "Org salud 2", "Org salud 3"),
+        "Educación" to listOf("Org educación 1", "Org educación 2", "Org educación 3"),
+        "Medio Ambiente" to listOf("Org medio ambiente 1", "Org medio ambiente 2", "Org medio ambiente 3"),
+        "Derechos humanos" to listOf("Org derechos humanos 1", "Org derechos humanos 2", "Org derechos humanos 3")
+    )
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Welcome (insert name)", color = Color.White) },
+                title = { Text("Your favourites", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
