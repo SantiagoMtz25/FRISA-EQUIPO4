@@ -1,6 +1,7 @@
 package com.example.loginpagetest.screens.loginpage
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -61,6 +63,7 @@ fun mainLoginPage(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        val customRed = Color(0xFFC2012E)
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
 
@@ -107,20 +110,33 @@ fun mainLoginPage(navController: NavHostController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Login button
-        Button(onClick = {
-            // println("Email: $email, Password: $password")
-            navController.navigate("testScreen")
-        }) {
-            Text("Login")
+        MaterialTheme(
+            colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+        ) {
+            Button(
+                onClick = {
+                    // Navigate to testScreen
+                    navController.navigate("testScreen")
+                }
+            ) {
+                Text("Login")
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        // Create Account button
-        Button(onClick = {
-            // println("Create Account button clicked")
-            navController.navigate("create_account")
-        }) {
-            Text("Create Account")
+        MaterialTheme(
+            colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+        ) {
+            Button(
+                onClick = {
+                    // Navigate to create_account
+                    navController.navigate("create_account")
+                }
+            ) {
+                Text("Create Account")
+            }
         }
+
+
     }
 }
 

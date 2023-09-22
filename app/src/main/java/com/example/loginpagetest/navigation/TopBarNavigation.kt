@@ -11,17 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.loginpagetest.R
 
 @Composable
 fun CustomTopBar(title: String, navController: NavHostController, screen: String) {
+    val myColor = colorResource(id = R.color.logoRed)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)  // Fixed height
-            .background(Color.Red),
+            .background(myColor),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {

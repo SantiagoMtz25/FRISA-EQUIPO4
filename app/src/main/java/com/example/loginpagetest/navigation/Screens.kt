@@ -6,5 +6,7 @@ enum class Screens {
     OrganizationsCatalogue,
     CreateAccount,
     OSCpage,
-    testScreen;
+    testScreen,
+    favourites,
+    aboutapp;
 }
