@@ -2,6 +2,7 @@ package com.example.loginpagetest.screens.test
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,6 +64,7 @@ fun MainScreen(content: NavHostController) {
 
 @Composable
 fun DrawerContent(content: NavHostController) {
+    val myColor = colorResource(id = R.color.lightred_pink)
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -75,6 +77,7 @@ fun DrawerContent(content: NavHostController) {
                     .size(100.dp)
                     .clip(CircleShape)
                     .padding(16.dp)
+                    .border(2.dp, color = myColor)
             )
             // Profile Name
             Text(

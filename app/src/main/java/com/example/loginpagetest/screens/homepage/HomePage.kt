@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,6 +31,7 @@ import com.example.loginpagetest.navigation.CustomTopBar
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OrganizationsCatalogue(content: NavHostController) {
+    val scrollState = rememberScrollState()
     var searchQuery by remember { mutableStateOf("") }
     val selectedCategories = remember { mutableStateListOf<String>() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -37,7 +39,11 @@ fun OrganizationsCatalogue(content: NavHostController) {
         "Salud" to listOf("Org salud 1", "Org salud 2", "Org salud 3"),
         "Educación" to listOf("Org educación 1", "Org educación 2", "Org educación 3"),
         "Medio Ambiente" to listOf("Org medio ambiente 1", "Org medio ambiente 2", "Org medio ambiente 3"),
-        "Derechos humanos" to listOf("Org derechos humanos 1", "Org derechos humanos 2", "Org derechos humanos 3")
+        "Derechos Humanos" to listOf("Org derechos humanos 1", "Org derechos humanos 2", "Org derechos humanos 3"),
+        "Asociaciones Religiosas" to listOf("Org religiosa 1", "Org religiosa 2", "Org religiosa 3"),
+        "Transporte Público" to listOf("Org de transporte 1", "Org de transporte 2", "Org de transporte 3"),
+        "Cultura" to listOf("Org cultural 1", "Org cultural 2", "Org cultural 3"),
+        "Servicios Asistenciales" to listOf("Org de servicios 1", "Org de servicios 2", "Org de servicios 3")
     )
     val filteredAndSortedCategories = organizationsMap.keys.filter {
         it.contains(searchQuery, ignoreCase = true)
