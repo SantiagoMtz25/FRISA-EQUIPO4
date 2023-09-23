@@ -33,9 +33,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 
 @Composable
 fun CreateAccount(navController: NavHostController) {
+    val viewModel: CreateAccountViewModel = viewModel()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colorScheme.background
@@ -54,17 +57,11 @@ fun CreateAccount(navController: NavHostController) {
             ) {
                 val focusManager = LocalFocusManager.current
                 // utilizar view model para guardar valores
-                var name by rememberSaveable { mutableStateOf("") }
-                var lastName by rememberSaveable { mutableStateOf("") }
-                var email by rememberSaveable { mutableStateOf("") }
-                var password by rememberSaveable { mutableStateOf("") }
-                var confirmPassword by rememberSaveable { mutableStateOf("") }
-                var phoneNumber by rememberSaveable { mutableStateOf("") }
-                var selectedState by rememberSaveable { mutableStateOf("") }
-                var selectedCity by remember { mutableStateOf("") }
+                /*var selectedState by viewModel.selectedState.observeAsState(initial = "")
+                var selectedCity by viewModel.selectedCity.observeAsState(initial = "")
                 var isStateDropdownExpanded by rememberSaveable { mutableStateOf(false) }
                 var isCityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-                var showSnackbar by rememberSaveable { mutableStateOf(false) }
+                var showSnackbar by rememberSaveable { mutableStateOf(false) }*/
 
                 val chihuahuaMunicipalities = listOf(
                     "Ahumada", "Aldama", "Allende", "Aquiles Serdán", "Ascensión",
@@ -408,12 +405,12 @@ fun CreateAccount(navController: NavHostController) {
                         .align(Alignment.CenterHorizontally)
                 )
 
-                CreateAccountTextField(value = name, onValueChange = { name = it }, label = "Name")
-                CreateAccountTextField(value = lastName, onValueChange = { lastName = it }, label = "Last Name")
-                CreateAccountTextField(value = email, onValueChange = { email = it }, label = "Email", keyboardType = KeyboardType.Email)
-                CreateAccountTextField(value = password, onValueChange = { password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
-                CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
-                CreateAccountTextField(value = phoneNumber, onValueChange = { phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone)
+                CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name")
+                CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name")
+                CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email)
+                CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
+                CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
+                CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone)
 
                 // CreateAccountTextField(value = state, onValueChange = { state = it }, label = "State"),
                 // For State
@@ -423,23 +420,23 @@ fun CreateAccount(navController: NavHostController) {
                         .padding(top = 8.dp, bottom = 8.dp)
                 ) {
                     OutlinedTextField(
-                        value = selectedState,
+                        value = viewModel.selectedState,
                         onValueChange = { /* Ignored for readOnly */ },
                         label = { Text("State") },
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
-                            if (focusState.isFocused) isStateDropdownExpanded = true
+                            if (focusState.isFocused) viewModel.isStateDropdownExpanded = true
                         }
                     )
                     DropdownMenu(
-                        expanded = isStateDropdownExpanded,
-                        onDismissRequest = { isStateDropdownExpanded = false }
+                        expanded = viewModel.isStateDropdownExpanded,
+                        onDismissRequest = { viewModel.isStateDropdownExpanded = false }
                     ) {
                         mapStates.keys.forEach { state ->
                             DropdownMenuItem(onClick = {
-                                isStateDropdownExpanded = false
-                                selectedState = state
-                                selectedCity = "Select City" // Reset the city selection
+                                viewModel.isStateDropdownExpanded = false
+                                viewModel.selectedState = state
+                                viewModel.selectedCity = "Select City" // Reset the city selection
                             }) {
                                 Text(text = state)
                             }
@@ -453,22 +450,22 @@ fun CreateAccount(navController: NavHostController) {
                         .padding(top = 8.dp, bottom = 8.dp)
                 ) {
                     OutlinedTextField(
-                        value = selectedCity,
+                        value = viewModel.selectedCity,
                         onValueChange = { /* Ignored for readOnly */ },
                         label = { Text("City") },
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
-                            if (focusState.isFocused) isCityDropdownExpanded = true
+                            if (focusState.isFocused) viewModel.isCityDropdownExpanded = true
                         }
                     )
                     DropdownMenu(
-                        expanded = isCityDropdownExpanded,
-                        onDismissRequest = { isCityDropdownExpanded = false }
+                        expanded = viewModel.isCityDropdownExpanded,
+                        onDismissRequest = { viewModel.isCityDropdownExpanded = false }
                     ) {
-                        mapStates[selectedState]?.forEach { city ->  // Get cities for the selected state
+                        mapStates[viewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
                             DropdownMenuItem(onClick = {
-                                isCityDropdownExpanded = false
-                                selectedCity = city
+                                viewModel.isCityDropdownExpanded = false
+                                viewModel.selectedCity = city
                             }) {
                                 Text(text = city)
                             }
@@ -477,9 +474,9 @@ fun CreateAccount(navController: NavHostController) {
                         }
                     }
                 }
-                LaunchedEffect(showSnackbar) {
+                LaunchedEffect(viewModel.showSnackbar) {
                     // If snackbar is shown, scroll all the way down
-                    if (showSnackbar) {
+                    if (viewModel.showSnackbar) {
                         scrollState.animateScrollTo(scrollState.maxValue)
                     }
                 }
@@ -488,27 +485,37 @@ fun CreateAccount(navController: NavHostController) {
                     colorScheme = MaterialTheme.colorScheme.copy(primary = myColor, onPrimary = Color.White)
                 ) {
                     Button(onClick = {
-                        if (name.isNotEmpty() &&
-                            lastName.isNotEmpty() &&
-                            email.isNotEmpty() &&
-                            selectedCity.isNotEmpty() &&
-                            selectedState.isNotEmpty() &&
-                            phoneNumber.isNotEmpty() &&
-                            password.isNotEmpty() &&
-                            password == confirmPassword
+                        if (viewModel.name.isNotEmpty() &&
+                            viewModel.lastName.isNotEmpty() &&
+                            viewModel.email.isNotEmpty() &&
+                            viewModel.selectedCity.isNotEmpty() &&
+                            viewModel.selectedState.isNotEmpty() &&
+                            viewModel.phoneNumber.isNotEmpty() &&
+                            viewModel.password.isNotEmpty() &&
+                            viewModel.password == viewModel.confirmPassword
                         ) {
+                            // navigate to the login screen and reset the state variables
                             navController.navigate("login")
+                            viewModel.name = ""
+                            viewModel.lastName = ""
+                            viewModel.email = ""
+                            viewModel.password = ""
+                            viewModel.confirmPassword = ""
+                            viewModel.phoneNumber = ""
+                            viewModel.selectedState = ""
+                            viewModel.selectedCity = ""
                         } else {
-                            showSnackbar = true
+                            viewModel.showSnackbar = true
                         }
                     }) {
                         Text("Create Account", color = Color.White)
                     }
-                    if (showSnackbar) {
+
+                    if (viewModel.showSnackbar) {
                         Snackbar(
                             modifier = Modifier.padding(16.dp).background(Color.Red),
                             action = {
-                                TextButton(onClick = { showSnackbar = false }) {
+                                TextButton(onClick = { viewModel.showSnackbar = false }) {
                                     Text(
                                         "Dismiss",
                                         color = Color.White,
