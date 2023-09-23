@@ -8,5 +8,6 @@ enum class Screens {
     OSCpage,
     testScreen,
     favourites,
-    aboutapp;
+    aboutapp,
+    inviteUser;
 }

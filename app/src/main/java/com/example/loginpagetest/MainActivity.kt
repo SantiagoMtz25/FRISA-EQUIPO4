@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.loginpagetest.navigation.PageNagivation
-import com.example.loginpagetest.screens.loginpage.mainLoginPage
-import com.example.loginpagetest.screens.loginpage.myLoginApp
+import com.example.loginpagetest.navigation.PageNavigation
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +20,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PageNagivation()
+                    PageNavigation()
                 }
             }
         }

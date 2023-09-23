@@ -24,6 +24,12 @@ import com.example.loginpagetest.navigation.CustomTopBar
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -45,6 +51,7 @@ fun CreateAccount(navController: NavHostController) {
     ) {
         val scrollState = rememberScrollState()
         val myColor = colorResource(id = R.color.logoRed)
+        val customLighterRed = colorResource(id = R.color.almostlogored)
         Column {
             CustomTopBar(title = "Create User Account", navController = navController, screen = "login")
             Column(
@@ -405,12 +412,54 @@ fun CreateAccount(navController: NavHostController) {
                         .align(Alignment.CenterHorizontally)
                 )
 
-                CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name")
-                CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name")
-                CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email)
-                CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
-                CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
-                CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone)
+                CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Name Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Last Name Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Email Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Email Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "Email Icon",
+                            tint = customLighterRed
+                        )
+                    })
 
                 // CreateAccountTextField(value = state, onValueChange = { state = it }, label = "State"),
                 // For State
@@ -534,17 +583,25 @@ fun CreateAccount(navController: NavHostController) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccountTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     keyboardType: KeyboardType = KeyboardType.Text,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    icon: @Composable (() -> Unit)? = null
 ) {
+    val customRed = colorResource(id = R.color.logoRed)
+    val customLighterRed = colorResource(id = R.color.almostlogored)
+    val customGray = colorResource(id = R.color.logoGray)
+    val customPink = colorResource(id = R.color.lightred_pink)
+
     TextField(
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
         label = { Text(label) },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
@@ -553,6 +610,13 @@ fun CreateAccountTextField(
         visualTransformation = visualTransformation,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp)
+            .padding(top = 8.dp, bottom = 8.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            cursorColor = customRed,
+            focusedIndicatorColor = customPink,
+            unfocusedIndicatorColor = customGray,
+            focusedLabelColor = customLighterRed
+        ),
+        leadingIcon = icon
     )
 }

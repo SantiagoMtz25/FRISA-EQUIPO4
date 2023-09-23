@@ -9,11 +9,12 @@ import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 import com.example.loginpagetest.screens.loginpage.myLoginApp
 import com.example.loginpagetest.screens.createaccount.CreateAccount
 import com.example.loginpagetest.screens.favourites.myFavourites
+import com.example.loginpagetest.screens.inviteuser.inviteUser
 import com.example.loginpagetest.screens.oscpage.OSCPage
 import com.example.loginpagetest.screens.test.MainScreen
 
 @Composable
-fun PageNagivation () {
+fun PageNavigation () {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
@@ -36,6 +37,9 @@ fun PageNagivation () {
         }
         composable("aboutapp") {
             aboutApp(navController)
+        }
+        composable("inviteUser") {
+            inviteUser(navController)
         }
     }
 }
