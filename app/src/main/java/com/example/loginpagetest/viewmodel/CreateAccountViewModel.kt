@@ -18,6 +18,8 @@ class CreateAccountViewModel(private val stateHandle: SavedStateHandle) : ViewMo
     var isStateDropdownExpanded by mutableStateOf(false)
     var isCityDropdownExpanded by mutableStateOf(false)
     var showSnackbar by mutableStateOf(false)
+    var showSuccessSnackbar by mutableStateOf(false)
 }
+
 
 

@@ -26,10 +26,11 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.viewmodel.CreateAccountViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccount(navController: NavHostController) {
     val viewModel: CreateAccountViewModel = viewModel()
@@ -49,9 +54,12 @@ fun CreateAccount(navController: NavHostController) {
         modifier = Modifier.fillMaxSize(),
         color = colorScheme.background
     ) {
+        val coroutineScope = rememberCoroutineScope()
         val scrollState = rememberScrollState()
-        val myColor = colorResource(id = R.color.logoRed)
+        val customRed = colorResource(id = R.color.logoRed)
         val customLighterRed = colorResource(id = R.color.almostlogored)
+        val customGray = colorResource(id = R.color.logoGray)
+        val customPink = colorResource(id = R.color.lightred_pink)
         Column {
             CustomTopBar(title = "Create User Account", navController = navController, screen = "login")
             Column(
@@ -440,7 +448,7 @@ fun CreateAccount(navController: NavHostController) {
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
-                            contentDescription = "Email Icon",
+                            contentDescription = "Lock Icon",
                             tint = customLighterRed
                         )
                     })
@@ -448,7 +456,7 @@ fun CreateAccount(navController: NavHostController) {
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
-                            contentDescription = "Email Icon",
+                            contentDescription = "Lock Icon",
                             tint = customLighterRed
                         )
                     })
@@ -456,13 +464,11 @@ fun CreateAccount(navController: NavHostController) {
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Phone,
-                            contentDescription = "Email Icon",
+                            contentDescription = "Phone Icon",
                             tint = customLighterRed
                         )
                     })
 
-                // CreateAccountTextField(value = state, onValueChange = { state = it }, label = "State"),
-                // For State
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -475,7 +481,20 @@ fun CreateAccount(navController: NavHostController) {
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
                             if (focusState.isFocused) viewModel.isStateDropdownExpanded = true
-                        }
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = customRed,
+                            focusedIndicatorColor = customPink,
+                            unfocusedIndicatorColor = customGray,
+                            focusedLabelColor = customLighterRed
+                        ),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Place,
+                                contentDescription = "Place Icon",
+                                tint = customLighterRed
+                            )
+                        },
                     )
                     DropdownMenu(
                         expanded = viewModel.isStateDropdownExpanded,
@@ -505,7 +524,20 @@ fun CreateAccount(navController: NavHostController) {
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
                             if (focusState.isFocused) viewModel.isCityDropdownExpanded = true
-                        }
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = customRed,
+                            focusedIndicatorColor = customPink,
+                            unfocusedIndicatorColor = customGray,
+                            focusedLabelColor = customLighterRed
+                        ),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Home,
+                                contentDescription = "Home Icon",
+                                tint = customLighterRed
+                            )
+                        },
                     )
                     DropdownMenu(
                         expanded = viewModel.isCityDropdownExpanded,
@@ -523,15 +555,17 @@ fun CreateAccount(navController: NavHostController) {
                         }
                     }
                 }
-                LaunchedEffect(viewModel.showSnackbar) {
+                LaunchedEffect(viewModel.showSnackbar, viewModel.showSuccessSnackbar) {
                     // If snackbar is shown, scroll all the way down
                     if (viewModel.showSnackbar) {
                         scrollState.animateScrollTo(scrollState.maxValue)
                     }
+                    if (viewModel.showSuccessSnackbar) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
                 }
-                // CreateAccountTextField(value = city, onValueChange = { city = it }, label = "Municipality")
-                MaterialTheme (
-                    colorScheme = MaterialTheme.colorScheme.copy(primary = myColor, onPrimary = Color.White)
+                MaterialTheme(
+                    colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                 ) {
                     Button(onClick = {
                         if (viewModel.name.isNotEmpty() &&
@@ -542,17 +576,20 @@ fun CreateAccount(navController: NavHostController) {
                             viewModel.phoneNumber.isNotEmpty() &&
                             viewModel.password.isNotEmpty() &&
                             viewModel.password == viewModel.confirmPassword
-                        ) {
-                            // navigate to the login screen and reset the state variables
-                            navController.navigate("login")
-                            viewModel.name = ""
-                            viewModel.lastName = ""
-                            viewModel.email = ""
-                            viewModel.password = ""
-                            viewModel.confirmPassword = ""
-                            viewModel.phoneNumber = ""
-                            viewModel.selectedState = ""
-                            viewModel.selectedCity = ""
+                            ) {
+                            viewModel.showSuccessSnackbar = true
+                            coroutineScope.launch {
+                                delay(5000) // Delay for 5 seconds
+                                navController.navigate("login")
+                                viewModel.name = ""
+                                viewModel.lastName = ""
+                                viewModel.email = ""
+                                viewModel.password = ""
+                                viewModel.confirmPassword = ""
+                                viewModel.phoneNumber = ""
+                                viewModel.selectedState = ""
+                                viewModel.selectedCity = ""
+                            }
                         } else {
                             viewModel.showSnackbar = true
                         }
@@ -560,7 +597,7 @@ fun CreateAccount(navController: NavHostController) {
                         Text("Create Account", color = Color.White)
                     }
 
-                    if (viewModel.showSnackbar) {
+                    if (viewModel.showSnackbar && !viewModel.showSuccessSnackbar) {
                         Snackbar(
                             modifier = Modifier.padding(16.dp).background(Color.Red),
                             action = {
@@ -574,6 +611,23 @@ fun CreateAccount(navController: NavHostController) {
                             }
                         ) {
                             Text("Fill all fields and ensure passwords match", color = Color.White)
+                        }
+                    }
+
+                    if (viewModel.showSuccessSnackbar) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp).background(Color.Green),
+                            action = {
+                                TextButton(onClick = { viewModel.showSuccessSnackbar = false }) {
+                                    Text(
+                                        "Dismiss",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        ) {
+                            Text("Thank you! Account created successfully", color = Color.White)
                         }
                     }
                 }
