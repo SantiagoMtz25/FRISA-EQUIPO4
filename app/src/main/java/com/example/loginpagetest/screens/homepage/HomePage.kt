@@ -30,7 +30,6 @@ import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.shadow
 
-
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OrganizationsCatalogue(content: NavHostController) {
@@ -42,6 +41,7 @@ fun OrganizationsCatalogue(content: NavHostController) {
     val scrollState = rememberScrollState()
     var searchQuery by remember { mutableStateOf("") }
     val selectedCategories = remember { mutableStateListOf<String>() }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val organizationsMap = mapOf(
         "Salud" to listOf("Org salud 1", "Org salud 2", "Org salud 3"),
@@ -58,8 +58,6 @@ fun OrganizationsCatalogue(content: NavHostController) {
     }.sortedBy { it != searchQuery }
 
     Column {
-        // CustomTopBar(title = "Welcome (person name here)", navController = content, screen = "login")
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,22 +101,35 @@ fun OrganizationsCatalogue(content: NavHostController) {
         }
         if (isPopupVisible) {
             Popup(
-                onDismissRequest = { isPopupVisible = false }, // Handle outside clicks
+                onDismissRequest = { isPopupVisible = false },
                 alignment = Alignment.TopEnd
             ) {
-                // Your Popup UI. It can be a list of filters.
                 Surface(
                     color = Color.White,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .width(400.dp)
-                        .height(300.dp)
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Box(modifier = Modifier
-                        .padding(16.dp)
-                        .shadow(8.dp, RoundedCornerShape(8.dp))
+                    Column(
+                        modifier = Modifier
+                            .shadow(8.dp, RoundedCornerShape(8.dp))
+                            .width(300.dp)
+                            .height(200.dp)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text("Here will be the list of filters")
+                        MaterialTheme(
+                            colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+                        ) {
+                            Button(
+                                onClick = {
+                                    // Here it will search given the variables in the future
+                                },
+                                modifier = Modifier.width(100.dp)
+                            ) {
+                                Text("Search")
+                            }
+                        }
                     }
                 }
             }
@@ -127,7 +138,9 @@ fun OrganizationsCatalogue(content: NavHostController) {
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp)
         ) {
-            items(listOf("Salud", "Educación", "Medio Ambiente", "Derechos humanos")) { tag ->
+            items(listOf("Salud", "Educación", "Medio Ambiente", "Derechos humanos",
+                "Asociaciones Religiosas", "Transporte Público", "Cultura", "Servicios Asistenciales"
+            )) { tag ->
                 Chip(tag = tag, onClick = {
                     searchQuery = tag
                 }, modifier = Modifier.padding(end = 8.dp)) // Add padding to each tag
@@ -146,29 +159,28 @@ fun OrganizationsCatalogue(content: NavHostController) {
                         .padding(vertical = 8.dp)
                         .background(Color.Transparent)
                         .clickable {
-                            if (selectedCategories.contains(category)) {
-                                selectedCategories.remove(category)
+                            if (selectedCategory == category) {
+                                selectedCategory = null
                             } else {
-                                selectedCategories.add(category)
+                                selectedCategory = category
                             }
                         }
                 ) {
                     Row(
-                        Modifier.padding(16.dp),
+                        modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(text = category)
-                        Spacer(Modifier.weight(1f)) // This will take up all available space between Text and Icon
+                        Spacer(Modifier.weight(1f))
                         Icon(
-                            imageVector = if (selectedCategories.contains(category)) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            imageVector = if (selectedCategory == category) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                             contentDescription = "Keyboard Arrow Icon",
                             tint = customGray
                         )
                     }
                 }
-                // Conditionally display the list of organizations
-                if (selectedCategories.contains(category)) {
+                if (selectedCategory == category) {
                     organizationsMap[category]?.forEach { organization ->
                         Card(
                             modifier = Modifier

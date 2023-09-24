@@ -1,16 +1,24 @@
 package com.example.loginpagetest.screens.oscpage
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,6 +28,14 @@ import com.example.loginpagetest.navigation.CustomTopBar
 
 @Composable
 fun OSCPage(content: NavHostController) {
+    val customRed = colorResource(id = R.color.logoRed)
+    val context = LocalContext.current
+    val startActivityLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        // Handle the result
+
+    }
     Column {
         CustomTopBar(title = "OSC Page", navController = content, screen = "testScreen")
 
@@ -100,6 +116,33 @@ fun OSCPage(content: NavHostController) {
                     Text(text = "Instagram: @instagram")
                     Text(text = "Email: email@example.com")
                     Text(text = "Twitter: @twitter")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                MaterialTheme(
+                    colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+                ) {
+                    Button(
+                        onClick = {
+                            val shareContent = """
+                                Name: Name
+                                Location: Location
+                                Category: Category
+                                Description: This is a description...
+                            """.trimIndent()
+
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, shareContent)
+                                type = "text/plain"
+                            }
+
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            startActivityLauncher.launch(shareIntent)
+                        },
+                        modifier = Modifier.width(100.dp).align(Alignment.CenterHorizontally)
+                    ) {
+                        Text("Share")
+                    }
                 }
             }
         }
