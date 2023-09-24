@@ -24,6 +24,13 @@ import com.example.loginpagetest.navigation.CustomTopBar
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -33,15 +40,26 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.loginpagetest.viewmodel.CreateAccountViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccount(navController: NavHostController) {
+    val viewModel: CreateAccountViewModel = viewModel()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colorScheme.background
     ) {
+        val coroutineScope = rememberCoroutineScope()
         val scrollState = rememberScrollState()
-        val myColor = colorResource(id = R.color.logoRed)
+        val customRed = colorResource(id = R.color.logoRed)
+        val customLighterRed = colorResource(id = R.color.almostlogored)
+        val customGray = colorResource(id = R.color.logoGray)
+        val customPink = colorResource(id = R.color.lightred_pink)
         Column {
             CustomTopBar(title = "Create User Account", navController = navController, screen = "login")
             Column(
@@ -54,17 +72,11 @@ fun CreateAccount(navController: NavHostController) {
             ) {
                 val focusManager = LocalFocusManager.current
                 // utilizar view model para guardar valores
-                var name by rememberSaveable { mutableStateOf("") }
-                var lastName by rememberSaveable { mutableStateOf("") }
-                var email by rememberSaveable { mutableStateOf("") }
-                var password by rememberSaveable { mutableStateOf("") }
-                var confirmPassword by rememberSaveable { mutableStateOf("") }
-                var phoneNumber by rememberSaveable { mutableStateOf("") }
-                var selectedState by rememberSaveable { mutableStateOf("") }
-                var selectedCity by remember { mutableStateOf("") }
+                /*var selectedState by viewModel.selectedState.observeAsState(initial = "")
+                var selectedCity by viewModel.selectedCity.observeAsState(initial = "")
                 var isStateDropdownExpanded by rememberSaveable { mutableStateOf(false) }
                 var isCityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-                var showSnackbar by rememberSaveable { mutableStateOf(false) }
+                var showSnackbar by rememberSaveable { mutableStateOf(false) }*/
 
                 val chihuahuaMunicipalities = listOf(
                     "Ahumada", "Aldama", "Allende", "Aquiles Serdán", "Ascensión",
@@ -408,38 +420,90 @@ fun CreateAccount(navController: NavHostController) {
                         .align(Alignment.CenterHorizontally)
                 )
 
-                CreateAccountTextField(value = name, onValueChange = { name = it }, label = "Name")
-                CreateAccountTextField(value = lastName, onValueChange = { lastName = it }, label = "Last Name")
-                CreateAccountTextField(value = email, onValueChange = { email = it }, label = "Email", keyboardType = KeyboardType.Email)
-                CreateAccountTextField(value = password, onValueChange = { password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
-                CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation())
-                CreateAccountTextField(value = phoneNumber, onValueChange = { phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone)
-
-                // CreateAccountTextField(value = state, onValueChange = { state = it }, label = "State"),
-                // For State
+                CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Name Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Last Name Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Lock Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Lock Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "Phone Icon",
+                            tint = customLighterRed
+                        )
+                    })
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp, bottom = 8.dp)
                 ) {
                     OutlinedTextField(
-                        value = selectedState,
+                        value = viewModel.selectedState,
                         onValueChange = { /* Ignored for readOnly */ },
                         label = { Text("State") },
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
-                            if (focusState.isFocused) isStateDropdownExpanded = true
-                        }
+                            if (focusState.isFocused) viewModel.isStateDropdownExpanded = true
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = customRed,
+                            focusedIndicatorColor = customPink,
+                            unfocusedIndicatorColor = customGray,
+                            focusedLabelColor = customLighterRed
+                        ),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Place,
+                                contentDescription = "Place Icon",
+                                tint = customLighterRed
+                            )
+                        },
                     )
                     DropdownMenu(
-                        expanded = isStateDropdownExpanded,
-                        onDismissRequest = { isStateDropdownExpanded = false }
+                        expanded = viewModel.isStateDropdownExpanded,
+                        onDismissRequest = { viewModel.isStateDropdownExpanded = false }
                     ) {
                         mapStates.keys.forEach { state ->
                             DropdownMenuItem(onClick = {
-                                isStateDropdownExpanded = false
-                                selectedState = state
-                                selectedCity = "Select City" // Reset the city selection
+                                viewModel.isStateDropdownExpanded = false
+                                viewModel.selectedState = state
+                                viewModel.selectedCity = "Select City" // Reset the city selection
                             }) {
                                 Text(text = state)
                             }
@@ -453,22 +517,35 @@ fun CreateAccount(navController: NavHostController) {
                         .padding(top = 8.dp, bottom = 8.dp)
                 ) {
                     OutlinedTextField(
-                        value = selectedCity,
+                        value = viewModel.selectedCity,
                         onValueChange = { /* Ignored for readOnly */ },
                         label = { Text("City") },
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
-                            if (focusState.isFocused) isCityDropdownExpanded = true
-                        }
+                            if (focusState.isFocused) viewModel.isCityDropdownExpanded = true
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = customRed,
+                            focusedIndicatorColor = customPink,
+                            unfocusedIndicatorColor = customGray,
+                            focusedLabelColor = customLighterRed
+                        ),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Home,
+                                contentDescription = "Home Icon",
+                                tint = customLighterRed
+                            )
+                        },
                     )
                     DropdownMenu(
-                        expanded = isCityDropdownExpanded,
-                        onDismissRequest = { isCityDropdownExpanded = false }
+                        expanded = viewModel.isCityDropdownExpanded,
+                        onDismissRequest = { viewModel.isCityDropdownExpanded = false }
                     ) {
-                        mapStates[selectedState]?.forEach { city ->  // Get cities for the selected state
+                        mapStates[viewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
                             DropdownMenuItem(onClick = {
-                                isCityDropdownExpanded = false
-                                selectedCity = city
+                                viewModel.isCityDropdownExpanded = false
+                                viewModel.selectedCity = city
                             }) {
                                 Text(text = city)
                             }
@@ -477,38 +554,53 @@ fun CreateAccount(navController: NavHostController) {
                         }
                     }
                 }
-                LaunchedEffect(showSnackbar) {
+                LaunchedEffect(viewModel.showSnackbar, viewModel.showSuccessSnackbar) {
                     // If snackbar is shown, scroll all the way down
-                    if (showSnackbar) {
+                    if (viewModel.showSnackbar) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
+                    if (viewModel.showSuccessSnackbar) {
                         scrollState.animateScrollTo(scrollState.maxValue)
                     }
                 }
-                // CreateAccountTextField(value = city, onValueChange = { city = it }, label = "Municipality")
-                MaterialTheme (
-                    colorScheme = MaterialTheme.colorScheme.copy(primary = myColor, onPrimary = Color.White)
+                MaterialTheme(
+                    colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                 ) {
                     Button(onClick = {
-                        if (name.isNotEmpty() &&
-                            lastName.isNotEmpty() &&
-                            email.isNotEmpty() &&
-                            selectedCity.isNotEmpty() &&
-                            selectedState.isNotEmpty() &&
-                            phoneNumber.isNotEmpty() &&
-                            password.isNotEmpty() &&
-                            password == confirmPassword
-                        ) {
-                            navController.navigate("login")
+                        if (viewModel.name.isNotEmpty() &&
+                            viewModel.lastName.isNotEmpty() &&
+                            viewModel.email.isNotEmpty() &&
+                            viewModel.selectedCity.isNotEmpty() &&
+                            viewModel.selectedState.isNotEmpty() &&
+                            viewModel.phoneNumber.isNotEmpty() &&
+                            viewModel.password.isNotEmpty() &&
+                            viewModel.password == viewModel.confirmPassword
+                            ) {
+                            viewModel.showSuccessSnackbar = true
+                            coroutineScope.launch {
+                                delay(4000)
+                                navController.navigate("login")
+                                viewModel.name = ""
+                                viewModel.lastName = ""
+                                viewModel.email = ""
+                                viewModel.password = ""
+                                viewModel.confirmPassword = ""
+                                viewModel.phoneNumber = ""
+                                viewModel.selectedState = ""
+                                viewModel.selectedCity = ""
+                            }
                         } else {
-                            showSnackbar = true
+                            viewModel.showSnackbar = true
                         }
                     }) {
                         Text("Create Account", color = Color.White)
                     }
-                    if (showSnackbar) {
+
+                    if (viewModel.showSnackbar && !viewModel.showSuccessSnackbar) {
                         Snackbar(
                             modifier = Modifier.padding(16.dp).background(Color.Red),
                             action = {
-                                TextButton(onClick = { showSnackbar = false }) {
+                                TextButton(onClick = { viewModel.showSnackbar = false }) {
                                     Text(
                                         "Dismiss",
                                         color = Color.White,
@@ -520,6 +612,23 @@ fun CreateAccount(navController: NavHostController) {
                             Text("Fill all fields and ensure passwords match", color = Color.White)
                         }
                     }
+
+                    if (viewModel.showSuccessSnackbar) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp).background(Color.Green),
+                            action = {
+                                TextButton(onClick = { viewModel.showSuccessSnackbar = false }) {
+                                    Text(
+                                        "Dismiss",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        ) {
+                            Text("Thank you! Account created successfully", color = Color.White)
+                        }
+                    }
                 }
             }
         }
@@ -527,17 +636,25 @@ fun CreateAccount(navController: NavHostController) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccountTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     keyboardType: KeyboardType = KeyboardType.Text,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    icon: @Composable (() -> Unit)? = null
 ) {
+    val customRed = colorResource(id = R.color.logoRed)
+    val customLighterRed = colorResource(id = R.color.almostlogored)
+    val customGray = colorResource(id = R.color.logoGray)
+    val customPink = colorResource(id = R.color.lightred_pink)
+
     TextField(
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
         label = { Text(label) },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
@@ -546,6 +663,13 @@ fun CreateAccountTextField(
         visualTransformation = visualTransformation,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp)
+            .padding(top = 8.dp, bottom = 8.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            cursorColor = customRed,
+            focusedIndicatorColor = customPink,
+            unfocusedIndicatorColor = customGray,
+            focusedLabelColor = customLighterRed
+        ),
+        leadingIcon = icon
     )
 }

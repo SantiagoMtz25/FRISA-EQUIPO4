@@ -4,12 +4,20 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,18 +36,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
+
 
 @Composable
 fun myLoginApp(navController: NavHostController) {
@@ -63,9 +75,13 @@ fun mainLoginPage(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val customRed = Color(0xFFC2012E)
+        val customRed = colorResource(id = R.color.logoRed)
+        val customLighterRed = colorResource(id = R.color.almostlogored)
+        val customGray = colorResource(id = R.color.logoGray)
+        val customPink = colorResource(id = R.color.lightred_pink)
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
+        var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
         // FRISA Logo
         val image: Painter = painterResource(id = R.drawable.frisa)
@@ -85,60 +101,98 @@ fun mainLoginPage(navController: NavHostController) {
                 color = Color.Black
             )
         )
-        Spacer(modifier = Modifier.height(16.dp))
-
+        Spacer(modifier = Modifier.height(28.dp))
         // Email input
         TextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
             singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = customRed,
+                focusedIndicatorColor = customPink,
+                unfocusedIndicatorColor = customGray,
+                focusedLabelColor = customLighterRed
+            ),
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Email,
+                    contentDescription = "Email Icon",
+                    tint = customLighterRed
+                )
+            },
+            // modifier = Modifier.background(customGray) // Change this to your desired background color
         )
         Spacer(modifier = Modifier.height(16.dp))
-
         // Password input
         TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
-            )
+            ),
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = customRed,
+                focusedIndicatorColor = customPink,
+                unfocusedIndicatorColor = customGray,
+                focusedLabelColor = customLighterRed
+            ),
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Lock,
+                    contentDescription = "Lock Icon",
+                    tint = customLighterRed
+                )
+            }
+            // modifier = Modifier.background(customGray) // Change this to your desired background color
         )
         Spacer(modifier = Modifier.height(16.dp))
-        // Login button
-        MaterialTheme(
-            colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
-        ) {
-            Button(
-                onClick = {
-                    // Navigate to testScreen
-                    navController.navigate("testScreen")
-                }
+        Row {
+            MaterialTheme(
+                colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
             ) {
-                Text("Login")
+                Button(
+                    onClick = {
+                        // Navigate to testScreen
+                        navController.navigate("testScreen")
+                    },
+                    modifier = Modifier.width(100.dp)
+                ) {
+                    Text("Login")
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            MaterialTheme(
+                colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+            ) {
+                Button(
+                    onClick = {
+                        // Navigate to create_account
+                        navController.navigate("create_account")
+                    },
+                    modifier = Modifier.width(145.dp)
+                ) {
+                    Text("Create Account")
+                }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         MaterialTheme(
             colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
         ) {
             Button(
                 onClick = {
                     // Navigate to create_account
-                    navController.navigate("create_account")
-                }
+                    navController.navigate("inviteUser")
+                },
+                modifier = Modifier.width(145.dp)
             ) {
-                Text("Create Account")
+                Text("Invite User")
             }
         }
-
-
     }
 }
-
-
-

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -52,6 +53,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
+import com.example.loginpagetest.screens.test.DrawerContent
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -190,69 +192,3 @@ fun aboutApp(content: NavHostController) {
     }
 }
 
-@Composable
-fun DrawerContent(content: NavHostController) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            // Profile Picture
-            Image(
-                painter = painterResource(id = android.R.drawable.ic_menu_gallery), // Replace this with your image resource
-                contentDescription = null,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .padding(16.dp)
-            )
-            // Profile Name
-            Text(
-                text = "Your Name",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-            )
-            // Profile Email
-            Text(
-                text = "youremail@example.com",
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-            )
-            // Divider
-            Divider(modifier = Modifier.padding(horizontal = 16.dp))
-
-            // Menu Items
-            Text(
-                text = "Home",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .clickable {
-                        content.navigate("testScreen")
-                    }
-            )
-            Text(
-                text = "My Favorites",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .clickable {
-                        content.navigate("myfavourites")
-                    }
-            )
-            // Divider
-            Divider(modifier = Modifier.padding(horizontal = 16.dp))
-            // Future adds can go here
-            Text(
-                text = "About App",
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .clickable {
-                        content.navigate("aboutapp")
-                    }
-            )
-        }
-    }
-}
