@@ -468,7 +468,6 @@ fun CreateAccount(navController: NavHostController) {
                             tint = customLighterRed
                         )
                     })
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -579,7 +578,7 @@ fun CreateAccount(navController: NavHostController) {
                             ) {
                             viewModel.showSuccessSnackbar = true
                             coroutineScope.launch {
-                                delay(5000) // Delay for 5 seconds
+                                delay(4000)
                                 navController.navigate("login")
                                 viewModel.name = ""
                                 viewModel.lastName = ""
