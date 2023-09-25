@@ -77,5 +77,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.0.1")
     implementation("androidx.compose.material:material:1.0.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    // To make connect to MongoDB database
+    implementation("io.realm:realm-gradle-plugin:10.5.0")
 
 }

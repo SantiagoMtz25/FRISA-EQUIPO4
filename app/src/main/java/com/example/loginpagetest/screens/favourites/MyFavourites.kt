@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
@@ -33,6 +34,7 @@ import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,11 +57,10 @@ import com.example.loginpagetest.screens.homepage.Chip
 import com.example.loginpagetest.screens.test.DrawerContent
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun myFavourites(content: NavHostController) {
     val scrollState = rememberScrollState()
-    val custombeige = colorResource(id = R.color.lightgray_beige)
     var searchQuery by remember { mutableStateOf("") }
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
@@ -105,7 +106,9 @@ fun myFavourites(content: NavHostController) {
             LazyRow(
                 modifier = Modifier.padding(bottom = 16.dp) // Added bottom padding here
             ) {
-                items(listOf("Salud", "Educación", "Medio Ambiente", "Derechos humanos")) { tag ->
+                items(listOf("Salud", "Educación", "Medio Ambiente", "Derechos humanos",
+                    "Asociaciones Religiosas", "Transporte Público", "Cultura", "Servicios Asistenciales"
+                )) { tag ->
                     Chip(tag = tag, onClick = {
                         searchQuery = tag
                     }, modifier = Modifier.padding(end = 8.dp))
@@ -118,56 +121,78 @@ fun myFavourites(content: NavHostController) {
             ) {
                 val cardHeight = 300.dp
                 val cardWidth = 360.dp
+                val customGray = colorResource(id = R.color.lightgray_beige) // replace with actual color
+                val itemsCount = 3
+                val lazyColumnState = rememberLazyListState()
+
+                // Observe the first visible item index to represent the current scroll page
+                val currentItemIndex by derivedStateOf {
+                    lazyColumnState.firstVisibleItemIndex + 1
+                }
+
                 Card(
                     modifier = Modifier
                         .height(cardHeight)
                         .width(cardWidth)
-                        .background(MaterialTheme.colorScheme.surface)
+                        .background(customGray)
                 ) {
-                    LazyColumn {
-                        items(3) {
-                            Card(
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .height(cardHeight - 16.dp)
-                                    .width(cardWidth - 16.dp)
-                                    .background(MaterialTheme.colorScheme.surface),
-                                backgroundColor = custombeige
-                            ) {
-                                Column(
+                    Box (
+                        modifier = Modifier.background(customGray)
+                    ) { // Wrap LazyColumn and Indicator in a Box to overlay them
+                        LazyColumn(state = lazyColumnState) {
+                            items(itemsCount) {
+                                Card(
                                     modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(16.dp) // Adjust the padding as needed
+                                        .padding(8.dp)
+                                        .height(cardHeight - 16.dp)
+                                        .width(cardWidth - 16.dp)
+                                        .background(color = Color.LightGray),
+                                    backgroundColor = Color.LightGray
                                 ) {
-                                    Image(
-                                        painter = painterResource(id = android.R.drawable.ic_menu_gallery),
-                                        contentDescription = null,
+                                    Column(
                                         modifier = Modifier
-                                            .size(40.dp) // Adjust the size as needed
-                                            .clip(CircleShape)
-                                            .background(myColor)
-                                    )
-                                    Text(
-                                        "OSC Number #",
-                                        style = TextStyle(
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            textAlign = TextAlign.Center
-                                        ),
-                                        modifier = Modifier.padding(top = 8.dp) // Adjust the padding as needed
-                                    )
+                                            .fillMaxSize()
+                                            .padding(16.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = android.R.drawable.ic_menu_gallery),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .clip(CircleShape)
+                                                .background(myColor)
+                                        )
+                                        Text(
+                                            "OSC Number #$currentItemIndex",
+                                            style = TextStyle(
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                textAlign = TextAlign.Center
+                                            ),
+                                            modifier = Modifier.padding(top = 8.dp)
+                                        )
 
-                                    Text(
-                                        "Welcome to OSC Number #\n" +
-                                                "We would like to share that we have reached our most important goal of reaching to ...\n" +
-                                                "For the past year and a half, we have been working on a project called ... which sought to ...\n\n"
-                                                    .trimIndent(),
-                                        style = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Justify),
-                                        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp) // Adjust the padding as needed
-                                    )
+                                        Text(
+                                            "Welcome to OSC Number #$currentItemIndex\n" +
+                                                    "We would like to share that we have reached our most important goal of reaching to ...\n" +
+                                                    "For the past year and a half, we have been working on a project called ... which sought to ...\n\n"
+                                                        .trimIndent(),
+                                            style = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Justify),
+                                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
+                        // Scroll Indicator
+                        Text(
+                            text = "$currentItemIndex / $itemsCount",
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(8.dp),
+                            color = Color.Black, // Adjust color as needed
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        )
                     }
                 }
             }
