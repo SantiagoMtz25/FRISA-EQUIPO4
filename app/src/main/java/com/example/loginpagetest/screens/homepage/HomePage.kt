@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -99,41 +100,9 @@ fun OrganizationsCatalogue(content: NavHostController) {
                 )
             }
         }
-        if (isPopupVisible) {
-            Popup(
-                onDismissRequest = { isPopupVisible = false },
-                alignment = Alignment.TopEnd
-            ) {
-                Surface(
-                    color = Color.White,
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .shadow(8.dp, RoundedCornerShape(8.dp))
-                            .width(300.dp)
-                            .height(200.dp)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Here will be the list of filters")
-                        MaterialTheme(
-                            colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
-                        ) {
-                            Button(
-                                onClick = {
-                                    // Here it will search given the variables in the future
-                                },
-                                modifier = Modifier.width(100.dp)
-                            ) {
-                                Text("Search")
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // Add icon functionality here
+
+
         LazyRow(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp)
