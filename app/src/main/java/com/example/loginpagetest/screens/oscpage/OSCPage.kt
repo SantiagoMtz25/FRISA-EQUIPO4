@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.navigation.CustomTopBar
+import com.example.loginpagetest.navigation.CustomTopBar2
 
 @Composable
 fun OSCPage(content: NavHostController) {
@@ -37,7 +38,7 @@ fun OSCPage(content: NavHostController) {
 
     }
     Column {
-        CustomTopBar(title = "OSC Page", navController = content, screen = "testScreen")
+        CustomTopBar2(title = "OSC Page", navController = content)
 
         Card(
             modifier = Modifier
