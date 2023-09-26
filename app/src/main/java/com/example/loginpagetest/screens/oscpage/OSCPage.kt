@@ -11,7 +11,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -60,6 +63,7 @@ fun OSCPage(content: NavHostController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 // Top section with photo and texts
                 Row(
@@ -91,8 +95,6 @@ fun OSCPage(content: NavHostController) {
                 // Description
                 Text(
                     text = "This is a description.This is a description.This is a description." +
-                            "This is a description.This is a description.This is a description." +
-                            "This is a description.This is a description.This is a description." +
                             "This is a description.This is a description.This is a description." +
                             "This is a description.This is a description.This is a description." +
                             "This is a description.This is a description.This is a description.",
