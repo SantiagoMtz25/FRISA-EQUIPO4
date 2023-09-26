@@ -1,6 +1,7 @@
 package com.example.loginpagetest.screens.homepage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -57,6 +59,7 @@ fun OrganizationsCatalogue(content: NavHostController) {
     val filteredAndSortedCategories = organizationsMap.keys.filter {
         it.contains(searchQuery, ignoreCase = true)
     }.sortedBy { it != searchQuery }
+    var starFilter by remember { mutableIntStateOf(0) }
 
     Column {
         Row(
@@ -101,7 +104,113 @@ fun OrganizationsCatalogue(content: NavHostController) {
             }
         }
         // Add icon functionality here
-
+        if(isPopupVisible) {
+            Popup(onDismissRequest = { isPopupVisible = false }) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(4.dp)
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                    ) {
+                        Text(text = "Filters", style = MaterialTheme.typography.bodyMedium)
+                        Divider()
+                        // Name Filter
+                        Text("Name:")
+                        OutlinedTextField(
+                            value = "",
+                            onValueChange = { /*Handle Name Filter Change*/ },
+                            label = { Text("Name") },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Gray,
+                                unfocusedBorderColor = Color.LightGray
+                            ),
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    // Handle on Done Clicked
+                                }
+                            )
+                        )
+                        // Location Filter
+                        Text("Location:")
+                        OutlinedTextField(
+                            value = "",
+                            onValueChange = { /*Handle Name Filter Change*/ },
+                            label = { Text("Name") },
+                            singleLine = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Gray,
+                                unfocusedBorderColor = Color.LightGray
+                            ),
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    // Handle on Done Clicked
+                                }
+                            )
+                        )
+                        // Category Filter
+                        Text("Category:")
+                        LazyColumn {
+                            items(organizationsMap.keys.toList()) { category ->
+                                val isSelected = category == selectedCategory
+                                Text(
+                                    text = category,
+                                    color = if (isSelected) Color.White else Color.Black,
+                                    modifier = Modifier
+                                        .clickable { selectedCategory = category }
+                                        .background(if (isSelected) Color.Blue else Color.Transparent)
+                                        .padding(8.dp)
+                                        .fillMaxWidth()
+                                        .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
+                                        .padding(4.dp)
+                                )
+                            }
+                        }
+                        Divider()
+                        // Star Filter
+                        Text("Star:")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            (1..5).forEach { index ->
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = "Star $index",
+                                    tint = if (starFilter >= index) customRed else customGray,
+                                    modifier = Modifier.clickable { starFilter = index }
+                                )
+                            }
+                        }
+                        // Apply button to apply filters
+                        MaterialTheme (
+                            colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+                        ) {
+                            Button(onClick = { isPopupVisible = false }) {
+                                Text("Apply")
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         LazyRow(
             modifier = Modifier
