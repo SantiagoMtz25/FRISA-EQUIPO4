@@ -165,7 +165,7 @@ fun mainLoginPage(navController: NavHostController) {
                     Text("Login")
                 }
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(14.dp))
             MaterialTheme(
                 colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
             ) {
@@ -174,7 +174,7 @@ fun mainLoginPage(navController: NavHostController) {
                         // Navigate to create_account
                         navController.navigate("create_account")
                     },
-                    modifier = Modifier.width(145.dp)
+                    modifier = Modifier.width(165.dp)
                 ) {
                     Text("Create Account")
                 }
