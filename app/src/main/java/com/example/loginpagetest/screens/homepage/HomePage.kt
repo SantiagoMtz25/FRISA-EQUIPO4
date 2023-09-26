@@ -109,8 +109,9 @@ fun OrganizationsCatalogue(content: NavHostController) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .shadow(4.dp)
+                        .shadow(5.dp)
                         .padding(16.dp)
+                        .background(Color.White)
                 ) {
                     Column(
                         modifier = Modifier
@@ -128,7 +129,7 @@ fun OrganizationsCatalogue(content: NavHostController) {
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
+                                .padding(4.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.Gray,
                                 unfocusedBorderColor = Color.LightGray
@@ -151,7 +152,7 @@ fun OrganizationsCatalogue(content: NavHostController) {
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
+                                .padding(4.dp),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.Gray,
                                 unfocusedBorderColor = Color.LightGray
@@ -175,17 +176,16 @@ fun OrganizationsCatalogue(content: NavHostController) {
                                     color = if (isSelected) Color.White else Color.Black,
                                     modifier = Modifier
                                         .clickable { selectedCategory = category }
-                                        .background(if (isSelected) Color.Blue else Color.Transparent)
-                                        .padding(8.dp)
+                                        .background(if (isSelected) customPink else Color.Transparent)
+                                        .padding(2.dp)
                                         .fillMaxWidth()
                                         .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
-                                        .padding(4.dp)
                                 )
                             }
                         }
                         Divider()
                         // Star Filter
-                        Text("Star:")
+                        Text("Stars:")
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
