@@ -78,4 +78,19 @@ dependencies {
     implementation("androidx.compose.material:material:1.0.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
+    // To create DataStoreManager
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("com.google.android.gms:play-services-auth:19.2.0")
+    implementation ("com.github.skydoves:landscapist-glide:1.3.7")
+
+    // ViewModel implementation
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    // Retrofit - library to retrieve and upload data via a REST-based web service
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+
+    //GSON converter - to work with JSON data
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
 }
