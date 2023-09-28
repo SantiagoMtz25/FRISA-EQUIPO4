@@ -163,7 +163,6 @@ fun OSCPage(content: NavHostController) {
                             openInstagramTrigger = true
                         }
                     )
-
                     Text(
                         text = "Email: $email",
                         modifier = Modifier.clickable {

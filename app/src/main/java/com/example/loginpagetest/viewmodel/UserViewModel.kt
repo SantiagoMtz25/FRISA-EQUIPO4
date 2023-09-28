@@ -29,8 +29,18 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     val protectedResult: StateFlow<UserProtectedResponse?>
         get() = _protectedResult
 
-    fun addUser(telephone: Int, password: String) {
-        val user = UserRegister(telephone, password)
+    // is this like creating account?
+    fun addUser(
+        name: String,
+        lastname: String,
+        email: String,
+        password: String,
+        confirmPassword: String,
+        phoneNumber: Int,
+        state: String,
+        city: String
+    ) {
+        val user = UserRegister(name, lastname, email, password, confirmPassword, phoneNumber, state, city)
 
         viewModelScope.launch {
             var response: UserRegistrationResponse
@@ -46,12 +56,13 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun loginUser(telephone: Int, password: String) {
+    // for our app for the login functionality we'll only use email and password
+    fun loginUser(email: String, password: String) {
 
         // Reset the login result to nul before making a new login request
         _loginResult.value = null
 
-        val user = UserLogin(telephone, password)
+        val user = UserLogin(email, password)
 
         viewModelScope.launch {
             var response: UserLoginResponse

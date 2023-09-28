@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -60,6 +61,7 @@ fun DrawerContent(content: NavHostController) {
                 text = "Home",
                 fontSize = 18.sp,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
                         content.navigate("testScreen")
@@ -69,6 +71,7 @@ fun DrawerContent(content: NavHostController) {
                 text = "My Favorites",
                 fontSize = 18.sp,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
                         content.navigate("myfavourites")
@@ -81,6 +84,7 @@ fun DrawerContent(content: NavHostController) {
                 text = "About App",
                 fontSize = 18.sp,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
                         content.navigate("aboutapp")
@@ -91,6 +95,7 @@ fun DrawerContent(content: NavHostController) {
                 text = "Log Out",
                 fontSize = 18.sp,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
                         content.navigate("login")
