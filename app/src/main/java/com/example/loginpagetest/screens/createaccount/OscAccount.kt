@@ -4,33 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
-import com.example.loginpagetest.navigation.CustomTopBar
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -40,19 +31,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
-import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateAccount(navController: NavHostController) {
+fun oscAccount() {
     val viewModel: CreateAccountViewModel = viewModel()
-    val oscViewModel: CreateOSCViewModel = viewModel()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colorScheme.background
@@ -63,10 +51,7 @@ fun CreateAccount(navController: NavHostController) {
         val customLighterRed = colorResource(id = R.color.almostlogored)
         val customGray = colorResource(id = R.color.logoGray)
         val customPink = colorResource(id = R.color.lightred_pink)
-        var isUserAccount by rememberSaveable { mutableStateOf(false) }
-
         Column {
-            CustomTopBar(title = "Create User Account", navController = navController, screen = "login")
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -424,338 +409,217 @@ fun CreateAccount(navController: NavHostController) {
                         .size(100.dp, 100.dp)
                         .align(Alignment.CenterHorizontally)
                 )
-                buttonSlider { isChecked ->
-                    isUserAccount = isChecked
+
+                CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Name Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name",
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Last Name Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Lock Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Lock Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "Phone Icon",
+                            tint = customLighterRed
+                        )
+                    })
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.selectedState,
+                        onValueChange = { /* Ignored for readOnly */ },
+                        label = { Text("State") },
+                        readOnly = true,
+                        modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
+                            if (focusState.isFocused) viewModel.isStateDropdownExpanded = true
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = customRed,
+                            focusedIndicatorColor = customPink,
+                            unfocusedIndicatorColor = customGray,
+                            focusedLabelColor = customLighterRed
+                        ),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Place,
+                                contentDescription = "Place Icon",
+                                tint = customLighterRed
+                            )
+                        },
+                    )
+                    DropdownMenu(
+                        expanded = viewModel.isStateDropdownExpanded,
+                        onDismissRequest = { viewModel.isStateDropdownExpanded = false }
+                    ) {
+                        mapStates.keys.forEach { state ->
+                            DropdownMenuItem(onClick = {
+                                viewModel.isStateDropdownExpanded = false
+                                viewModel.selectedState = state
+                                viewModel.selectedCity = "Select City" // Reset the city selection
+                            }) {
+                                Text(text = state)
+                            }
+                        }
+                    }
                 }
-                if (!isUserAccount) {
-                    CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.AccountBox,
-                                contentDescription = "Name Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.AccountBox,
-                                contentDescription = "Last Name Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email,
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Email,
-                                contentDescription = "Email Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "Lock Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "Lock Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone,
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Phone,
-                                contentDescription = "Phone Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 8.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = viewModel.selectedState,
-                            onValueChange = { /* Ignored for readOnly */ },
-                            label = { Text("State") },
-                            readOnly = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) viewModel.isStateDropdownExpanded = true
-                                },
-                            colors = TextFieldDefaults.textFieldColors(
-                                cursorColor = customRed,
-                                focusedIndicatorColor = customPink,
-                                unfocusedIndicatorColor = customGray,
-                                focusedLabelColor = customLighterRed
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Place,
-                                    contentDescription = "Place Icon",
-                                    tint = customLighterRed
-                                )
-                            },
-                        )
-                        DropdownMenu(
-                            expanded = viewModel.isStateDropdownExpanded,
-                            onDismissRequest = { viewModel.isStateDropdownExpanded = false }
-                        ) {
-                            mapStates.keys.forEach { state ->
-                                DropdownMenuItem(onClick = {
-                                    viewModel.isStateDropdownExpanded = false
-                                    viewModel.selectedState = state
-                                    viewModel.selectedCity = "Select City" // Reset the city selection
-                                }) {
-                                    Text(text = state)
-                                }
-                            }
-                        }
-                    }
-                    // For municipalities
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 8.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = viewModel.selectedCity,
-                            onValueChange = { /* Ignored for readOnly */ },
-                            label = { Text("City") },
-                            readOnly = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) viewModel.isCityDropdownExpanded = true
-                                },
-                            colors = TextFieldDefaults.textFieldColors(
-                                cursorColor = customRed,
-                                focusedIndicatorColor = customPink,
-                                unfocusedIndicatorColor = customGray,
-                                focusedLabelColor = customLighterRed
-                            ),
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Home,
-                                    contentDescription = "Home Icon",
-                                    tint = customLighterRed
-                                )
-                            },
-                        )
-                        DropdownMenu(
-                            expanded = viewModel.isCityDropdownExpanded,
-                            onDismissRequest = { viewModel.isCityDropdownExpanded = false }
-                        ) {
-                            mapStates[viewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
-                                DropdownMenuItem(onClick = {
-                                    viewModel.isCityDropdownExpanded = false
-                                    viewModel.selectedCity = city
-                                }) {
-                                    Text(text = city)
-                                }
-                            } ?: DropdownMenuItem(onClick = { }) {
-                                Text(text = "No cities available")
-                            }
-                        }
-                    }
-                    LaunchedEffect(viewModel.showSnackbar, viewModel.showSuccessSnackbar) {
-                        // If snackbar is shown, scroll all the way down
-                        if (viewModel.showSnackbar) {
-                            scrollState.animateScrollTo(scrollState.maxValue)
-                        }
-                        if (viewModel.showSuccessSnackbar) {
-                            scrollState.animateScrollTo(scrollState.maxValue)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    MaterialTheme(
-                        colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
-                    ) {
-                        Button(onClick = {
-                            if (viewModel.name.isNotEmpty() &&
-                                viewModel.lastName.isNotEmpty() &&
-                                viewModel.email.isNotEmpty() &&
-                                viewModel.selectedCity.isNotEmpty() &&
-                                viewModel.selectedState.isNotEmpty() &&
-                                viewModel.phoneNumber.isNotEmpty() &&
-                                viewModel.password.isNotEmpty() &&
-                                viewModel.password == viewModel.confirmPassword
-                            ) {
-                                viewModel.showSuccessSnackbar = true
-                                coroutineScope.launch {
-                                    delay(4000)
-                                    navController.navigate("login")
-                                    viewModel.name = ""
-                                    viewModel.lastName = ""
-                                    viewModel.email = ""
-                                    viewModel.password = ""
-                                    viewModel.confirmPassword = ""
-                                    viewModel.phoneNumber = ""
-                                    viewModel.selectedState = ""
-                                    viewModel.selectedCity = ""
-                                }
-                            } else {
-                                viewModel.showSnackbar = true
-                            }
-                        }) {
-                            Text("Create Account", color = Color.White)
-                        }
-
-                        if (viewModel.showSnackbar && !viewModel.showSuccessSnackbar) {
-                            Snackbar(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .background(Color.Red),
-                                action = {
-                                    TextButton(onClick = { viewModel.showSnackbar = false }) {
-                                        Text(
-                                            "Dismiss",
-                                            color = Color.White,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                            ) {
-                                Text("Fill all fields and ensure passwords match", color = Color.White)
-                            }
-                        }
-
-                        if (viewModel.showSuccessSnackbar) {
-                            Snackbar(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .background(Color.Green),
-                                action = {
-                                    TextButton(onClick = { viewModel.showSuccessSnackbar = false }) {
-                                        Text(
-                                            "Dismiss",
-                                            color = Color.White,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                            ) {
-                                Text("Thank you! Account created successfully", color = Color.White)
-                            }
-                        }
-                    }
-                } else {
-                    // add here the osc create account screen
-                    CreateAccountTextField(value = oscViewModel.name, onValueChange = { oscViewModel.name = it }, label = "OSC Name",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.AccountBox,
-                                contentDescription = "OSC Name Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = oscViewModel.adminName, onValueChange = { oscViewModel.adminName = it }, label = "Administrator Name",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Administrator Name Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = oscViewModel.rfc, onValueChange = { oscViewModel.rfc = it }, label = "RFC (if available)",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "RFC Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = oscViewModel.description, onValueChange = { oscViewModel.description = it }, label = "Description",
-                        icon = {
+                // For municipalities
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.selectedCity,
+                        onValueChange = { /* Ignored for readOnly */ },
+                        label = { Text("City") },
+                        readOnly = true,
+                        modifier = Modifier.fillMaxWidth().onFocusChanged { focusState ->
+                            if (focusState.isFocused) viewModel.isCityDropdownExpanded = true
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = customRed,
+                            focusedIndicatorColor = customPink,
+                            unfocusedIndicatorColor = customGray,
+                            focusedLabelColor = customLighterRed
+                        ),
+                        leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
-                                contentDescription = "Description Icon",
+                                contentDescription = "Home Icon",
                                 tint = customLighterRed
                             )
-                        })
-                    CreateAccountTextField(value = oscViewModel.phoneNumber, onValueChange = { oscViewModel.phoneNumber = it }, label = "Phone Number",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Phone,
-                                contentDescription = "Phone Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, label = "Phone Number",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Email,
-                                contentDescription = "Email Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = oscViewModel.webpage, onValueChange = { oscViewModel.webpage = it }, label = "Phone Number",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Webpage Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    CreateAccountTextField(value = oscViewModel.category, onValueChange = { oscViewModel.category = it }, label = "Phone Number",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.List,
-                                contentDescription = "Category Icon",
-                                tint = customLighterRed
-                            )
-                        })
-                    // add state and city here
+                        },
+                    )
+                    DropdownMenu(
+                        expanded = viewModel.isCityDropdownExpanded,
+                        onDismissRequest = { viewModel.isCityDropdownExpanded = false }
+                    ) {
+                        mapStates[viewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
+                            DropdownMenuItem(onClick = {
+                                viewModel.isCityDropdownExpanded = false
+                                viewModel.selectedCity = city
+                            }) {
+                                Text(text = city)
+                            }
+                        } ?: DropdownMenuItem(onClick = { }) {
+                            Text(text = "No cities available")
+                        }
+                    }
+                }
+                LaunchedEffect(viewModel.showSnackbar, viewModel.showSuccessSnackbar) {
+                    // If snackbar is shown, scroll all the way down
+                    if (viewModel.showSnackbar) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
+                    if (viewModel.showSuccessSnackbar) {
+                        scrollState.animateScrollTo(scrollState.maxValue)
+                    }
+                }
+                MaterialTheme(
+                    colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+                ) {
+                    Button(onClick = {
+                        if (viewModel.name.isNotEmpty() &&
+                            viewModel.lastName.isNotEmpty() &&
+                            viewModel.email.isNotEmpty() &&
+                            viewModel.selectedCity.isNotEmpty() &&
+                            viewModel.selectedState.isNotEmpty() &&
+                            viewModel.phoneNumber.isNotEmpty() &&
+                            viewModel.password.isNotEmpty() &&
+                            viewModel.password == viewModel.confirmPassword
+                        ) {
+                            viewModel.showSuccessSnackbar = true
+                            coroutineScope.launch {
+                                delay(4000)
+                                viewModel.name = ""
+                                viewModel.lastName = ""
+                                viewModel.email = ""
+                                viewModel.password = ""
+                                viewModel.confirmPassword = ""
+                                viewModel.phoneNumber = ""
+                                viewModel.selectedState = ""
+                                viewModel.selectedCity = ""
+                            }
+                        } else {
+                            viewModel.showSnackbar = true
+                        }
+                    }) {
+                        Text("Create Account", color = Color.White)
+                    }
 
+                    if (viewModel.showSnackbar && !viewModel.showSuccessSnackbar) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp).background(Color.Red),
+                            action = {
+                                TextButton(onClick = { viewModel.showSnackbar = false }) {
+                                    Text(
+                                        "Dismiss",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        ) {
+                            Text("Fill all fields and ensure passwords match", color = Color.White)
+                        }
+                    }
+
+                    if (viewModel.showSuccessSnackbar) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp).background(Color.Green),
+                            action = {
+                                TextButton(onClick = { viewModel.showSuccessSnackbar = false }) {
+                                    Text(
+                                        "Dismiss",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        ) {
+                            Text("Thank you! Account created successfully", color = Color.White)
+                        }
+                    }
                 }
             }
         }
     }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CreateAccountTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    icon: @Composable (() -> Unit)? = null
-) {
-    val customRed = colorResource(id = R.color.logoRed)
-    val customLighterRed = colorResource(id = R.color.almostlogored)
-    val customGray = colorResource(id = R.color.logoGray)
-    val customPink = colorResource(id = R.color.lightred_pink)
-
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-        label = { Text(label) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = ImeAction.Done
-        ),
-        visualTransformation = visualTransformation,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            cursorColor = customRed,
-            focusedIndicatorColor = customPink,
-            unfocusedIndicatorColor = customGray,
-            focusedLabelColor = customLighterRed
-        ),
-        leadingIcon = icon
-    )
 }
