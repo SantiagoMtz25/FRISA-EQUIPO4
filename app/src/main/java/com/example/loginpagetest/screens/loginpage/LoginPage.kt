@@ -11,22 +11,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,12 +45,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
+import com.example.loginpagetest.model.UserLoginResponse
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
+import com.example.loginpagetest.viewmodel.UserViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -75,13 +81,24 @@ fun mainLoginPage(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Color definitions
         val customRed = colorResource(id = R.color.logoRed)
         val customLighterRed = colorResource(id = R.color.almostlogored)
         val customGray = colorResource(id = R.color.logoGray)
         val customPink = colorResource(id = R.color.lightred_pink)
+
+        val scrollState = rememberScrollState()
+
+        // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
-        var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+        var passwordVisibility by rememberSaveable { mutableStateOf(true) }
+
+        // To get the result from login and redirect or not to screen
+        var loginResult by remember {
+            mutableStateOf(UserLoginResponse())
+        }
+        var successfulLogin by rememberSaveable { mutableStateOf(true) }
 
         // FRISA Logo
         val image: Painter = painterResource(id = R.drawable.frisa)
@@ -157,8 +174,20 @@ fun mainLoginPage(navController: NavHostController) {
             ) {
                 Button(
                     onClick = {
-                        // Navigate to testScreen
-                        navController.navigate("testScreen")
+                        if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
+                            // Admin user login, navigating to admin screen
+                            successfulLogin = true
+                            navController.navigate("adminScreen")
+
+                        } else if (!loginResult.token.isNullOrEmpty()) {
+                            // Regular user login, navigating to regular user screen
+                            successfulLogin = true
+                            navController.navigate("userScreen")
+
+                        } else {
+                            // Login failed, showing a snack bar
+                            successfulLogin = false
+                        }
                     },
                     modifier = Modifier.width(100.dp)
                 ) {
@@ -171,7 +200,6 @@ fun mainLoginPage(navController: NavHostController) {
             ) {
                 Button(
                     onClick = {
-                        // Navigate to create_account
                         navController.navigate("create_account")
                     },
                     modifier = Modifier.width(165.dp)
@@ -186,12 +214,36 @@ fun mainLoginPage(navController: NavHostController) {
         ) {
             Button(
                 onClick = {
-                    // Navigate to create_account
                     navController.navigate("inviteUser")
                 },
                 modifier = Modifier.width(145.dp)
             ) {
                 Text("Invite User")
+            }
+        }
+
+        // Wrong login snack-bar message for user
+        LaunchedEffect(!successfulLogin) {
+            if (!successfulLogin) {
+                scrollState.animateScrollTo(scrollState.maxValue)
+            }
+        }
+        if (!successfulLogin) {
+            Snackbar(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(Color.Green),
+                action = {
+                    TextButton(onClick = { successfulLogin = true }) {
+                        androidx.compose.material.Text(
+                            "Dismiss",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            ) {
+                androidx.compose.material.Text("Email or Password are incorrect", color = Color.White)
             }
         }
     }

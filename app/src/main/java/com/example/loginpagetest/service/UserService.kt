@@ -22,7 +22,7 @@ interface UserService {
 
     companion object {
         // place our link here from FL0 server once api is uploaded
-        val instance: UserService = Retrofit.Builder().baseUrl("https://api-android2023-klhg-dev.fl0.io/users/")
+        val instance: UserService = Retrofit.Builder().baseUrl("https://api-test-frisa-n7cx-dev.fl0.io/users/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UserService::class.java)
