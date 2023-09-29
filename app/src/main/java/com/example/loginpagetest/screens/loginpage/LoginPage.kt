@@ -92,13 +92,13 @@ fun mainLoginPage(navController: NavHostController) {
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
-        var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+        var passwordVisibility by rememberSaveable { mutableStateOf(true) }
 
         // To get the result from login and redirect or not to screen
         var loginResult by remember {
             mutableStateOf(UserLoginResponse())
         }
-        var successfulLogin by rememberSaveable { mutableStateOf(false) }
+        var successfulLogin by rememberSaveable { mutableStateOf(true) }
 
         // FRISA Logo
         val image: Painter = painterResource(id = R.drawable.frisa)
@@ -176,12 +176,14 @@ fun mainLoginPage(navController: NavHostController) {
                     onClick = {
                         if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
                             // Admin user login, navigating to admin screen
-                            navController.navigate("adminScreen")
                             successfulLogin = true
+                            navController.navigate("adminScreen")
+
                         } else if (!loginResult.token.isNullOrEmpty()) {
                             // Regular user login, navigating to regular user screen
-                            navController.navigate("userScreen")
                             successfulLogin = true
+                            navController.navigate("userScreen")
+
                         } else {
                             // Login failed, showing a snack bar
                             successfulLogin = false
