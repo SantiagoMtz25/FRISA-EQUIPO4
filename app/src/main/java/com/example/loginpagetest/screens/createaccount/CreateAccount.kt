@@ -714,7 +714,179 @@ fun CreateAccount(navController: NavHostController) {
                             )
                         })
                     // add state and city here
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 8.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = oscViewModel.selectedState,
+                            onValueChange = { /* Ignored for readOnly */ },
+                            label = { Text("State") },
+                            readOnly = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onFocusChanged { focusState ->
+                                    if (focusState.isFocused) oscViewModel.isStateDropdownExpanded = true
+                                },
+                            colors = TextFieldDefaults.textFieldColors(
+                                cursorColor = customRed,
+                                focusedIndicatorColor = customPink,
+                                unfocusedIndicatorColor = customGray,
+                                focusedLabelColor = customLighterRed
+                            ),
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Place,
+                                    contentDescription = "Place Icon",
+                                    tint = customLighterRed
+                                )
+                            },
+                        )
+                        DropdownMenu(
+                            expanded = oscViewModel.isStateDropdownExpanded,
+                            onDismissRequest = { oscViewModel.isStateDropdownExpanded = false }
+                        ) {
+                            mapStates.keys.forEach { state ->
+                                DropdownMenuItem(onClick = {
+                                    oscViewModel.isStateDropdownExpanded = false
+                                    oscViewModel.selectedState = state
+                                    oscViewModel.selectedCity = "Select City" // Reset the city selection
+                                }) {
+                                    Text(text = state)
+                                }
+                            }
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 8.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = oscViewModel.selectedCity,
+                            onValueChange = { /* Ignored for readOnly */ },
+                            label = { Text("City") },
+                            readOnly = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onFocusChanged { focusState ->
+                                    if (focusState.isFocused) oscViewModel.isCityDropdownExpanded = true
+                                },
+                            colors = TextFieldDefaults.textFieldColors(
+                                cursorColor = customRed,
+                                focusedIndicatorColor = customPink,
+                                unfocusedIndicatorColor = customGray,
+                                focusedLabelColor = customLighterRed
+                            ),
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Home,
+                                    contentDescription = "Home Icon",
+                                    tint = customLighterRed
+                                )
+                            },
+                        )
+                        DropdownMenu(
+                            expanded = oscViewModel.isCityDropdownExpanded,
+                            onDismissRequest = { oscViewModel.isCityDropdownExpanded = false }
+                        ) {
+                            mapStates[oscViewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
+                                DropdownMenuItem(onClick = {
+                                    oscViewModel.isCityDropdownExpanded = false
+                                    oscViewModel.selectedCity = city
+                                }) {
+                                    Text(text = city)
+                                }
+                            } ?: DropdownMenuItem(onClick = { }) {
+                                Text(text = "No cities available")
+                            }
+                        }
+                    }
+                    LaunchedEffect(oscViewModel.showSnackbar, oscViewModel.showSuccessSnackbar) {
+                        // If snackbar is shown, scroll all the way down
+                        if (oscViewModel.showSnackbar) {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                        if (oscViewModel.showSuccessSnackbar) {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    MaterialTheme(
+                        colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
+                    ) {
+                        Button(onClick = {
+                            if (oscViewModel.name.isNotEmpty() &&
+                                oscViewModel.adminName.isNotEmpty() &&
+                                oscViewModel.rfc.isNotEmpty() &&
+                                oscViewModel.description.isNotEmpty() &&
+                                oscViewModel.phoneNumber.isNotEmpty() &&
+                                oscViewModel.selectedState.isNotEmpty() &&
+                                oscViewModel.selectedCity.isNotEmpty() &&
+                                oscViewModel.email.isNotEmpty() &&
+                                oscViewModel.category.isNotEmpty()
 
+                            ) {
+                                oscViewModel.showSuccessSnackbar = true
+                                coroutineScope.launch {
+                                    delay(4000)
+                                    navController.navigate("login")
+                                    oscViewModel.name = ""
+                                    oscViewModel.adminName = ""
+                                    oscViewModel.rfc = ""
+                                    oscViewModel.description = ""
+                                    oscViewModel.phoneNumber = ""
+                                    oscViewModel.selectedState = ""
+                                    oscViewModel.selectedCity = ""
+                                    oscViewModel.email = ""
+                                    oscViewModel.category = ""
+                                }
+                            } else {
+                                oscViewModel.showSnackbar = true
+                            }
+                        }) {
+                            Text("Create Account", color = Color.White)
+                        }
+
+                        if (oscViewModel.showSnackbar && !oscViewModel.showSuccessSnackbar) {
+                            Snackbar(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .background(Color.Red),
+                                action = {
+                                    TextButton(onClick = { oscViewModel.showSnackbar = false }) {
+                                        Text(
+                                            "Dismiss",
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            ) {
+                                Text("Fill all fields and ensure passwords match", color = Color.White)
+                            }
+                        }
+
+                        if (oscViewModel.showSuccessSnackbar) {
+                            Snackbar(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .background(Color.Green),
+                                action = {
+                                    TextButton(onClick = { oscViewModel.showSuccessSnackbar = false }) {
+                                        Text(
+                                            "Dismiss",
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            ) {
+                                Text("Thank you! Account created successfully", color = Color.White)
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -15,6 +15,7 @@ class CreateOSCViewModel () : ViewModel() {
     var selectedCity by mutableStateOf("")
     var email by mutableStateOf("")
     var webpage by mutableStateOf("")
+
     var category by mutableStateOf("")
     var isStateDropdownExpanded by mutableStateOf(false)
     var isCityDropdownExpanded by mutableStateOf(false)
