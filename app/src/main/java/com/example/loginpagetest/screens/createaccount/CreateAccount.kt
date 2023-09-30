@@ -24,6 +24,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
@@ -46,6 +47,10 @@ import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.DpOffset
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -427,7 +432,7 @@ fun CreateAccount(navController: NavHostController) {
                 buttonSlider { isChecked ->
                     isUserAccount = isChecked
                 }
-                if (!isUserAccount) {
+                if (isUserAccount) {
                     CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name",
                         icon = {
                             Icon(
@@ -489,7 +494,8 @@ fun CreateAccount(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) viewModel.isStateDropdownExpanded = true
+                                    if (focusState.isFocused) viewModel.isStateDropdownExpanded =
+                                        true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
                                 cursorColor = customRed,
@@ -534,7 +540,8 @@ fun CreateAccount(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) viewModel.isCityDropdownExpanded = true
+                                    if (focusState.isFocused) viewModel.isCityDropdownExpanded =
+                                        true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
                                 cursorColor = customRed,
@@ -689,7 +696,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, label = "Phone Number",
+                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, label = "Email",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -697,7 +704,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.webpage, onValueChange = { oscViewModel.webpage = it }, label = "Phone Number",
+                    CreateAccountTextField(value = oscViewModel.webpage, onValueChange = { oscViewModel.webpage = it }, label = "Webpage Link",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Info,
@@ -705,14 +712,61 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.category, onValueChange = { oscViewModel.category = it }, label = "Phone Number",
+                    /*CreateAccountTextField(value = oscViewModel.category, onValueChange = { oscViewModel.category = it }, label = "Category",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.List,
                                 contentDescription = "Category Icon",
                                 tint = customLighterRed
                             )
-                        })
+                        })*/
+
+                    var expanded by rememberSaveable { mutableStateOf(false) }
+                    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+
+                    val categories = listOf(
+                        "Salud", "Educación", "Medio Ambiente", "Derechos humanos",
+                        "Asociaciones Religiosas", "Transporte Público", "Cultura", "Servicios Asistenciales"
+                    )
+
+                    Box {
+                        TextField(
+                            label = {Text("Email") },
+                            leadingIcon = {
+                                androidx.compose.material.Icon(
+                                    Icons.Default.List,
+                                    contentDescription = "Category Icon",
+                                    tint = customLighterRed
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp, bottom = 8.dp),
+                            value = categories[selectedIndex],
+                            onValueChange = { /* do nothing as we are changing the value using dropdown selections */ },
+                            label = { Text("Category") },
+                            trailingIcon = {
+                                IconButton(onClick = { expanded = true }) {
+                                    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+                                }
+                            }
+                        )
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            categories.forEachIndexed { index, category ->
+                                DropdownMenuItem(onClick = {
+                                    selectedIndex = index
+                                    oscViewModel.category = category
+                                    expanded = false
+                                }) {
+                                    Text(text = category)
+                                }
+                            }
+                        }
+                    }
                     // add state and city here
                     Box(
                         modifier = Modifier
@@ -721,13 +775,14 @@ fun CreateAccount(navController: NavHostController) {
                     ) {
                         OutlinedTextField(
                             value = oscViewModel.selectedState,
-                            onValueChange = { /* Ignored for readOnly */ },
+                            onValueChange = {  },
                             label = { Text("State") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) oscViewModel.isStateDropdownExpanded = true
+                                    if (focusState.isFocused) oscViewModel.isStateDropdownExpanded =
+                                        true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
                                 cursorColor = customRed,
@@ -771,7 +826,8 @@ fun CreateAccount(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) oscViewModel.isCityDropdownExpanded = true
+                                    if (focusState.isFocused) oscViewModel.isCityDropdownExpanded =
+                                        true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
                                 cursorColor = customRed,

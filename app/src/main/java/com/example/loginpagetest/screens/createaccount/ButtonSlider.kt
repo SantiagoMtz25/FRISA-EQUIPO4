@@ -39,7 +39,7 @@ fun buttonSlider(onSwitchToggled: (Boolean) -> Unit) {
                     isSwitchChecked = !isSwitchChecked
                     onSwitchToggled(isSwitchChecked)
                 }
-                .background(customGray),
+                .background(customLighterRed),
             contentAlignment = Alignment.Center
         ) {
             Row(
@@ -73,7 +73,7 @@ fun buttonSlider(onSwitchToggled: (Boolean) -> Unit) {
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f) // Occupy half space
                     .align(if (isSwitchChecked) Alignment.CenterEnd else Alignment.CenterStart)
-                    .background(customLighterRed.copy(alpha = 0.25f)) // Added transparency
+                    .background(customGray.copy(alpha = 0.25f)) // Added transparency
                     .clip(RoundedCornerShape(10.dp))
             )
         }
