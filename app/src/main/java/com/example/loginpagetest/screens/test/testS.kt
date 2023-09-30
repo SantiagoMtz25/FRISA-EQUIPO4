@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
+import com.example.loginpagetest.screens.inviteuser.inviteUser
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -31,12 +32,15 @@ fun MainScreen(content: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
+    // Retrieving if administrator logged in
+    val isAdmin: Boolean = content.currentBackStackEntry
+        ?.arguments?.getBoolean("isAdmin") ?: false
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Welcome (insert name)", color = Color.White)},
+                title = { Text("Welcome", color = Color.White)},
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
@@ -54,10 +58,9 @@ fun MainScreen(content: NavHostController) {
             )
         },
         drawerContent = {
-            DrawerContent(content)
+            DrawerContent(content, isAdmin)
         }
     ) {
-        // Text("Main Screen Content", modifier = Modifier.fillMaxSize(), style = TextStyle(textAlign = TextAlign.Center))
-        OrganizationsCatalogue(content)
+        OrganizationsCatalogue(content, inviteUser = false)
     }
 }

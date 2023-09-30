@@ -72,6 +72,8 @@ fun myFavourites(content: NavHostController) {
         "Medio Ambiente" to listOf("Org medio ambiente 1", "Org medio ambiente 2", "Org medio ambiente 3"),
         "Derechos humanos" to listOf("Org derechos humanos 1", "Org derechos humanos 2", "Org derechos humanos 3")
     )
+    val isAdmin: Boolean = content.currentBackStackEntry
+        ?.arguments?.getBoolean("isAdmin") ?: false
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -95,7 +97,7 @@ fun myFavourites(content: NavHostController) {
             )
         },
         drawerContent = {
-            DrawerContent(content)
+            DrawerContent(content, isAdmin)
         }
     ) {
         Column(

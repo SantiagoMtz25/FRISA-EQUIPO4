@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -35,7 +34,7 @@ import androidx.compose.ui.draw.shadow
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun OrganizationsCatalogue(content: NavHostController) {
+fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
     val customLighterRed = colorResource(id = R.color.almostlogored)
@@ -266,7 +265,7 @@ fun OrganizationsCatalogue(content: NavHostController) {
                                 .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                 .background(Color.Transparent)
                                 .clickable {
-                                    content.navigate("OSCpage")
+                                    content.navigate("OSCpage/${inviteUser}")
                                 }
                         ) {
                             Text(

@@ -65,6 +65,8 @@ fun aboutApp(content: NavHostController) {
     val customgray = colorResource(id = R.color.darkgray)
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
+    val isAdmin: Boolean = content.currentBackStackEntry
+        ?.arguments?.getBoolean("isAdmin") ?: false
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -88,7 +90,7 @@ fun aboutApp(content: NavHostController) {
             )
         },
         drawerContent = {
-            DrawerContent(content)
+            DrawerContent(content, isAdmin)
         }
     ) {
         // write code here

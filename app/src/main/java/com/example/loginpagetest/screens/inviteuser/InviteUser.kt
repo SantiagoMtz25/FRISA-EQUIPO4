@@ -8,8 +8,10 @@ import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 
 @Composable
 fun inviteUser (navController: NavHostController) {
+    val inviteUser: Boolean = navController.currentBackStackEntry
+        ?.arguments?.getBoolean("inviteUser") ?: false
     Column {
         CustomTopBar(title = "Welcome", navController = navController, screen = "login")
-        OrganizationsCatalogue(content = navController)
+        OrganizationsCatalogue(content = navController, inviteUser)
     }
 }
