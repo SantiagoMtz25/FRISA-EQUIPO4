@@ -731,7 +731,6 @@ fun CreateAccount(navController: NavHostController) {
 
                     Box {
                         TextField(
-                            label = {Text("Email") },
                             leadingIcon = {
                                 androidx.compose.material.Icon(
                                     Icons.Default.List,
@@ -920,7 +919,7 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
-                                Text("Fill all fields and ensure passwords match", color = Color.White)
+                                Text("Fill all fields correctly", color = Color.White)
                             }
                         }
 
@@ -939,7 +938,7 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
-                                Text("Thank you! Account created successfully", color = Color.White)
+                                Text("Your submission has been received, if successful you will be reached out.", color = Color.White)
                             }
                         }
                     }

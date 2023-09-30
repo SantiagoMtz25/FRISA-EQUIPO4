@@ -33,7 +33,7 @@ fun buttonSlider(onSwitchToggled: (Boolean) -> Unit) {
 
         Box(
             modifier = Modifier
-                .height(48.dp) // Set height as you like
+                .height(48.dp)
                 .fillMaxWidth()
                 .clickable {
                     isSwitchChecked = !isSwitchChecked
