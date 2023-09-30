@@ -688,7 +688,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.phoneNumber, onValueChange = { oscViewModel.phoneNumber = it }, label = "Phone Number",
+                    CreateAccountTextField(value = oscViewModel.phoneNumber, onValueChange = { oscViewModel.phoneNumber = it }, keyboardType = KeyboardType.Phone ,label = "Phone Number",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
@@ -696,7 +696,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, label = "Email",
+                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, keyboardType = KeyboardType.Email, label = "Email",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -730,8 +730,7 @@ fun CreateAccount(navController: NavHostController) {
                     )
 
                     Box {
-                        TextField(
-                            label = {Text("Email") },
+                        OutlinedTextField(
                             leadingIcon = {
                                 androidx.compose.material.Icon(
                                     Icons.Default.List,
@@ -739,6 +738,7 @@ fun CreateAccount(navController: NavHostController) {
                                     tint = customLighterRed
                                 )
                             },
+                            enabled = false,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp, bottom = 8.dp),
@@ -749,7 +749,13 @@ fun CreateAccount(navController: NavHostController) {
                                 IconButton(onClick = { expanded = true }) {
                                     Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
                                 }
-                            }
+                            },
+                            colors = TextFieldDefaults.textFieldColors(
+                                cursorColor = customRed,
+                                focusedIndicatorColor = customPink,
+                                unfocusedIndicatorColor = customGray,
+                                focusedLabelColor = customLighterRed
+                            ),
                         )
 
                         DropdownMenu(
@@ -776,8 +782,8 @@ fun CreateAccount(navController: NavHostController) {
                         OutlinedTextField(
                             value = oscViewModel.selectedState,
                             onValueChange = {  },
+                            // readOnly = true,
                             label = { Text("State") },
-                            readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
@@ -920,7 +926,7 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
-                                Text("Fill all fields and ensure passwords match", color = Color.White)
+                                Text("Fill all fields correctly", color = Color.White)
                             }
                         }
 
@@ -939,7 +945,7 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
-                                Text("Thank you! Account created successfully", color = Color.White)
+                                Text("Your submission has been received, if successful you will be reached out.", color = Color.White)
                             }
                         }
                     }

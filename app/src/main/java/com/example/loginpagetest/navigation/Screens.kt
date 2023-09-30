@@ -9,5 +9,6 @@ enum class Screens {
     testScreen,
     favourites,
     aboutapp,
-    inviteUser;
+    inviteUser,
+    accountManager;
 }

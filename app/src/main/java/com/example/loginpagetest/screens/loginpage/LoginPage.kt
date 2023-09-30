@@ -50,13 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
-import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
-import com.example.loginpagetest.viewmodel.UserViewModel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
 
 @Composable
 fun myLoginApp(navController: NavHostController) {
@@ -99,6 +93,8 @@ fun mainLoginPage(navController: NavHostController) {
             mutableStateOf(UserLoginResponse())
         }
         var successfulLogin by rememberSaveable { mutableStateOf(true) }
+
+        var inviteUser by rememberSaveable { mutableStateOf(false) }
 
         // FRISA Logo
         val image: Painter = painterResource(id = R.drawable.frisa)
@@ -177,12 +173,12 @@ fun mainLoginPage(navController: NavHostController) {
                         if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
                             // Admin user login, navigating to admin screen
                             successfulLogin = true
-                            navController.navigate("adminScreen")
+                            navController.navigate("testScreen/${loginResult.isAdmin}")
 
                         } else if (!loginResult.token.isNullOrEmpty()) {
                             // Regular user login, navigating to regular user screen
                             successfulLogin = true
-                            navController.navigate("userScreen")
+                            navController.navigate("testScreen/${loginResult.isAdmin}")
 
                         } else {
                             // Login failed, showing a snack bar
@@ -214,7 +210,8 @@ fun mainLoginPage(navController: NavHostController) {
         ) {
             Button(
                 onClick = {
-                    navController.navigate("inviteUser")
+                    inviteUser = true
+                    navController.navigate("inviteUser/${inviteUser}")
                 },
                 modifier = Modifier.width(145.dp)
             ) {

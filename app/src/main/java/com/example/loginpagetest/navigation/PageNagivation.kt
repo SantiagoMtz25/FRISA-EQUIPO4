@@ -1,10 +1,13 @@
 package com.example.loginpagetest.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.loginpagetest.screens.aboutapp.aboutApp
+import com.example.loginpagetest.screens.accountmanager.accountManager
 import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 import com.example.loginpagetest.screens.loginpage.myLoginApp
 import com.example.loginpagetest.screens.createaccount.CreateAccount
@@ -20,26 +23,44 @@ fun PageNavigation () {
         composable("login") {
             myLoginApp(navController)
         }
-        composable("home") {
+        /*composable("home") {
             OrganizationsCatalogue(navController)
-        }
+        }*/
         composable("create_account") {
             CreateAccount(navController)
         }
-        composable("OSCpage") {
+
+        composable("OSCpage/{inviteUser}",
+            arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
+        ) {
             OSCPage(navController)
         }
-        composable("testScreen") {
+
+        // Main screen will the receive the parameter type in order to load different view components
+        composable("testScreen/{isAdmin}",
+            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
+        ) {
             MainScreen(navController)
         }
-        composable("myfavourites") {
+        composable("myfavourites/{isAdmin}",
+            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
+        ) {
             myFavourites(navController)
         }
-        composable("aboutapp") {
+        composable("aboutapp/{isAdmin}",
+            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
+        ) {
             aboutApp(navController)
         }
-        composable("inviteUser") {
+
+        composable("inviteUser/{inviteUser}",
+            arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
+        ) {
             inviteUser(navController)
+        }
+
+        composable("accountManager") {
+            accountManager(navController)
         }
     }
 }

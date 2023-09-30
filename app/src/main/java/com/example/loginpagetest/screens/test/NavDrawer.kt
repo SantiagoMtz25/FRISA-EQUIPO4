@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 
 @Composable
-fun DrawerContent(content: NavHostController) {
+fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
     val myColor = colorResource(id = R.color.lightred_pink)
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -67,14 +67,39 @@ fun DrawerContent(content: NavHostController) {
                         content.navigate("testScreen")
                     }
             )
+            if (isAdmin) {
+                // Load something else here
+                Text(
+                    text = "My Organization",
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            content.navigate("")
+                        }
+                )
+            } else {
+                Text(
+                    text = "My Favorites",
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            content.navigate("myfavourites")
+                        }
+                )
+            }
+            Divider(modifier = Modifier.padding(horizontal = 16.dp))
             Text(
-                text = "My Favorites",
+                text = "My Account",
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
-                        content.navigate("myfavourites")
+                        content.navigate("accountManager")
                     }
             )
             // Divider
