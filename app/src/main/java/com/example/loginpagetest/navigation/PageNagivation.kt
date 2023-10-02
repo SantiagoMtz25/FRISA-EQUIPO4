@@ -8,11 +8,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.loginpagetest.screens.aboutapp.aboutApp
 import com.example.loginpagetest.screens.accountmanager.accountManager
-import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
 import com.example.loginpagetest.screens.loginpage.myLoginApp
 import com.example.loginpagetest.screens.createaccount.CreateAccount
 import com.example.loginpagetest.screens.favourites.myFavourites
 import com.example.loginpagetest.screens.inviteuser.inviteUser
+import com.example.loginpagetest.screens.myosc.myOSC
 import com.example.loginpagetest.screens.oscpage.OSCPage
 import com.example.loginpagetest.screens.test.MainScreen
 
@@ -59,8 +59,16 @@ fun PageNavigation () {
             inviteUser(navController)
         }
 
-        composable("accountManager") {
+        composable("accountManager/{isAdmin}",
+            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
+        ) {
             accountManager(navController)
+        }
+
+        composable("myOSC/{isAdmin}",
+            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
+        ) {
+            myOSC(navController)
         }
     }
 }

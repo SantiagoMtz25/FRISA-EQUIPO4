@@ -170,7 +170,13 @@ fun mainLoginPage(navController: NavHostController) {
             ) {
                 Button(
                     onClick = {
-                        if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
+                        // while api is not yet used, for testing
+                        successfulLogin = true
+                        loginResult.isAdmin = false
+                        navController.navigate("testScreen/${loginResult.isAdmin}")
+
+
+                        /*if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
                             // Admin user login, navigating to admin screen
                             successfulLogin = true
                             navController.navigate("testScreen/${loginResult.isAdmin}")
@@ -183,7 +189,7 @@ fun mainLoginPage(navController: NavHostController) {
                         } else {
                             // Login failed, showing a snack bar
                             successfulLogin = false
-                        }
+                        }*/
                     },
                     modifier = Modifier.width(100.dp)
                 ) {
