@@ -119,7 +119,11 @@ fun accountManager(navController: NavHostController) {
                         onClick = { areFieldsVisible = !areFieldsVisible },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 16.dp)
+                            .padding(bottom = 16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = customRed,
+                            contentColor = Color.White
+                        )
                     ) {
                         Text("Update Information")
                     }
@@ -262,7 +266,11 @@ fun accountManager(navController: NavHostController) {
                         onClick = { areFieldsVisible = !areFieldsVisible },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 16.dp)
+                            .padding(bottom = 16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = customRed,
+                            contentColor = Color.White
+                        )
                     ) {
                         Text("Update Information")
                     }

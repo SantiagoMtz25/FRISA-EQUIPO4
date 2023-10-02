@@ -25,6 +25,7 @@ import com.example.loginpagetest.R
 @Composable
 fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
     val myColor = colorResource(id = R.color.lightred_pink)
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -76,7 +77,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                         .fillMaxWidth()
                         .padding(16.dp)
                         .clickable {
-                            content.navigate("")
+                            content.navigate("myOSC/${isAdmin}")
                         }
                 )
             } else {
@@ -91,7 +92,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                         }
                 )
             }
-            Divider(modifier = Modifier.padding(horizontal = 16.dp))
+            //Divider(modifier = Modifier.padding(horizontal = 16.dp))
             Text(
                 text = "My Account",
                 fontSize = 18.sp,
@@ -115,7 +116,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                         content.navigate("aboutapp/${isAdmin}")
                     }
             )
-            Divider(modifier = Modifier.padding(horizontal = 16.dp))
+            //Divider(modifier = Modifier.padding(horizontal = 16.dp))
             Text(
                 text = "Log Out",
                 fontSize = 18.sp,

@@ -12,6 +12,7 @@ import com.example.loginpagetest.screens.loginpage.myLoginApp
 import com.example.loginpagetest.screens.createaccount.CreateAccount
 import com.example.loginpagetest.screens.favourites.myFavourites
 import com.example.loginpagetest.screens.inviteuser.inviteUser
+import com.example.loginpagetest.screens.myosc.myOSC
 import com.example.loginpagetest.screens.oscpage.OSCPage
 import com.example.loginpagetest.screens.test.MainScreen
 
@@ -62,6 +63,12 @@ fun PageNavigation () {
             arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
         ) {
             accountManager(navController)
+        }
+
+        composable("myOSC/{isAdmin}",
+            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
+        ) {
+            myOSC(navController)
         }
     }
 }

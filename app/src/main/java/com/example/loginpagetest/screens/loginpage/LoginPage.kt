@@ -172,6 +172,7 @@ fun mainLoginPage(navController: NavHostController) {
                     onClick = {
                         // while api is not yet used, for testing
                         successfulLogin = true
+                        loginResult.isAdmin = false
                         navController.navigate("testScreen/${loginResult.isAdmin}")
 
 
