@@ -1,12 +1,14 @@
 package com.example.loginpagetest.screens.favourites
 
 import android.annotation.SuppressLint
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.homepage.Chip
+import com.example.loginpagetest.screens.myosc.Event
 import com.example.loginpagetest.screens.test.DrawerContent
 import kotlinx.coroutines.launch
 
@@ -103,7 +106,7 @@ fun myFavourites(content: NavHostController) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .background(MaterialTheme.colorScheme.background)
+                .background(color = Color.Transparent)
         ) {
             LazyRow(
                 modifier = Modifier.padding(bottom = 16.dp) // Added bottom padding here
@@ -198,6 +201,53 @@ fun myFavourites(content: NavHostController) {
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Upcoming Events", fontSize = 20.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                fontWeight = FontWeight.Bold
+            )
+
+            val eventsList = listOf(
+                Event("Event 1", "2023-10-01", "This is a short description of Event 1."),
+                Event("Event 2", "2023-11-01", "This is a short description of Event 2."),
+                Event("Event 3", "2023-12-01", "This is a short description of Event 3."),
+                Event("Event 4", "2023-12-01", "This is a short description of Event 4."),
+                Event("Event 5", "2023-12-01", "This is a short description of Event 5.")
+            )
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                LazyColumn {
+                    items(eventsList) { event ->
+                        EventCard(event = event)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EventCard(event: Event) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .height(80.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Text(text = event.title, fontWeight = FontWeight.Bold)
+            Text(text = event.date)
+            Text(text = event.description)
         }
     }
 }
