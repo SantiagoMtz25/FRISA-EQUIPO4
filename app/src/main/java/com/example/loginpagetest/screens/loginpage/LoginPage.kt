@@ -174,8 +174,6 @@ fun mainLoginPage(navController: NavHostController) {
                         successfulLogin = true
                         loginResult.isAdmin = true
                         navController.navigate("testScreen/${loginResult.isAdmin}")
-
-
                         /*if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
                             // Admin user login, navigating to admin screen
                             successfulLogin = true
