@@ -52,6 +52,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
+import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,9 +62,17 @@ fun CreateAccount(navController: NavHostController) {
     val oscViewModel: CreateOSCViewModel = viewModel()
 
     val registerUser: UserViewModel = viewModel()
+    val registerOSC: OrgViewModel = viewModel()
 
     LaunchedEffect(key1 = registerUser.registrationResult) {
         registerUser.registrationResult.collect { result ->
+            if (result != null) {
+                navController.navigate("login")
+            }
+        }
+    }
+    LaunchedEffect(key1 = registerOSC.orgRegisterResult) {
+        registerOSC.orgRegisterResult.collect { result ->
             if (result != null) {
                 navController.navigate("login")
             }
@@ -905,11 +914,18 @@ fun CreateAccount(navController: NavHostController) {
                                 oscViewModel.selectedState.isNotEmpty() &&
                                 oscViewModel.selectedCity.isNotEmpty() &&
                                 oscViewModel.email.isNotEmpty() &&
+                                oscViewModel.webpage.isNotEmpty() &&
                                 oscViewModel.category.isNotEmpty()
 
                             ) {
                                 oscViewModel.showSuccessSnackbar = true
                                 coroutineScope.launch {
+
+                                    registerOSC.addOrganization(
+                                        oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
+                                        oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
+                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category)
+
                                     delay(4000)
                                     navController.navigate("login")
                                     oscViewModel.name = ""

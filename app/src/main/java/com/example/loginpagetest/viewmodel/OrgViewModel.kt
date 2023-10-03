@@ -5,38 +5,54 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.OrgRegisterResponse
-import com.example.loginpagetest.model.UserLogin
-import com.example.loginpagetest.model.UserLoginResponse
-import com.example.loginpagetest.model.UserProtectedResponse
-import com.example.loginpagetest.model.UserRegister
-import com.example.loginpagetest.model.UserRegistrationResponse
+import com.example.loginpagetest.screens.homepage.Category
 import com.example.loginpagetest.service.OrgService
-import com.example.loginpagetest.service.UserService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class OrgViewModel(private val orgService: OrgService) : ViewModel() {
 
     private val _orgRegisterResult = MutableStateFlow<OrgRegisterResponse?>(null)
-    val orgRegisterResult: StateFlow<OrgRegisterResponse?>
-        get() = _orgRegisterResult
+    val orgRegisterResult: StateFlow<OrgRegisterResponse?> = _orgRegisterResult
 
-    fun addOrganization(token: String, org: OrgRegister) {
+    fun addOrganization(
+        name: String,
+        adminName: String,
+        rfc: String,
+        description: String,
+        phoneNumber: String,
+        state: String,
+        city: String,
+        email: String,
+        webpage: String,
+        category: String
+    ) {
 
         viewModelScope.launch {
 
-            var response: OrgRegisterResponse? = null
+            val osc = OrgRegister(name, adminName, rfc, description, phoneNumber, state, city, email, webpage, category)
 
-            try {
-
-                response = orgService.addOrg(token, org)
+            //var response: OrgRegisterResponse? = null
+            /*try {
+                response = orgService.addOrg(name, adminName, rfc, description, phoneNumber, state, city, email, webpage)
                 _orgRegisterResult.value = response
                 response.message?.let { Log.d("RESPONSE", it) }
 
             } catch (e: Exception) {
                 Log.d("RESPONSE", e.localizedMessage)
+            }*/
+            viewModelScope.launch {
+                var response: OrgRegisterResponse
+                try {
+                    response = orgService.addOrg(osc)
+                    _orgRegisterResult.value = response
+                } catch (e: Exception) {
+
+                    var errorResponse = OrgRegisterResponse("")
+                    errorResponse.message = e.localizedMessage
+                    _orgRegisterResult.value = errorResponse
+                }
             }
         }
     }

@@ -16,13 +16,13 @@ import retrofit2.HttpException
 
 class UserViewModel(private val userService: UserService) : ViewModel() {
 
+    // Normal user registration result
     private val _registrationResult = MutableStateFlow<UserRegistrationResponse?>(null)
     val registrationResult: StateFlow<UserRegistrationResponse?> = _registrationResult
 
-
+    // Login result
     private val _loginResult = MutableStateFlow<UserLoginResponse?>(null)
     val loginResult: StateFlow<UserLoginResponse?> = _loginResult
-
 
     private val _protectedResult = MutableStateFlow<UserProtectedResponse?>(null)
     val protectedResult: StateFlow<UserProtectedResponse?>
@@ -53,19 +53,6 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                 _registrationResult.value = errorResponse
             }
         }
-    }
-
-    fun addOSC (
-        name: String,
-        lastname: String,
-        email: String,
-        password: String,
-        confirmPassword: String,
-        phoneNumber: String,
-        state: String,
-        city: String
-    ) {
-
     }
 
     // for our app for the login functionality we'll only use email and password
