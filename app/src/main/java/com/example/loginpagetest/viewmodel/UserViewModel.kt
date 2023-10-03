@@ -1,9 +1,7 @@
 package com.example.loginpagetest.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
@@ -21,9 +19,10 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     private val _registrationResult = MutableStateFlow<UserRegistrationResponse?>(null)
     val registrationResult: StateFlow<UserRegistrationResponse?> = _registrationResult
 
+
     private val _loginResult = MutableStateFlow<UserLoginResponse?>(null)
-    val loginResult: StateFlow<UserLoginResponse?>
-        get() = _loginResult
+    val loginResult: StateFlow<UserLoginResponse?> = _loginResult
+
 
     private val _protectedResult = MutableStateFlow<UserProtectedResponse?>(null)
     val protectedResult: StateFlow<UserProtectedResponse?>
@@ -36,7 +35,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         email: String,
         password: String,
         confirmPassword: String,
-        phoneNumber: Int,
+        phoneNumber: String,
         state: String,
         city: String
     ) {
@@ -54,6 +53,19 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                 _registrationResult.value = errorResponse
             }
         }
+    }
+
+    fun addOSC (
+        name: String,
+        lastname: String,
+        email: String,
+        password: String,
+        confirmPassword: String,
+        phoneNumber: String,
+        state: String,
+        city: String
+    ) {
+
     }
 
     // for our app for the login functionality we'll only use email and password

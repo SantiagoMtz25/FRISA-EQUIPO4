@@ -47,10 +47,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
+import com.example.loginpagetest.viewmodel.UserViewModel
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun myLoginApp(navController: NavHostController) {
@@ -83,6 +86,9 @@ fun mainLoginPage(navController: NavHostController) {
 
         val scrollState = rememberScrollState()
 
+        // Login POST
+        val login: UserViewModel = viewModel()
+
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
@@ -95,6 +101,27 @@ fun mainLoginPage(navController: NavHostController) {
         var successfulLogin by rememberSaveable { mutableStateOf(true) }
 
         var inviteUser by rememberSaveable { mutableStateOf(false) }
+
+        LaunchedEffect(key1 = login.loginResult) {
+            login.loginResult.collect { result ->
+                if (result != null) {
+                    if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
+                        // Admin user login, navigating to admin screen
+                        successfulLogin = true
+                        navController.navigate("testScreen/${loginResult.isAdmin}")
+
+                    } else if (!loginResult.token.isNullOrEmpty()) {
+                        // Regular user login, navigating to regular user screen
+                        successfulLogin = true
+                        navController.navigate("testScreen/${loginResult.isAdmin}")
+
+                    } else {
+                        // Login failed, showing a snack bar
+                        successfulLogin = false
+                    }
+                }
+            }
+        }
 
         // FRISA Logo
         val image: Painter = painterResource(id = R.drawable.frisa)
@@ -170,24 +197,10 @@ fun mainLoginPage(navController: NavHostController) {
             ) {
                 Button(
                     onClick = {
-                        // while api is not yet used, for testing
-                        successfulLogin = true
-                        loginResult.isAdmin = true
-                        navController.navigate("testScreen/${loginResult.isAdmin}")
-                        /*if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
-                            // Admin user login, navigating to admin screen
-                            successfulLogin = true
-                            navController.navigate("testScreen/${loginResult.isAdmin}")
-
-                        } else if (!loginResult.token.isNullOrEmpty()) {
-                            // Regular user login, navigating to regular user screen
-                            successfulLogin = true
-                            navController.navigate("testScreen/${loginResult.isAdmin}")
-
-                        } else {
-                            // Login failed, showing a snack bar
-                            successfulLogin = false
-                        }*/
+                        login.loginUser(email, password)
+                        /*successfulLogin = true
+                        loginResult.isAdmin = false
+                        navController.navigate("testScreen/${loginResult.isAdmin}")*/
                     },
                     modifier = Modifier.width(100.dp)
                 ) {

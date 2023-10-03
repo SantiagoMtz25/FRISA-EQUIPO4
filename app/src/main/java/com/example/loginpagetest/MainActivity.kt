@@ -11,6 +11,9 @@ import com.example.loginpagetest.navigation.PageNavigation
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 
 class MainActivity : ComponentActivity() {
+
+    // Add the token checks to avoid login screen
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -6,7 +6,7 @@ data class UserRegister(
     val email: String,
     val password: String,
     val confirmPassword: String,
-    val phoneNumber: Int,
+    val phoneNumber: String,
     val state: String,
     val city: String
 )
