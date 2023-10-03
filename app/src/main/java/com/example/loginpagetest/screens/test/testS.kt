@@ -61,6 +61,6 @@ fun MainScreen(content: NavHostController) {
             DrawerContent(content, isAdmin)
         }
     ) {
-        OrganizationsCatalogue(content, inviteUser = false)
+        OrganizationsCatalogue(content, inviteUser = false, isAdmin)
     }
 }

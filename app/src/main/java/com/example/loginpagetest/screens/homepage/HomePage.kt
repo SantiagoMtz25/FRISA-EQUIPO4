@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.List
@@ -30,11 +31,12 @@ import androidx.compose.ui.window.Popup
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.shadow
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean) {
+fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAdmin: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
     val customLighterRed = colorResource(id = R.color.almostlogored)
@@ -178,7 +180,11 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean) {
                                         .background(if (isSelected) customPink else Color.Transparent)
                                         .padding(2.dp)
                                         .fillMaxWidth()
-                                        .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
+                                        .border(
+                                            width = 1.dp,
+                                            color = Color.Gray,
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
                                 )
                             }
                         }
@@ -257,27 +263,73 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean) {
                         )
                     }
                 }
-                if (selectedCategory == category) {
-                    organizationsMap[category]?.forEach { organization ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
-                                .background(Color.Transparent)
-                                .clickable {
-                                    content.navigate("OSCpage/${inviteUser}")
+                if (!isAdmin) {
+                    if (selectedCategory == category) {
+                        organizationsMap[category]?.forEach { organization ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
+                                    .background(Color.Transparent)
+                                    .clickable {
+                                        content.navigate("OSCpage/${inviteUser}")
+                                    }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = organization)
                                 }
-                        ) {
-                            Text(
-                                text = organization,
-                                modifier = Modifier.padding(16.dp)
-                            )
+                            }
+                        }
+                    }
+                } else {
+                    if (selectedCategory == category) {
+                        organizationsMap[category]?.forEach { organization ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
+                                    .background(Color.Transparent)
+                                    .clickable {
+                                        content.navigate("OSCpage/${inviteUser}")
+                                    }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = organization)
+                                    ClickableIcon()
+                                }
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun ClickableIcon() {
+    var isClicked by remember { mutableStateOf(false) }
+
+    Icon(
+        tint = if (isClicked) Color.Yellow else Color.Gray,
+        imageVector = Icons.Default.Star,
+        contentDescription = null,
+        modifier = Modifier.clickable {
+            isClicked = !isClicked
+        }
+    )
 }
 
 @Composable
