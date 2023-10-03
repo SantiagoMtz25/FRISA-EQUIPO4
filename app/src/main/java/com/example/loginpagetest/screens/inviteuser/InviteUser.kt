@@ -12,6 +12,6 @@ fun inviteUser (navController: NavHostController) {
         ?.arguments?.getBoolean("inviteUser") ?: false
     Column {
         CustomTopBar(title = "Welcome", navController = navController, screen = "login")
-        OrganizationsCatalogue(content = navController, inviteUser)
+        OrganizationsCatalogue(content = navController, inviteUser, isAdmin = false)
     }
 }
