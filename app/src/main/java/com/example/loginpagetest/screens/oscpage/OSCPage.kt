@@ -74,7 +74,7 @@ fun OSCPage(content: NavHostController) {
 
     val lastRankingTime = prefs.getLong(LAST_RANKING_KEY, 0L)
     val currentTime = System.currentTimeMillis()
-    val isAllowedToRank = (currentTime - lastRankingTime) > 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+    val isAllowedToRank = (currentTime - lastRankingTime) > 24 * 60 * 60 * 1000
 
     Column {
         CustomTopBar2(title = "OSC Page", navController = content)
