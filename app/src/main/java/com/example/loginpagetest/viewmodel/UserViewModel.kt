@@ -98,6 +98,10 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
+    fun addFavourite () {
+
+    }
+
     fun testProtectedRequest(token : String) {
 
         viewModelScope.launch {

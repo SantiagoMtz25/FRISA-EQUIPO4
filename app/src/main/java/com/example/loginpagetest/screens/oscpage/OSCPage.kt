@@ -46,6 +46,9 @@ fun OSCPage(content: NavHostController) {
     var starFilter by remember { mutableIntStateOf(0) }
     val inviteUser: Boolean = content.currentBackStackEntry
         ?.arguments?.getBoolean("inviteUser") ?: false
+    val isAdmin: Boolean = content.currentBackStackEntry
+        ?.arguments?.getBoolean("isAdmin") ?: false
+
     Column {
         CustomTopBar2(title = "OSC Page", navController = content)
 
@@ -234,7 +237,8 @@ fun OSCPage(content: NavHostController) {
                 }*/
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
-                if (!inviteUser) {
+                // Check this logic so that invite users and osc admin wont have the option to rank osc's
+                if (!inviteUser && !isAdmin) {
                     Text("Rank the OSC:")
                     Row(
                         modifier = Modifier.fillMaxWidth(),

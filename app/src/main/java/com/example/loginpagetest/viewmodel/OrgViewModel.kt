@@ -1,11 +1,9 @@
 package com.example.loginpagetest.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.OrgRegisterResponse
-import com.example.loginpagetest.screens.homepage.Category
 import com.example.loginpagetest.service.OrgService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

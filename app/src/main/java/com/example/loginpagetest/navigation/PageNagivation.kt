@@ -30,8 +30,11 @@ fun PageNavigation () {
             CreateAccount(navController)
         }
 
-        composable("OSCpage/{inviteUser}",
-            arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
+        composable("OSCpage/{inviteUser}/{isAdmin}",
+            arguments = listOf(
+                navArgument("inviteUser") { type = NavType.BoolType },
+                navArgument("isAdmin") { type = NavType.BoolType }
+            )
         ) {
             OSCPage(navController)
         }

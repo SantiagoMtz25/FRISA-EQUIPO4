@@ -1,5 +1,7 @@
 package com.example.loginpagetest.service
 
+import com.example.loginpagetest.model.UserFavourites
+import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
 import com.example.loginpagetest.model.UserProtectedResponse
@@ -33,6 +35,9 @@ interface UserService {
 
     @POST("login")
     suspend fun loginUser(@Body user: UserLogin): UserLoginResponse
+
+    @GET("addfavourite")
+    suspend fun addFavourite(@Body userFav: UserFavourites) : UserFavouritesResponse
 
     @GET("protected")
     //@Headers("Authorization: {token}")

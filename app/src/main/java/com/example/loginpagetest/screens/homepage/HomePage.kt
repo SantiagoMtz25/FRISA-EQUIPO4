@@ -296,7 +296,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/${inviteUser}")
+                                        content.navigate("OSCpage/${inviteUser}/${isAdmin}")
                                     }
                             ) {
                                 Row(
