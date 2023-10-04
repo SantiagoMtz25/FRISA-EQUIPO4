@@ -1,5 +1,7 @@
 package com.example.loginpagetest.service
 
+import com.example.loginpagetest.model.OrgGrade
+import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.OrgRegisterResponse
 import retrofit2.Retrofit
@@ -20,6 +22,7 @@ interface OrgService {
     @POST("add")
     suspend fun addOrg(@Body osc: OrgRegister) : OrgRegisterResponse
 
-
+    @POST("addgrade")
+    suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
 
 }

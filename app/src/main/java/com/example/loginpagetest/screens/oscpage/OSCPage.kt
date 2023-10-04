@@ -35,9 +35,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.navigation.CustomTopBar2
+import com.example.loginpagetest.viewmodel.OrgViewModel
+
+private const val PREFS_NAME = "StarRankingPrefs"
+private const val LAST_RANKING_KEY = "LastRankingTime"
 
 @Composable
 fun OSCPage(content: NavHostController) {
@@ -48,6 +53,28 @@ fun OSCPage(content: NavHostController) {
         ?.arguments?.getBoolean("inviteUser") ?: false
     val isAdmin: Boolean = content.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
+
+    val osc: OrgViewModel = viewModel()
+
+    LaunchedEffect(key1 = osc.orgAddGradeResult) {
+        osc.orgAddGradeResult.collect { result ->
+            if (result != null) {
+                // maybe output grade has been sent, idk
+            }
+        }
+    }
+
+    var selectedStar by rememberSaveable { mutableIntStateOf(0) }
+    LaunchedEffect(selectedStar) {
+        osc.addGrade(selectedStar.toFloat())
+    }
+
+    val context = LocalContext.current
+    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    val lastRankingTime = prefs.getLong(LAST_RANKING_KEY, 0L)
+    val currentTime = System.currentTimeMillis()
+    val isAllowedToRank = (currentTime - lastRankingTime) > 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
     Column {
         CustomTopBar2(title = "OSC Page", navController = content)
@@ -238,25 +265,31 @@ fun OSCPage(content: NavHostController) {
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
                 // Check this logic so that invite users and osc admin wont have the option to rank osc's
-                if (!inviteUser && !isAdmin) {
-                    Text("Rank the OSC:")
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        var selectedStar by rememberSaveable { mutableIntStateOf(0) }
-                        (1..5).forEach { index ->
-                            Icon(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = "Star $index",
-                                tint = if (selectedStar >= index) customRed else customGray,
-                                modifier = Modifier
-                                    .clickable { selectedStar = index }
-                                    .padding(7.dp)
-                                    .size(40.dp),
-                            )
+                if (isAllowedToRank) {
+                    if (!inviteUser && !isAdmin) {
+                        Text("Rank the OSC:")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            (1..5).forEach { index ->
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = "Star $index",
+                                    tint = if (selectedStar >= index) customRed else customGray,
+                                    modifier = Modifier
+                                        .clickable { selectedStar = index }
+                                        .padding(7.dp)
+                                        .size(40.dp),
+                                )
+                            }
                         }
                     }
+                    val editor = prefs.edit()
+                    editor.putLong(LAST_RANKING_KEY, currentTime)
+                    editor.apply()
+                } else {
+                    // render snack-bar to indicate user has to wait at least 24 to rank again
                 }
             }
         }

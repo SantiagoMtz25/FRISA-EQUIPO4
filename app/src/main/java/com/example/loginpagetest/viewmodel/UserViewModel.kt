@@ -3,6 +3,8 @@ package com.example.loginpagetest.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.loginpagetest.model.UserFavourites
+import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
 import com.example.loginpagetest.model.UserProtectedResponse
@@ -24,9 +26,13 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     private val _loginResult = MutableStateFlow<UserLoginResponse?>(null)
     val loginResult: StateFlow<UserLoginResponse?> = _loginResult
 
+    // Add a favourite, called when the OSC in the catalogue star is clicked
+    private val _addFavouriteResult = MutableStateFlow<UserFavouritesResponse?>(null)
+    val addFavouriteResult: MutableStateFlow<UserFavouritesResponse?> = _addFavouriteResult
+
+
     private val _protectedResult = MutableStateFlow<UserProtectedResponse?>(null)
-    val protectedResult: StateFlow<UserProtectedResponse?>
-        get() = _protectedResult
+    val protectedResult: StateFlow<UserProtectedResponse?> = _protectedResult
 
     // is this like creating account?
     fun addUser(
@@ -98,8 +104,26 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun addFavourite () {
+    fun addFavourite (
+        token: String?,
+        name: String,
+        category: String
+    ) {
+        val addedosc = UserFavourites(token, name, category)
 
+        viewModelScope.launch {
+            var response: UserFavouritesResponse
+
+            try {
+                response = userService.addFavourite(addedosc)
+                _addFavouriteResult.value = response
+            } catch (e: Exception) {
+
+                var errorResponse = UserFavouritesResponse("")
+                errorResponse.message = e.localizedMessage
+                _addFavouriteResult.value = errorResponse
+            }
+        }
     }
 
     fun testProtectedRequest(token : String) {

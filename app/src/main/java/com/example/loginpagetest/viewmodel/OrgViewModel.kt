@@ -2,6 +2,8 @@ package com.example.loginpagetest.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.loginpagetest.model.OrgGrade
+import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.OrgRegisterResponse
 import com.example.loginpagetest.service.OrgService
@@ -13,6 +15,28 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
 
     private val _orgRegisterResult = MutableStateFlow<OrgRegisterResponse?>(null)
     val orgRegisterResult: StateFlow<OrgRegisterResponse?> = _orgRegisterResult
+
+    private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
+    val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
+
+    fun addGrade (
+        average: Float
+    ) {
+        val oscgrade = OrgGrade(average)
+
+        viewModelScope.launch {
+            var response: OrgGradeResponse
+            try {
+                response = orgService.addGrade(oscgrade)
+                _orgAddGradeResult.value = response
+            } catch (e: Exception) {
+
+                var errorResponse = OrgGradeResponse("")
+                errorResponse.message = e.localizedMessage
+                _orgAddGradeResult.value = errorResponse
+            }
+        }
+    }
 
     fun addOrganization(
         name: String,

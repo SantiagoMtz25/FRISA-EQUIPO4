@@ -33,6 +33,8 @@ import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.shadow
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +63,16 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
         it.contains(searchQuery, ignoreCase = true)
     }.sortedBy { it != searchQuery }
     var starFilter by remember { mutableIntStateOf(0) }
+
+    val user: UserViewModel = viewModel()
+
+    LaunchedEffect(key1 = user.addFavouriteResult){
+        user.addFavouriteResult.collect { result ->
+            if (result != null) {
+                content.navigate("OSCpage/${inviteUser}/${isAdmin}")
+            }
+        }
+    }
 
     Column {
         Row(
@@ -296,7 +308,9 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/${inviteUser}/${isAdmin}")
+
+                                        user.addFavourite("", organization,"$selectedCategory")
+
                                     }
                             ) {
                                 Row(
