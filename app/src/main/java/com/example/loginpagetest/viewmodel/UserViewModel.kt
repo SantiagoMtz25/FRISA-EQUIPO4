@@ -14,6 +14,7 @@ import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.model.UserUpdateAccount
 import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.service.UserService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +40,9 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
 
     private val _updateAccountResult = MutableStateFlow<UserUpdateAccountResponse?>(null)
     val updateAccountResult: StateFlow<UserUpdateAccountResponse?> = _updateAccountResult
+
+    private val _getUserFavoriteOrgsResult = MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
+    val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> = _getUserFavoriteOrgsResult
 
     // is this like creating account?
     fun addUser(
@@ -173,6 +177,21 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                 var errorResponse = UserUpdateAccountResponse("")
                 errorResponse.message = e.localizedMessage
                 _updateAccountResult.value = errorResponse
+            }
+        }
+    }
+
+    fun getUserFavoriteOrganization(token: String) {
+        viewModelScope.launch {
+            val response: GetUserFavoriteOrganizationsResponse
+            try {
+                response = userService.getUserFavoriteOrganization(token)
+                _getUserFavoriteOrgsResult.value = response
+            } catch (e: Exception) {
+
+                val errorResponse = e.localizedMessage
+                Log.d("ERROR-API", errorResponse)
+                //_getUserFavoriteOrgsResult.value = errorResponse
             }
         }
     }

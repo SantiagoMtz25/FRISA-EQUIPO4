@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,11 +50,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
+import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.screens.homepage.Chip
 import com.example.loginpagetest.screens.myosc.Event
 import com.example.loginpagetest.screens.test.DrawerContent
+import com.example.loginpagetest.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
@@ -65,6 +69,33 @@ fun myFavourites(content: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
+
+    val userViewModel: UserViewModel = viewModel()
+
+    var eventsList = listOf(
+        Event("Event 1", "2023-10-01", "Salud","This is a short description of Event 1."),
+        Event("Event 2", "2023-11-01", "Educación","This is a short description of Event 2."),
+        Event("Event 3", "2023-12-01", "Derechos humanos","This is a short description of Event 3."),
+        Event("Event 4", "2023-12-01", "Transporte Público","This is a short description of Event 4."),
+        Event("Event 5", "2023-12-01", "Medio Ambiente","This is a short description of Event 5.")
+    )
+    val filteredEvents by derivedStateOf {
+        if (searchQuery.isEmpty()) eventsList else eventsList.filter { it.category == searchQuery }
+    }
+    val Organizations = remember {
+        mutableStateOf(GetUserFavoriteOrganizationsResponse())
+    }
+
+    LaunchedEffect(key1 = userViewModel.getUserFavoriteOrgsResult) {
+        userViewModel.getUserFavoriteOrgsResult.collect { result ->
+            if (result != null) {
+                // collect the list to a variable to then use it
+                val organizationsResponse = GetUserFavoriteOrganizationsResponse()
+                organizationsResponse.addAll(result)
+                Organizations.value = organizationsResponse
+            }
+        }
+    }
 
     val isAdmin: Boolean = content.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
@@ -209,17 +240,6 @@ fun myFavourites(content: NavHostController) {
                     .align(Alignment.CenterHorizontally),
                 fontWeight = FontWeight.Bold
             )
-
-            val eventsList = listOf(
-                Event("Event 1", "2023-10-01", "Salud","This is a short description of Event 1."),
-                Event("Event 2", "2023-11-01", "Educación","This is a short description of Event 2."),
-                Event("Event 3", "2023-12-01", "Derechos humanos","This is a short description of Event 3."),
-                Event("Event 4", "2023-12-01", "Transporte Público","This is a short description of Event 4."),
-                Event("Event 5", "2023-12-01", "Medio Ambiente","This is a short description of Event 5.")
-            )
-            val filteredEvents by derivedStateOf {
-                if (searchQuery.isEmpty()) eventsList else eventsList.filter { it.category == searchQuery }
-            }
 
             Card(
                 modifier = Modifier

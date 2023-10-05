@@ -10,6 +10,7 @@ import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.model.UserUpdateAccount
 import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -47,5 +48,8 @@ interface UserService {
     @POST("userUpdateAccount")
     suspend fun updateAccount(@Body userUpdate: UserUpdateAccount) : UserUpdateAccountResponse
 
-
+    @GET("getUserFavoriteOrganizations/")
+    suspend fun getUserFavoriteOrganization(
+        @Header("Authorization") token: String
+    ): GetUserFavoriteOrganizationsResponse
 }
