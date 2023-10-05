@@ -4,9 +4,13 @@ import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.OrgRegisterResponse
+import com.example.loginpagetest.model.OrgUpdateAccount
+import com.example.loginpagetest.model.OrgUpdateAccountResponse
+import com.example.loginpagetest.model.getoscaverage.OrgAverageResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface OrgService {
@@ -25,4 +29,9 @@ interface OrgService {
     @POST("addgrade")
     suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
 
+    @POST("orgUpdateAccount")
+    suspend fun updateAccount(@Body orgUpdate: OrgUpdateAccount) : OrgUpdateAccountResponse
+
+    @GET("oscAverage")
+    suspend fun getAverage(@Body average: String?) : OrgAverageResponse
 }

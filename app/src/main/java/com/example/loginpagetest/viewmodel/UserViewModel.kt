@@ -3,6 +3,7 @@ package com.example.loginpagetest.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavourites
@@ -11,6 +12,8 @@ import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
 import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
+import com.example.loginpagetest.model.UserUpdateAccount
+import com.example.loginpagetest.model.UserUpdateAccountResponse
 import com.example.loginpagetest.service.UserService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,10 +32,13 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
 
     // Add a favourite, called when the OSC in the catalogue star is clicked
     private val _addFavouriteResult = MutableStateFlow<UserFavouritesResponse?>(null)
-    val addFavouriteResult: MutableStateFlow<UserFavouritesResponse?> = _addFavouriteResult
+    val addFavouriteResult: StateFlow<UserFavouritesResponse?> = _addFavouriteResult
 
     private val _removeFavouriteResult = MutableStateFlow<UserFavToDeleteResponse?>(null)
-    val removeFavouriteResult: MutableStateFlow<UserFavToDeleteResponse?> = _removeFavouriteResult
+    val removeFavouriteResult: StateFlow<UserFavToDeleteResponse?> = _removeFavouriteResult
+
+    private val _updateAccountResult = MutableStateFlow<UserUpdateAccountResponse?>(null)
+    val updateAccountResult: StateFlow<UserUpdateAccountResponse?> = _updateAccountResult
 
     // is this like creating account?
     fun addUser(
@@ -147,8 +153,29 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
+    fun userUpdateAccount (
+        token: String? = "",
+        state: String,
+        city: String,
+        phoneNumber: String,
+        password: String,
+        confirmPassword: String
+    ) {
+        val userUpdate = UserUpdateAccount(token, state, city, phoneNumber, password, confirmPassword)
 
+        viewModelScope.launch {
+            var response: UserUpdateAccountResponse
 
+            try {
+                response = userService.updateAccount(userUpdate)
+                _updateAccountResult.value = response
+            } catch (e: Exception) {
+                var errorResponse = UserUpdateAccountResponse("")
+                errorResponse.message = e.localizedMessage
+                _updateAccountResult.value = errorResponse
+            }
+        }
+    }
 }
 
 

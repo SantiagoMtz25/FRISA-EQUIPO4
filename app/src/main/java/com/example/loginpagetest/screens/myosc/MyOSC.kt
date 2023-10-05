@@ -58,6 +58,8 @@ fun myOSC (navController: NavHostController) {
 
     var average by remember { mutableFloatStateOf(2.5f) }
 
+
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {

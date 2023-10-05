@@ -8,6 +8,8 @@ import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
 import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
+import com.example.loginpagetest.model.UserUpdateAccount
+import com.example.loginpagetest.model.UserUpdateAccountResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -36,11 +38,14 @@ interface UserService {
     @POST("login")
     suspend fun loginUser(@Body user: UserLogin): UserLoginResponse
 
-    @GET("addfavourite")
+    @POST("addfavourite")
     suspend fun addFavourite(@Body userFav: UserFavourites) : UserFavouritesResponse
 
     @POST("removeFavourite")
     suspend fun removeFavourite(@Body userFavRemove: UserFavToDelete) : UserFavToDeleteResponse
+
+    @POST("userUpdateAccount")
+    suspend fun updateAccount(@Body userUpdate: UserUpdateAccount) : UserUpdateAccountResponse
 
 
 }

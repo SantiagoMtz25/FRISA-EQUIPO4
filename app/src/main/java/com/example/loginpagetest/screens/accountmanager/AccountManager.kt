@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.loginpagetest.screens.createaccount.CreateAccountTextField
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
+import com.example.loginpagetest.viewmodel.OrgViewModel
+import com.example.loginpagetest.viewmodel.UserViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -65,6 +68,24 @@ fun accountManager(navController: NavHostController) {
     val viewModel: CreateAccountViewModel = viewModel()
     val oscViewModel : CreateOSCViewModel = viewModel()
     var areFieldsVisible by rememberSaveable { mutableStateOf(false) }
+
+    val userVM: UserViewModel = viewModel()
+    val orgVM: OrgViewModel = viewModel()
+
+    LaunchedEffect(key1 = userVM.updateAccountResult) {
+        userVM.updateAccountResult.collect { result ->
+            if (result != null) {
+                // message of account updated, do not allow user to update every  single time
+            }
+        }
+    }
+    LaunchedEffect(key1 = orgVM.updateAccountResult) {
+        orgVM.updateAccountResult.collect { result ->
+            if (result != null) {
+                // same as the previous one
+            }
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -134,7 +155,9 @@ fun accountManager(navController: NavHostController) {
                                 .fillMaxWidth()
                         ) {
                             Column (
-                                modifier = Modifier.verticalScroll(rememberScrollState()).padding(16.dp)
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(16.dp)
                             ) {
                                 CreateAccountTextField(value = oscViewModel.selectedState,
                                     onValueChange = { oscViewModel.selectedState = it },
@@ -221,6 +244,18 @@ fun accountManager(navController: NavHostController) {
                                     Button(
                                         onClick = {
                                             if (viewModel.password == viewModel.confirmPassword) {
+
+                                                orgVM.orgUpdateAccount(
+                                                    "",
+                                                    oscViewModel.selectedState,
+                                                    oscViewModel.selectedCity,
+                                                    oscViewModel.phoneNumber,
+                                                    oscViewModel.description,
+                                                    oscViewModel.rfc,
+                                                    oscViewModel.webpage,
+                                                    oscViewModel.category
+                                                )
+
                                                 // Handle save changes click event
                                             } else {
                                                 // Passwords do not match, show an error message
@@ -281,7 +316,9 @@ fun accountManager(navController: NavHostController) {
                                 .fillMaxWidth()
                         ) {
                             Column (
-                                modifier = Modifier.verticalScroll(rememberScrollState()).padding(16.dp)
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(16.dp)
                             ) {
                                 CreateAccountTextField(value = viewModel.selectedState,
                                     onValueChange = { viewModel.selectedState = it },
@@ -347,6 +384,15 @@ fun accountManager(navController: NavHostController) {
                                         onClick = {
                                             if (viewModel.password == viewModel.confirmPassword) {
                                                 // Handle save changes click event
+                                                userVM.userUpdateAccount(
+                                                    "",
+                                                    viewModel.selectedState,
+                                                    viewModel.selectedCity,
+                                                    viewModel.phoneNumber,
+                                                    viewModel.password,
+                                                    viewModel.confirmPassword
+                                                )
+
                                             } else {
                                                 // Passwords do not match, show an error message
                                             }
