@@ -31,12 +31,13 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(false)
             }
 
-            /*LaunchedEffect(appViewModel.isUserLoggedIn()) {
+            LaunchedEffect(appViewModel.isUserLoggedIn()) {
                 delay(2000)
                 appViewModel.isInitialized.collect { result ->
                     configLoaded.value = result
+
                 }
-            }*/
+            }
 
             LoginPageTestTheme {
                 // A surface container using the 'background' color from the theme
@@ -44,8 +45,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PageNavigation()
-
+                    PageNavigation(tokenResult = configLoaded.value)
                 }
             }
         }

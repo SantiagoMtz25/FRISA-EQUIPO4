@@ -64,16 +64,6 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
     }.sortedBy { it != searchQuery }
     var starFilter by remember { mutableIntStateOf(0) }
 
-    val user: UserViewModel = viewModel()
-
-    LaunchedEffect(key1 = user.addFavouriteResult){
-        user.addFavouriteResult.collect { result ->
-            if (result != null) {
-                content.navigate("OSCpage/${inviteUser}/${isAdmin}")
-            }
-        }
-    }
-
     Column {
         Row(
             modifier = Modifier
@@ -284,7 +274,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/${inviteUser}")
+                                        content.navigate("OSCpage/${inviteUser}/${false}/${organization}")
                                     }
                             ) {
                                 Row(
@@ -309,7 +299,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .background(Color.Transparent)
                                     .clickable {
 
-                                        user.addFavourite("", organization,"$selectedCategory")
+                                        content.navigate("OSCpage/${inviteUser}/${false}/${organization}")
 
                                     }
                             ) {
@@ -321,7 +311,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(text = organization)
-                                    ClickableIcon()
+                                    ClickableIcon("${organization}", "${category}")
                                 }
                             }
                         }
@@ -333,8 +323,18 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
 }
 
 @Composable
-fun ClickableIcon() {
+fun ClickableIcon(organization: String, selectedCategory: String) {
     var isClicked by remember { mutableStateOf(false) }
+
+    val user: UserViewModel = viewModel()
+
+    LaunchedEffect(key1 = user.addFavouriteResult){
+        user.addFavouriteResult.collect { result ->
+            if (result != null) {
+                // Maybe add a snackbar to says that organization was added to favourites
+            }
+        }
+    }
 
     Icon(
         tint = if (isClicked) Color.Yellow else Color.Gray,
@@ -342,6 +342,12 @@ fun ClickableIcon() {
         contentDescription = null,
         modifier = Modifier.clickable {
             isClicked = !isClicked
+            // according to logic of start being clicked or unclicked
+            if (isClicked) {
+                user.addFavourite("", organization,"$selectedCategory")
+            } else {
+                user.removeFavourite("", organization)
+            }
         }
     )
 }

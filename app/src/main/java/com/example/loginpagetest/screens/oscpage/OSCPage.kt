@@ -53,6 +53,8 @@ fun OSCPage(content: NavHostController) {
         ?.arguments?.getBoolean("inviteUser") ?: false
     val isAdmin: Boolean = content.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
+    val organization: String = content.currentBackStackEntry
+        ?.arguments?.getString("organization") ?: ""
 
     val osc: OrgViewModel = viewModel()
 
@@ -66,7 +68,7 @@ fun OSCPage(content: NavHostController) {
 
     var selectedStar by rememberSaveable { mutableIntStateOf(0) }
     LaunchedEffect(selectedStar) {
-        osc.addGrade(selectedStar.toFloat())
+        osc.addGrade(organization, selectedStar.toFloat())
     }
 
     val context = LocalContext.current

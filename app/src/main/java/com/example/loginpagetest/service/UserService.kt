@@ -1,10 +1,11 @@
 package com.example.loginpagetest.service
 
+import com.example.loginpagetest.model.UserFavToDelete
+import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavourites
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
-import com.example.loginpagetest.model.UserProtectedResponse
 import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import retrofit2.Retrofit
@@ -12,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 
 /* This code defines a UserService interface,
@@ -39,8 +39,8 @@ interface UserService {
     @GET("addfavourite")
     suspend fun addFavourite(@Body userFav: UserFavourites) : UserFavouritesResponse
 
-    @GET("protected")
-    //@Headers("Authorization: {token}")
-    suspend fun protectedRoute(@Header("Authorization") token: String) : UserProtectedResponse
+    @POST("removeFavourite")
+    suspend fun removeFavourite(@Body userFavRemove: UserFavToDelete) : UserFavToDeleteResponse
+
 
 }

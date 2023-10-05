@@ -20,9 +20,10 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
     val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
 
     fun addGrade (
+        name: String,
         average: Float
     ) {
-        val oscgrade = OrgGrade(average)
+        val oscgrade = OrgGrade(name, average)
 
         viewModelScope.launch {
             var response: OrgGradeResponse
