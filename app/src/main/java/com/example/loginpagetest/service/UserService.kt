@@ -52,4 +52,5 @@ interface UserService {
     suspend fun getUserFavoriteOrganization(
         @Header("Authorization") token: String
     ): GetUserFavoriteOrganizationsResponse
+
 }

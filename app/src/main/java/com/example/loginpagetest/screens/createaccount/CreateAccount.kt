@@ -51,6 +51,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
+import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
@@ -61,8 +63,8 @@ fun CreateAccount(navController: NavHostController) {
     val viewModel: CreateAccountViewModel = viewModel()
     val oscViewModel: CreateOSCViewModel = viewModel()
 
-    val registerUser: UserViewModel = viewModel()
-    val registerOSC: OrgViewModel = viewModel()
+    val registerUser = UserViewModel(UserService.instance)
+    val registerOSC = OrgViewModel(OrgService.instance)
 
     LaunchedEffect(key1 = registerUser.registrationResult) {
         registerUser.registrationResult.collect { result ->

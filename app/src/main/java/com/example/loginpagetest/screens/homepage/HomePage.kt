@@ -34,6 +34,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.shadow
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -326,7 +327,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
 fun ClickableIcon(organization: String, selectedCategory: String) {
     var isClicked by remember { mutableStateOf(false) }
 
-    val user: UserViewModel = viewModel()
+    val user = UserViewModel(UserService.instance)
 
     LaunchedEffect(key1 = user.addFavouriteResult){
         user.addFavouriteResult.collect { result ->

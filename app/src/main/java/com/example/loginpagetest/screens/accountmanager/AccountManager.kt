@@ -50,6 +50,8 @@ import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.loginpagetest.screens.createaccount.CreateAccountTextField
+import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
@@ -69,8 +71,8 @@ fun accountManager(navController: NavHostController) {
     val oscViewModel : CreateOSCViewModel = viewModel()
     var areFieldsVisible by rememberSaveable { mutableStateOf(false) }
 
-    val userVM: UserViewModel = viewModel()
-    val orgVM: OrgViewModel = viewModel()
+    val userVM =  UserViewModel(UserService.instance)
+    val orgVM = OrgViewModel(OrgService.instance)
 
     LaunchedEffect(key1 = userVM.updateAccountResult) {
         userVM.updateAccountResult.collect { result ->

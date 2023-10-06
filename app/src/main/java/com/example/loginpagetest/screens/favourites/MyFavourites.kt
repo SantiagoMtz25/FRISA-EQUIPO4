@@ -57,6 +57,7 @@ import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizatio
 import com.example.loginpagetest.screens.homepage.Chip
 import com.example.loginpagetest.screens.myosc.Event
 import com.example.loginpagetest.screens.test.DrawerContent
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -70,7 +71,7 @@ fun myFavourites(content: NavHostController) {
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
 
-    val userViewModel: UserViewModel = viewModel()
+    val userViewModel = UserViewModel(UserService.instance)
 
     var eventsList = listOf(
         Event("Event 1", "2023-10-01", "Salud","This is a short description of Event 1."),

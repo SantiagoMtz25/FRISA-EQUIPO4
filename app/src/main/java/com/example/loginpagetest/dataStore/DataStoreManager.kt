@@ -11,15 +11,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-/* These extension functions help in performing basic CRUD operations with the Android Jetpack's
-   DataStore in a more concise and manageable way. They extend the Context object,
-   which makes these functions universally accessible in any part of the Android application
-   where a Context is available, helping developers avoid boilerplate code related to
-   DataStore operations.*/
 
 const val DATASTORE = "my_datastore"
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DATASTORE)
+
 
 /* suspend fun storeValue(value: String, key:  Preferences.Key<String>) {
     context.dataStore.edit {
@@ -35,6 +31,7 @@ suspend fun <T> Context.storeValue(value: T, key: Preferences.Key<T>) {
     }
     Log.d("DATASTORE", "Value saved: $value")
 }
+
 
 suspend fun Context.deleteValue(key: Preferences.Key<*>) {
     dataStore.edit { preferences ->
@@ -52,6 +49,8 @@ suspend fun Context.hasKeyWithValue(key:  Preferences.Key<String>): Boolean {
     }
 }
 
+
+
 // val token: String = getValueFromDataStore(TOKEN, "")
 // val someValue: Int = getValueFromDataStore(SOME_KEY, 0)
 suspend inline fun <reified T : Any> Context.getValueFromDataStore(key: Preferences.Key<T>, defaultValue: T): T {
@@ -61,5 +60,4 @@ suspend inline fun <reified T : Any> Context.getValueFromDataStore(key: Preferen
         }.first()
     }
 }
-
 

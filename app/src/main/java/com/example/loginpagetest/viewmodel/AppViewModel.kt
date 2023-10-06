@@ -2,6 +2,7 @@ package com.example.loginpagetest.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,24 +17,27 @@ import kotlinx.coroutines.launch
 
 class AppViewModel(private val appContext: Application) : AndroidViewModel(appContext) {
 
-    private var token = ""
-    private var isLoggedIn = false
-    private var isAdmin = false
-    private var signedPrivacy = false
 
+    private val token = mutableStateOf("")
+    private val isLoggedIn = mutableStateOf(false)
+    private val isAdmin = mutableStateOf(false)
+    private val signedPrivacy = mutableStateOf(false)
     private val _isInitialized = MutableStateFlow(false)
+
+    // Con esta variable podemos saber si el proceso de init ya concluyó
     val isInitialized: StateFlow<Boolean>
         get() = _isInitialized
 
+
     init {
         viewModelScope.launch {
-            val hasTokenResult = appContext.hasKeyWithValue(Constants.TOKEN)
+            val hasTokenStored = appContext.hasKeyWithValue(Constants.TOKEN)
             val token = appContext.getValueFromDataStore(Constants.TOKEN, "")
             val isAdmin = appContext.getValueFromDataStore(Constants.ISADMIN, false)
             val signed = appContext.getValueFromDataStore(Constants.SIGNED_PRIVACY,false)
 
-            if (hasTokenResult) {
-                setLoggedIn()
+            if (hasTokenStored) {
+                setLoggedIn(true)
                 setToken(token)
                 setIsAdmin(isAdmin)
             }
@@ -56,44 +60,45 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
     fun deleteToken(){
         viewModelScope.launch {
             appContext.deleteValue(Constants.TOKEN)
-            token =""
+            token.value =""
             setLoggedOut()
         }
     }
 
     fun getToken(): String {
-        return token
+        return token.value
     }
 
     fun setToken(mytoken: String) {
-        token = mytoken
+        token.value = mytoken
     }
 
-    fun setLoggedIn() {
-        isLoggedIn = true
+
+    fun setLoggedIn(value: Boolean) {
+        isLoggedIn.value = value
     }
 
     fun setLoggedOut() {
-        isLoggedIn = false
+        isLoggedIn.value = false
     }
 
     fun isUserLoggedIn(): Boolean {
-        return isLoggedIn
+        return isLoggedIn.value
     }
 
     fun isAdmin(): Boolean {
-        return isAdmin
+        return isAdmin.value
     }
 
     fun setIsAdmin(value: Boolean){
-        isAdmin = value
+        isAdmin.value = value
     }
 
     fun setSignedPrivacy(){
-        signedPrivacy = true
+        signedPrivacy.value = true
     }
 
     fun isPrivacySigned(): Boolean{
-        return signedPrivacy
+        return signedPrivacy.value
     }
 }

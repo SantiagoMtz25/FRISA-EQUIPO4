@@ -51,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 import com.example.loginpagetest.viewmodel.UserViewModel
 import kotlinx.coroutines.flow.collect
@@ -87,7 +88,7 @@ fun mainLoginPage(navController: NavHostController) {
         val scrollState = rememberScrollState()
 
         // Login POST
-        val login: UserViewModel = viewModel()
+        val login =  UserViewModel(UserService.instance)
 
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }

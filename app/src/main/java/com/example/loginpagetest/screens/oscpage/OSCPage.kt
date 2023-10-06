@@ -39,7 +39,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.navigation.CustomTopBar2
+import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.OrgViewModel
+import com.example.loginpagetest.viewmodel.UserViewModel
 
 private const val PREFS_NAME = "StarRankingPrefs"
 private const val LAST_RANKING_KEY = "LastRankingTime"
@@ -56,7 +59,7 @@ fun OSCPage(content: NavHostController) {
     val organization: String = content.currentBackStackEntry
         ?.arguments?.getString("organization") ?: ""
 
-    val osc: OrgViewModel = viewModel()
+    val osc = OrgViewModel(OrgService.instance)
 
     LaunchedEffect(key1 = osc.orgAddGradeResult) {
         osc.orgAddGradeResult.collect { result ->
