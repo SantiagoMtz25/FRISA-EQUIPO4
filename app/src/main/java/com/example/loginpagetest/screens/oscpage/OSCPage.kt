@@ -52,14 +52,16 @@ fun OSCPage(content: NavHostController) {
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
     var starFilter by remember { mutableIntStateOf(0) }
-    val inviteUser: Boolean = content.currentBackStackEntry
-        ?.arguments?.getBoolean("inviteUser") ?: false
+    /*val inviteUser: Boolean = content.currentBackStackEntry
+        ?.arguments?.getBoolean("inviteUser") ?: false*/
+    val inviteUser: Boolean = content.currentBackStackEntry?.arguments?.getBoolean("inviteUser") ?: false
     val isAdmin: Boolean = content.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
     val organization: String = content.currentBackStackEntry
         ?.arguments?.getString("organization") ?: ""
 
-    val osc = OrgViewModel(OrgService.instance)
+
+    /*val osc = OrgViewModel(OrgService.instance)
 
     LaunchedEffect(key1 = osc.orgAddGradeResult) {
         osc.orgAddGradeResult.collect { result ->
@@ -67,12 +69,7 @@ fun OSCPage(content: NavHostController) {
                 // maybe output grade has been sent, idk
             }
         }
-    }
-
-    var selectedStar by rememberSaveable { mutableIntStateOf(0) }
-    LaunchedEffect(selectedStar) {
-        osc.addGrade(organization, selectedStar.toFloat())
-    }
+    }*/
 
     val context = LocalContext.current
     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -80,6 +77,15 @@ fun OSCPage(content: NavHostController) {
     val lastRankingTime = prefs.getLong(LAST_RANKING_KEY, 0L)
     val currentTime = System.currentTimeMillis()
     val isAllowedToRank = (currentTime - lastRankingTime) > 24 * 60 * 60 * 1000
+
+    var selectedStar by rememberSaveable { mutableIntStateOf(0) }
+    /*LaunchedEffect(selectedStar) {
+        //osc.addGrade(organization, selectedStar.toFloat())
+        val editor = prefs.edit()
+        editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
+        editor.apply()
+    }*/
+    var savedStarRank by rememberSaveable { mutableIntStateOf(0) }
 
     Column {
         CustomTopBar2(title = "OSC Page", navController = content)
@@ -269,32 +275,31 @@ fun OSCPage(content: NavHostController) {
                 }*/
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
-                // Check this logic so that invite users and osc admin wont have the option to rank osc's
-                if (isAllowedToRank) {
-                    if (!inviteUser && !isAdmin) {
-                        Text("Rank the OSC:")
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            (1..5).forEach { index ->
-                                Icon(
-                                    imageVector = Icons.Default.Star,
-                                    contentDescription = "Star $index",
-                                    tint = if (selectedStar >= index) customRed else customGray,
-                                    modifier = Modifier
-                                        .clickable { selectedStar = index }
-                                        .padding(7.dp)
-                                        .size(40.dp),
-                                )
-                            }
-                        }
+                Text("Rank the OSC:")
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    (1..5).forEach { index ->
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Star $index",
+                            tint = if (savedStarRank >= index) customRed else customGray,
+                            modifier = Modifier
+                                .clickable {
+                                    if (isAllowedToRank) {
+                                        savedStarRank = index
+                                        val editor = prefs.edit()
+                                        editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
+                                        editor.apply()
+                                    } else {
+                                        Toast.makeText(context, "You need to wait 24 hours before ranking again.", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                .padding(7.dp)
+                                .size(40.dp)
+                        )
                     }
-                    val editor = prefs.edit()
-                    editor.putLong(LAST_RANKING_KEY, currentTime)
-                    editor.apply()
-                } else {
-                    // render snack-bar to indicate user has to wait at least 24 to rank again
                 }
             }
         }
@@ -305,7 +310,6 @@ fun launchIntent(context: Context, intent: Intent) {
     try {
         context.startActivity(intent)
     } catch (e: ActivityNotFoundException) {
-        // Handle the exception, for example, by showing a Toast message
         Toast.makeText(context, "App not available", Toast.LENGTH_SHORT).show()
     }
 }

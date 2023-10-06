@@ -25,8 +25,7 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
     private val _isInitialized = MutableStateFlow(false)
 
     // Con esta variable podemos saber si el proceso de init ya concluyó
-    val isInitialized: StateFlow<Boolean>
-        get() = _isInitialized
+    val isInitialized: StateFlow<Boolean> = _isInitialized
 
 
     init {

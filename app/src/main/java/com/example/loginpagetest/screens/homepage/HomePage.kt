@@ -45,9 +45,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
     val customLighterRed = colorResource(id = R.color.almostlogored)
     val customGray = colorResource(id = R.color.logoGray)
     val customPink = colorResource(id = R.color.lightred_pink)
-    val scrollState = rememberScrollState()
     var searchQuery by remember { mutableStateOf("") }
-    val selectedCategories = remember { mutableStateListOf<String>() }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val organizationsMap = mapOf(
@@ -275,7 +273,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/${inviteUser}/${false}/${organization}")
+                                        content.navigate("OSCpage/$inviteUser/${isAdmin}/$organization")
                                     }
                             ) {
                                 Row(
@@ -300,7 +298,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .background(Color.Transparent)
                                     .clickable {
 
-                                        content.navigate("OSCpage/${inviteUser}/${false}/${organization}")
+                                        content.navigate("OSCpage/$inviteUser/${isAdmin}/$organization")
 
                                     }
                             ) {
@@ -312,7 +310,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(text = organization)
-                                    ClickableIcon("${organization}", "${category}")
+                                    ClickableIcon(organization, category)
                                 }
                             }
                         }
