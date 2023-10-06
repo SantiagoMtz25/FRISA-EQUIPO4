@@ -1,6 +1,5 @@
 package com.example.loginpagetest.model
 
-
-data class OrgRegisterResponse(
+data class UserFavouritesResponse(
     var message: String = ""
 )

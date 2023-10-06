@@ -1,6 +1,10 @@
 package com.example.loginpagetest.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,9 +21,18 @@ import com.example.loginpagetest.screens.oscpage.OSCPage
 import com.example.loginpagetest.screens.test.MainScreen
 
 @Composable
-fun PageNavigation () {
+fun PageNavigation (tokenResult: Boolean) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "login") {
+
+    var startScreen by remember { mutableStateOf("") }
+
+    if (tokenResult) {
+        startScreen = "testScreen/{isAdmin}"
+    } else {
+        startScreen = "login"
+    }
+
+    NavHost(navController = navController, startDestination = startScreen) {
         composable("login") {
             myLoginApp(navController)
         }
@@ -30,8 +43,12 @@ fun PageNavigation () {
             CreateAccount(navController)
         }
 
-        composable("OSCpage/{inviteUser}",
-            arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
+        composable("OSCpage/{inviteUser}/{isAdmin}/{organization}",
+            arguments = listOf(
+                navArgument("inviteUser") { type = NavType.BoolType },
+                navArgument("isAdmin") { type = NavType.BoolType },
+                navArgument("organization") { type = NavType.StringType }
+            )
         ) {
             OSCPage(navController)
         }

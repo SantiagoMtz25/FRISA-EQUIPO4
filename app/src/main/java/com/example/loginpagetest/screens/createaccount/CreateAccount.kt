@@ -51,13 +51,36 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
+import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
+import com.example.loginpagetest.viewmodel.OrgViewModel
+import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccount(navController: NavHostController) {
     val viewModel: CreateAccountViewModel = viewModel()
     val oscViewModel: CreateOSCViewModel = viewModel()
+
+    val registerUser = UserViewModel(UserService.instance)
+    val registerOSC = OrgViewModel(OrgService.instance)
+
+    LaunchedEffect(key1 = registerUser.registrationResult) {
+        registerUser.registrationResult.collect { result ->
+            if (result != null) {
+                navController.navigate("login")
+            }
+        }
+    }
+    LaunchedEffect(key1 = registerOSC.orgRegisterResult) {
+        registerOSC.orgRegisterResult.collect { result ->
+            if (result != null) {
+                navController.navigate("login")
+            }
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colorScheme.background
@@ -598,8 +621,11 @@ fun CreateAccount(navController: NavHostController) {
                             ) {
                                 viewModel.showSuccessSnackbar = true
                                 coroutineScope.launch {
+
+                                    registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.selectedCity,
+                                        viewModel.selectedState, viewModel.phoneNumber, viewModel.password, viewModel.confirmPassword)
+
                                     delay(4000)
-                                    navController.navigate("login")
                                     viewModel.name = ""
                                     viewModel.lastName = ""
                                     viewModel.email = ""
@@ -650,6 +676,9 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
+                                // According to me this will create the return of the UserRegistrationResponse
+                                // Text(text = "${registerUser.protectedResult}")
+
                                 Text("Thank you! Account created successfully", color = Color.White)
                             }
                         }
@@ -887,11 +916,18 @@ fun CreateAccount(navController: NavHostController) {
                                 oscViewModel.selectedState.isNotEmpty() &&
                                 oscViewModel.selectedCity.isNotEmpty() &&
                                 oscViewModel.email.isNotEmpty() &&
+                                oscViewModel.webpage.isNotEmpty() &&
                                 oscViewModel.category.isNotEmpty()
 
                             ) {
                                 oscViewModel.showSuccessSnackbar = true
                                 coroutineScope.launch {
+
+                                    registerOSC.addOrganization(
+                                        oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
+                                        oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
+                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category)
+
                                     delay(4000)
                                     navController.navigate("login")
                                     oscViewModel.name = ""

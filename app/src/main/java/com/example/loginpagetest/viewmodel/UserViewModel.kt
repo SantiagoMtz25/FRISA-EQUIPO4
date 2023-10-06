@@ -1,15 +1,20 @@
 package com.example.loginpagetest.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.loginpagetest.model.UserFavToDelete
+import com.example.loginpagetest.model.UserFavToDeleteResponse
+import com.example.loginpagetest.model.UserFavourites
+import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
-import com.example.loginpagetest.model.UserProtectedResponse
 import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
+import com.example.loginpagetest.model.UserUpdateAccount
+import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.service.UserService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,16 +23,26 @@ import retrofit2.HttpException
 
 class UserViewModel(private val userService: UserService) : ViewModel() {
 
+    // Normal user registration result
     private val _registrationResult = MutableStateFlow<UserRegistrationResponse?>(null)
     val registrationResult: StateFlow<UserRegistrationResponse?> = _registrationResult
 
+    // Login result
     private val _loginResult = MutableStateFlow<UserLoginResponse?>(null)
-    val loginResult: StateFlow<UserLoginResponse?>
-        get() = _loginResult
+    val loginResult: StateFlow<UserLoginResponse?> = _loginResult
 
-    private val _protectedResult = MutableStateFlow<UserProtectedResponse?>(null)
-    val protectedResult: StateFlow<UserProtectedResponse?>
-        get() = _protectedResult
+    // Add a favourite, called when the OSC in the catalogue star is clicked
+    private val _addFavouriteResult = MutableStateFlow<UserFavouritesResponse?>(null)
+    val addFavouriteResult: StateFlow<UserFavouritesResponse?> = _addFavouriteResult
+
+    private val _removeFavouriteResult = MutableStateFlow<UserFavToDeleteResponse?>(null)
+    val removeFavouriteResult: StateFlow<UserFavToDeleteResponse?> = _removeFavouriteResult
+
+    private val _updateAccountResult = MutableStateFlow<UserUpdateAccountResponse?>(null)
+    val updateAccountResult: StateFlow<UserUpdateAccountResponse?> = _updateAccountResult
+
+    private val _getUserFavoriteOrgsResult = MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
+    val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> = _getUserFavoriteOrgsResult
 
     // is this like creating account?
     fun addUser(
@@ -36,7 +51,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         email: String,
         password: String,
         confirmPassword: String,
-        phoneNumber: Int,
+        phoneNumber: String,
         state: String,
         city: String
     ) {
@@ -99,36 +114,89 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun testProtectedRequest(token : String) {
+    fun addFavourite (
+        token: String?,
+        name: String,
+        category: String
+    ) {
+        val addedosc = UserFavourites(token, name, category)
 
         viewModelScope.launch {
-            var response: UserProtectedResponse? = null
+            var response: UserFavouritesResponse
+
             try {
-                response = userService.protectedRoute(token)
-                _protectedResult.value = response
-                Log.d("RESPONSE", response.message)
-            } catch (e: HttpException) {
+                response = userService.addFavourite(addedosc)
+                _addFavouriteResult.value = response
+            } catch (e: Exception) {
 
-                when (e.code()) {
+                var errorResponse = UserFavouritesResponse("")
+                errorResponse.message = e.localizedMessage
+                _addFavouriteResult.value = errorResponse
+            }
+        }
+    }
 
-                    401 -> {
-                        Log.d("RESPONSE", e.localizedMessage)
-                        val errorMessage = "Invalid credentials"
-                        val errorResponse = UserProtectedResponse(errorMessage)
-                        _protectedResult.value = errorResponse
-                    }
+    fun removeFavourite (
+        token: String?,
+        name: String
+    ) {
+        val osctoremove = UserFavToDelete(token, name)
 
-                    else -> {
-                        Log.d("RESPONSE", e.localizedMessage)
-                        val errorMessage = e.localizedMessage
-                        val errorResponse = UserProtectedResponse(errorMessage)
-                        _protectedResult.value = errorResponse
-                    }
-                }
+        viewModelScope.launch {
+            var response: UserFavToDeleteResponse
+
+            try {
+                response = userService.removeFavourite(osctoremove)
+                _removeFavouriteResult.value = response
+            } catch (e: Exception) {
+
+                var errorResponse = UserFavToDeleteResponse("")
+                errorResponse.message = e.localizedMessage
+                _removeFavouriteResult.value = errorResponse
+            }
+        }
+    }
+
+    fun userUpdateAccount (
+        token: String? = "",
+        state: String,
+        city: String,
+        phoneNumber: String,
+        password: String,
+        confirmPassword: String
+    ) {
+        val userUpdate = UserUpdateAccount(token, state, city, phoneNumber, password, confirmPassword)
+
+        viewModelScope.launch {
+            var response: UserUpdateAccountResponse
+
+            try {
+                response = userService.updateAccount(userUpdate)
+                _updateAccountResult.value = response
+            } catch (e: Exception) {
+                var errorResponse = UserUpdateAccountResponse("")
+                errorResponse.message = e.localizedMessage
+                _updateAccountResult.value = errorResponse
+            }
+        }
+    }
+
+    fun getUserFavoriteOrganization(token: String) {
+        viewModelScope.launch {
+            val response: GetUserFavoriteOrganizationsResponse
+            try {
+                response = userService.getUserFavoriteOrganization(token)
+                _getUserFavoriteOrgsResult.value = response
+            } catch (e: Exception) {
+
+                val errorResponse = e.localizedMessage
+                Log.d("ERROR-API", errorResponse)
+                //_getUserFavoriteOrgsResult.value = errorResponse
             }
         }
     }
 }
+
 
 /*
 class AppViewModelFactory(private val context: Context) : ViewModelProvider.Factory {

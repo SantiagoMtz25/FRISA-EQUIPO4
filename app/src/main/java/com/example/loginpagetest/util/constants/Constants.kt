@@ -2,7 +2,6 @@ package com.example.loginpagetest.util.constants
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-
 object Constants {
 
     //Data Store Name
@@ -12,6 +11,7 @@ object Constants {
     val TOKEN = stringPreferencesKey("TOKEN")
     val ISADMIN = booleanPreferencesKey("ISADMIN")
     val SIGNED_PRIVACY = booleanPreferencesKey("SIGNED_PRIVACY")
+
 
     val avisoDePrivacidad = """
 AVISO DE PRIVACIDAD

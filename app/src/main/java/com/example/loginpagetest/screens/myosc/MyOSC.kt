@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,9 +41,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.test.DrawerContent
+import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.viewmodel.OrgViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -56,7 +60,17 @@ fun myOSC (navController: NavHostController) {
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
 
-    var average by remember { mutableFloatStateOf(2.5f) }
+    var average by remember { mutableFloatStateOf(0f) }
+
+    val orgViewModel = OrgViewModel(OrgService.instance)
+
+    LaunchedEffect(key1 = orgViewModel.getAverageResult) {
+        orgViewModel.getAverageResult.collect { result ->
+            if (result != null) {
+                average = result.average
+            }
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -111,7 +125,9 @@ fun myOSC (navController: NavHostController) {
                     .padding(bottom = 16.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)
                 ) {
                     Text(
                         text = "Average:",

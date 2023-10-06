@@ -1,6 +1,5 @@
 package com.example.loginpagetest.model
 
-
-data class OrgRegisterResponse(
+data class OrgGradeResponse(
     var message: String = ""
 )
