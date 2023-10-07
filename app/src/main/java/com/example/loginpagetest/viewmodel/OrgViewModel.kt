@@ -50,22 +50,11 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
     }
 
     fun addOrganization(
-        name: String,
-        adminName: String,
-        rfc: String,
-        description: String,
-        phoneNumber: String,
-        state: String,
-        city: String,
-        email: String,
-        webpage: String,
-        category: String
+        token: String,
+        org: OrgRegister
     ) {
 
         viewModelScope.launch {
-
-            val osc = OrgRegister(name, adminName, rfc, description, phoneNumber, state, city, email, webpage, category)
-
             //var response: OrgRegisterResponse? = null
             /*try {
                 response = orgService.addOrg(name, adminName, rfc, description, phoneNumber, state, city, email, webpage)
@@ -78,7 +67,7 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
             viewModelScope.launch {
                 var response: OrgRegisterResponse
                 try {
-                    response = orgService.addOrg(osc)
+                    response = orgService.addOrg(token, org)
                     _orgRegisterResult.value = response
                 } catch (e: Exception) {
 

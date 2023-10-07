@@ -51,8 +51,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
+import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
@@ -65,6 +67,7 @@ fun CreateAccount(navController: NavHostController) {
 
     val registerUser = UserViewModel(UserService.instance)
     val registerOSC = OrgViewModel(OrgService.instance)
+    val appViewModel: AppViewModel = viewModel()
 
     LaunchedEffect(key1 = registerUser.registrationResult) {
         registerUser.registrationResult.collect { result ->
@@ -625,6 +628,8 @@ fun CreateAccount(navController: NavHostController) {
                                     registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.selectedCity,
                                         viewModel.selectedState, viewModel.phoneNumber, viewModel.password, viewModel.confirmPassword)
 
+
+
                                     delay(4000)
                                     viewModel.name = ""
                                     viewModel.lastName = ""
@@ -923,10 +928,13 @@ fun CreateAccount(navController: NavHostController) {
                                 oscViewModel.showSuccessSnackbar = true
                                 coroutineScope.launch {
 
-                                    registerOSC.addOrganization(
+                                    val organization = OrgRegister(
                                         oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
                                         oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
-                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category)
+                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category
+                                    )
+                                    // double check this
+                                    registerOSC.addOrganization(appViewModel.getToken(), organization)
 
                                     delay(4000)
                                     navController.navigate("login")

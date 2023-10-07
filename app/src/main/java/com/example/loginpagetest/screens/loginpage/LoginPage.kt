@@ -47,11 +47,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
+import com.example.loginpagetest.util.constants.Constants
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @Composable
@@ -69,7 +72,10 @@ fun myLoginApp(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mainLoginPage(navController: NavHostController) {
+fun mainLoginPage(
+    navController: NavHostController,
+    onLoggedInChanged: ((Boolean) -> Unit)? = null
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,22 +92,19 @@ fun mainLoginPage(navController: NavHostController) {
         val scrollState = rememberScrollState()
 
         // Login POST
-        val login =  UserViewModel(UserService.instance)
+        val userViewModel =  UserViewModel(UserService.instance)
+        val appViewModel: AppViewModel = viewModel()
 
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
         var passwordVisibility by rememberSaveable { mutableStateOf(true) }
 
-        // To get the result from login and redirect or not to screen
-        var loginResult by remember {
-            mutableStateOf(UserLoginResponse())
-        }
         var successfulLogin by rememberSaveable { mutableStateOf(true) }
 
         var inviteUser by rememberSaveable { mutableStateOf(false) }
 
-        LaunchedEffect(key1 = login.loginResult) {
+        /*LaunchedEffect(key1 = login.loginResult) {
             login.loginResult.collect { result ->
                 if (result != null) {
                     if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
@@ -118,6 +121,41 @@ fun mainLoginPage(navController: NavHostController) {
                         // Login failed, showing a snack bar
                         successfulLogin = false
                     }
+                }
+            }
+        }*/
+        val loginResult = remember {
+            mutableStateOf(UserLoginResponse())
+        }
+        LaunchedEffect(key1 = userViewModel) {
+            userViewModel.loginResult.collect { result ->
+                if (result != null) {
+
+                    loginResult.value = result
+
+                    /*if (loginResult.value?.message != null){
+                        snackbarHostState.showSnackbar(loginResult.value.message.toString())
+                    }*/
+
+                    loginResult.value.token?.let {
+                        // snackbarHostState.showSnackbar("Login exitoso...")
+                        appViewModel.storeValueInDataStore(it, Constants.TOKEN)
+                        appViewModel.setToken(it)
+                        appViewModel.setLoggedIn(true)
+                        if (onLoggedInChanged != null) {
+                            onLoggedInChanged(true)
+                        }
+                        // navController.navigate("Privacy")
+
+                        // Log.d("DATASTORE", "Token saved: ${it}")
+                    }
+                    loginResult.value.isAdmin.let {
+                        appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
+                        appViewModel.setIsAdmin(it)
+                    }
+                    // Navigate to the main screen and pass isAdmin to load different
+                    // components in those pages UI/UX
+                    navController.navigate("testScreen/${loginResult.value.isAdmin}")
                 }
             }
         }
@@ -196,7 +234,9 @@ fun mainLoginPage(navController: NavHostController) {
             ) {
                 Button(
                     onClick = {
-                        login.loginUser(email, password)
+                        userViewModel.loginUser(email, password)
+
+
                         /*successfulLogin = true
                         loginResult.isAdmin = false
                         navController.navigate("testScreen/${loginResult.isAdmin}")*/
@@ -257,6 +297,29 @@ fun mainLoginPage(navController: NavHostController) {
                 }
             ) {
                 androidx.compose.material.Text("Email or Password are incorrect", color = Color.White)
+            }
+        }
+        LaunchedEffect(successfulLogin) {
+            if (successfulLogin) {
+                scrollState.animateScrollTo(scrollState.maxValue)
+            }
+        }
+        if (successfulLogin) {
+            Snackbar(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(Color.Green),
+                action = {
+                    TextButton(onClick = { successfulLogin = false }) {
+                        androidx.compose.material.Text(
+                            "Dismiss",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            ) {
+                androidx.compose.material.Text("Login Successful", color = Color.White)
             }
         }
     }

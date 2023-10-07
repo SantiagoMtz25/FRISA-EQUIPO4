@@ -11,20 +11,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface OrgService {
 
     companion object {
 
-        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/orgs")
+        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/orgs/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(OrgService::class.java)
     }
 
     @POST("add")
-    suspend fun addOrg(@Body osc: OrgRegister) : OrgRegisterResponse
+    suspend fun addOrg(@Header("Authorization") token: String, @Body osc: OrgRegister) : OrgRegisterResponse
 
     @POST("addgrade")
     suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
