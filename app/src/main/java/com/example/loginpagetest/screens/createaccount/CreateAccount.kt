@@ -2,6 +2,7 @@ package com.example.loginpagetest.screens.createaccount
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -763,7 +764,12 @@ fun CreateAccount(navController: NavHostController) {
                         "Asociaciones Religiosas", "Transporte Público", "Cultura", "Servicios Asistenciales"
                     )
 
-                    Box {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 8.dp)
+                            .clickable(onClick = { expanded = true }) // this makes the whole field clickable
+                    ) {
                         OutlinedTextField(
                             leadingIcon = {
                                 androidx.compose.material.Icon(
@@ -773,22 +779,18 @@ fun CreateAccount(navController: NavHostController) {
                                 )
                             },
                             enabled = false,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp, bottom = 8.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             value = categories[selectedIndex],
                             onValueChange = { /* do nothing as we are changing the value using dropdown selections */ },
                             label = { Text("Category") },
-                            trailingIcon = {
-                                IconButton(onClick = { expanded = true }) {
-                                    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
-                                }
-                            },
                             colors = TextFieldDefaults.textFieldColors(
-                                cursorColor = customRed,
-                                focusedIndicatorColor = customPink,
+                                cursorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                // cursorColor = customRed,
+                                // focusedIndicatorColor = customPink,
                                 unfocusedIndicatorColor = customGray,
-                                focusedLabelColor = customLighterRed
+                                focusedLabelColor = customLighterRed,
+                                disabledTextColor = Color.Black
                             ),
                         )
 
@@ -915,7 +917,6 @@ fun CreateAccount(navController: NavHostController) {
                         Button(onClick = {
                             if (oscViewModel.name.isNotEmpty() &&
                                 oscViewModel.adminName.isNotEmpty() &&
-                                oscViewModel.rfc.isNotEmpty() &&
                                 oscViewModel.description.isNotEmpty() &&
                                 oscViewModel.phoneNumber.isNotEmpty() &&
                                 oscViewModel.selectedState.isNotEmpty() &&
