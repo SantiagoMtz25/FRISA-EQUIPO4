@@ -27,7 +27,7 @@ fun PageNavigation (tokenResult: Boolean) {
     var startScreen by remember { mutableStateOf("") }
 
     if (tokenResult) {
-        startScreen = "testScreen/{isAdmin}"
+        startScreen = "testScreen/${tokenResult}"
     } else {
         startScreen = "login"
     }

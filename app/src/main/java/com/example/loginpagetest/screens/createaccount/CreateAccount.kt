@@ -2,6 +2,7 @@ package com.example.loginpagetest.screens.createaccount
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -51,8 +52,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
+import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
@@ -65,6 +68,7 @@ fun CreateAccount(navController: NavHostController) {
 
     val registerUser = UserViewModel(UserService.instance)
     val registerOSC = OrgViewModel(OrgService.instance)
+    val appViewModel: AppViewModel = viewModel()
 
     LaunchedEffect(key1 = registerUser.registrationResult) {
         registerUser.registrationResult.collect { result ->
@@ -625,6 +629,8 @@ fun CreateAccount(navController: NavHostController) {
                                     registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.selectedCity,
                                         viewModel.selectedState, viewModel.phoneNumber, viewModel.password, viewModel.confirmPassword)
 
+
+
                                     delay(4000)
                                     viewModel.name = ""
                                     viewModel.lastName = ""
@@ -758,7 +764,12 @@ fun CreateAccount(navController: NavHostController) {
                         "Asociaciones Religiosas", "Transporte Público", "Cultura", "Servicios Asistenciales"
                     )
 
-                    Box {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp, bottom = 8.dp)
+                            .clickable(onClick = { expanded = true }) // this makes the whole field clickable
+                    ) {
                         OutlinedTextField(
                             leadingIcon = {
                                 androidx.compose.material.Icon(
@@ -768,22 +779,18 @@ fun CreateAccount(navController: NavHostController) {
                                 )
                             },
                             enabled = false,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp, bottom = 8.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             value = categories[selectedIndex],
                             onValueChange = { /* do nothing as we are changing the value using dropdown selections */ },
                             label = { Text("Category") },
-                            trailingIcon = {
-                                IconButton(onClick = { expanded = true }) {
-                                    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
-                                }
-                            },
                             colors = TextFieldDefaults.textFieldColors(
-                                cursorColor = customRed,
-                                focusedIndicatorColor = customPink,
+                                cursorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                // cursorColor = customRed,
+                                // focusedIndicatorColor = customPink,
                                 unfocusedIndicatorColor = customGray,
-                                focusedLabelColor = customLighterRed
+                                focusedLabelColor = customLighterRed,
+                                disabledTextColor = Color.Black
                             ),
                         )
 
@@ -910,7 +917,6 @@ fun CreateAccount(navController: NavHostController) {
                         Button(onClick = {
                             if (oscViewModel.name.isNotEmpty() &&
                                 oscViewModel.adminName.isNotEmpty() &&
-                                oscViewModel.rfc.isNotEmpty() &&
                                 oscViewModel.description.isNotEmpty() &&
                                 oscViewModel.phoneNumber.isNotEmpty() &&
                                 oscViewModel.selectedState.isNotEmpty() &&
@@ -923,10 +929,13 @@ fun CreateAccount(navController: NavHostController) {
                                 oscViewModel.showSuccessSnackbar = true
                                 coroutineScope.launch {
 
-                                    registerOSC.addOrganization(
+                                    val organization = OrgRegister(
                                         oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
                                         oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
-                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category)
+                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category
+                                    )
+                                    // double check this
+                                    registerOSC.addOrganization(appViewModel.getToken(), organization)
 
                                     delay(4000)
                                     navController.navigate("login")

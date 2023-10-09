@@ -44,6 +44,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // verified screens load correctly, THEY DO
+                    // configLoaded.value = true
                     PageNavigation(tokenResult = configLoaded.value)
                 }
             }

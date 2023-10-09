@@ -40,6 +40,9 @@ suspend fun Context.deleteValue(key: Preferences.Key<*>) {
     Log.d("DATASTORE", "Key deleted: ${key.name}")
 }
 
+// The function hasKeyWithValue presumably checks the DataStore to
+// see if a particular key (in this case, the key for the token)
+// has a stored value.
 suspend fun Context.hasKeyWithValue(key:  Preferences.Key<String>): Boolean {
 
     return withContext(Dispatchers.IO) {
