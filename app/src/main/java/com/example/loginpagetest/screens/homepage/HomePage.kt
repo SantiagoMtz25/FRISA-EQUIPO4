@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.List
@@ -31,9 +29,7 @@ import androidx.compose.ui.window.Popup
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.shadow
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.UserViewModel
 
@@ -226,7 +222,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                 "Asociaciones Religiosas", "Transporte Público", "Cultura", "Servicios Asistenciales"
             )) { tag ->
                 Chip(tag = tag, onClick = {
-                    searchQuery = tag
+                    searchQuery = if (searchQuery == tag) "" else tag
                 }, modifier = Modifier.padding(end = 8.dp)) // Add padding to each tag
             }
         }
