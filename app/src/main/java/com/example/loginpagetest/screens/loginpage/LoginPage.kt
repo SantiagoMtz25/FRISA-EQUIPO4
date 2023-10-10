@@ -51,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
+import com.example.loginpagetest.model.osclogin.OrgLoginResponse
 import com.example.loginpagetest.screens.createaccount.buttonSlider
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
@@ -105,6 +106,7 @@ fun mainLoginPage(
         var passwordVisibility by rememberSaveable { mutableStateOf(true) }
 
         var successfulLogin by rememberSaveable { mutableStateOf(false) }
+        var notSuccessfulLogin by rememberSaveable { mutableStateOf(false) }
 
         var inviteUser by rememberSaveable { mutableStateOf(false) }
 
@@ -131,6 +133,9 @@ fun mainLoginPage(
         val loginResult = remember {
             mutableStateOf(UserLoginResponse())
         }
+        val orgLoginResult = remember {
+            mutableStateOf(OrgLoginResponse())
+        }
         LaunchedEffect(key1 = userViewModel) {
             userViewModel.loginResult.collect { result ->
                 if (result != null) {
@@ -155,6 +160,39 @@ fun mainLoginPage(
                         // Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     loginResult.value.isAdmin.let {
+                        appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
+                        appViewModel.setIsAdmin(it)
+                    }
+                    // Navigate to the main screen and pass isAdmin to load different
+                    // components in those pages UI/UX
+                    navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                }
+            }
+        }
+        LaunchedEffect(key1 = orgViewModel) {
+            orgViewModel.orgLoginResult.collect { result ->
+                if (result != null) {
+
+                    orgLoginResult.value = result
+
+                    // successfulLogin = !loginResult.value.token.isNullOrEmpty()
+                    /*if (loginResult.value?.message != null){
+                        snackbarHostState.showSnackbar(loginResult.value.message.toString())
+                    }*/
+
+                    orgLoginResult.value.token?.let {
+                        // snackbarHostState.showSnackbar("Login exitoso...")
+                        appViewModel.storeValueInDataStore(it, Constants.TOKEN)
+                        appViewModel.setToken(it)
+                        appViewModel.setLoggedIn(true)
+                        if (onLoggedInChanged != null) {
+                            onLoggedInChanged(true)
+                        }
+                        // navController.navigate("Privacy")
+
+                        // Log.d("DATASTORE", "Token saved: ${it}")
+                    }
+                    orgLoginResult.value.isAdmin.let {
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
                     }
@@ -291,8 +329,11 @@ fun mainLoginPage(
             ) {
                 Button(
                     onClick = {
-                        userViewModel.loginUser(email, password)
-
+                        if (isUserAccount) {
+                            userViewModel.loginUser(email, password)
+                        } else {
+                            orgViewModel.loginOrg(email, password)
+                        }
                         /*successfulLogin = true
                         loginResult.isAdmin = false
                         navController.navigate("testScreen/${loginResult.isAdmin}")*/
@@ -332,18 +373,18 @@ fun mainLoginPage(
         }
 
         // Wrong login snack-bar message for user
-        LaunchedEffect(!successfulLogin!!) {
-            if (!successfulLogin!!) {
+        LaunchedEffect(notSuccessfulLogin) {
+            if (notSuccessfulLogin) {
                 scrollState.animateScrollTo(scrollState.maxValue)
             }
         }
-        if (!successfulLogin!!) {
+        if (notSuccessfulLogin) {
             Snackbar(
                 modifier = Modifier
                     .padding(16.dp)
                     .background(Color.Green),
                 action = {
-                    TextButton(onClick = { successfulLogin = true }) {
+                    TextButton(onClick = { notSuccessfulLogin = true }) {
                         androidx.compose.material.Text(
                             "Dismiss",
                             color = Color.White,
@@ -356,11 +397,11 @@ fun mainLoginPage(
             }
         }
         LaunchedEffect(successfulLogin) {
-            if (successfulLogin!!) {
+            if (successfulLogin) {
                 scrollState.animateScrollTo(scrollState.maxValue)
             }
         }
-        if (successfulLogin!!) {
+        if (successfulLogin) {
             Snackbar(
                 modifier = Modifier
                     .padding(16.dp)
