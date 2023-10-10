@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.navigation.PageNavigation
-import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 import com.example.loginpagetest.viewmodel.AppViewModel
 import kotlinx.coroutines.delay
@@ -33,8 +32,9 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(appViewModel.isUserLoggedIn()) {
                 delay(2000)
                 appViewModel.isInitialized.collect { result ->
-                    configLoaded.value = result
-
+                    if (result != null) {
+                        configLoaded.value = result
+                    }
                 }
             }
 

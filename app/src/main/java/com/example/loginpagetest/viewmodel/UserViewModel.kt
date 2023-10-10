@@ -50,12 +50,11 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         lastname: String,
         email: String,
         password: String,
-        confirmPassword: String,
         phoneNumber: String,
         state: String,
         city: String
     ) {
-        val user = UserRegister(name, lastname, email, password, confirmPassword, phoneNumber, state, city)
+        val user = UserRegister(name, lastname, email, password, phoneNumber, state, city)
 
         viewModelScope.launch {
             var response: UserRegistrationResponse

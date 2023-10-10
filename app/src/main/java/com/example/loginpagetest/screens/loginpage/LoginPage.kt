@@ -51,10 +51,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
+import com.example.loginpagetest.screens.createaccount.buttonSlider
+import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 import com.example.loginpagetest.util.constants.Constants
 import com.example.loginpagetest.viewmodel.AppViewModel
+import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @Composable
@@ -88,11 +91,12 @@ fun mainLoginPage(
         val customLighterRed = colorResource(id = R.color.almostlogored)
         val customGray = colorResource(id = R.color.logoGray)
         val customPink = colorResource(id = R.color.lightred_pink)
-
         val scrollState = rememberScrollState()
 
+        var isUserAccount by rememberSaveable { mutableStateOf(false) }
         // Login POST
-        val userViewModel =  UserViewModel(UserService.instance)
+        val userViewModel = UserViewModel(UserService.instance)
+        val orgViewModel = OrgViewModel(OrgService.instance)
         val appViewModel: AppViewModel = viewModel()
 
         // Variables which will save user entered values
@@ -100,7 +104,7 @@ fun mainLoginPage(
         var password by rememberSaveable { mutableStateOf("") }
         var passwordVisibility by rememberSaveable { mutableStateOf(true) }
 
-        var successfulLogin by rememberSaveable { mutableStateOf(true) }
+        var successfulLogin by rememberSaveable { mutableStateOf(false) }
 
         var inviteUser by rememberSaveable { mutableStateOf(false) }
 
@@ -133,6 +137,7 @@ fun mainLoginPage(
 
                     loginResult.value = result
 
+                    // successfulLogin = !loginResult.value.token.isNullOrEmpty()
                     /*if (loginResult.value?.message != null){
                         snackbarHostState.showSnackbar(loginResult.value.message.toString())
                     }*/
@@ -178,55 +183,107 @@ fun mainLoginPage(
                 color = Color.Black
             )
         )
-        Spacer(modifier = Modifier.height(28.dp))
-        // Email input
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-            colors = TextFieldDefaults.textFieldColors(
-                cursorColor = customRed,
-                focusedIndicatorColor = customPink,
-                unfocusedIndicatorColor = customGray,
-                focusedLabelColor = customLighterRed
-            ),
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Email,
-                    contentDescription = "Email Icon",
-                    tint = customLighterRed
-                )
-            },
-            // modifier = Modifier.background(customGray) // Change this to your desired background color
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Password input
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            colors = TextFieldDefaults.textFieldColors(
-                cursorColor = customRed,
-                focusedIndicatorColor = customPink,
-                unfocusedIndicatorColor = customGray,
-                focusedLabelColor = customLighterRed
-            ),
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Lock,
-                    contentDescription = "Lock Icon",
-                    tint = customLighterRed
-                )
-            }
-            // modifier = Modifier.background(customGray) // Change this to your desired background color
-        )
+
+        buttonSlider { isChecked ->
+            isUserAccount = isChecked
+        }
+        if (isUserAccount) {
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email User") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Email,
+                        contentDescription = "Email Icon",
+                        tint = customLighterRed
+                    )
+                },
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Password input
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password User") },
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = "Lock Icon",
+                        tint = customLighterRed
+                    )
+                }
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+        } else {
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email OSC") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Email,
+                        contentDescription = "Email Icon",
+                        tint = customLighterRed
+                    )
+                },
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Password input
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password OSC") },
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = "Lock Icon",
+                        tint = customLighterRed
+                    )
+                }
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Row {
             MaterialTheme(
@@ -235,7 +292,6 @@ fun mainLoginPage(
                 Button(
                     onClick = {
                         userViewModel.loginUser(email, password)
-
 
                         /*successfulLogin = true
                         loginResult.isAdmin = false
@@ -276,12 +332,12 @@ fun mainLoginPage(
         }
 
         // Wrong login snack-bar message for user
-        LaunchedEffect(!successfulLogin) {
-            if (!successfulLogin) {
+        LaunchedEffect(!successfulLogin!!) {
+            if (!successfulLogin!!) {
                 scrollState.animateScrollTo(scrollState.maxValue)
             }
         }
-        if (!successfulLogin) {
+        if (!successfulLogin!!) {
             Snackbar(
                 modifier = Modifier
                     .padding(16.dp)
@@ -300,11 +356,11 @@ fun mainLoginPage(
             }
         }
         LaunchedEffect(successfulLogin) {
-            if (successfulLogin) {
+            if (successfulLogin!!) {
                 scrollState.animateScrollTo(scrollState.maxValue)
             }
         }
-        if (successfulLogin) {
+        if (successfulLogin!!) {
             Snackbar(
                 modifier = Modifier
                     .padding(16.dp)

@@ -25,7 +25,6 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
@@ -48,10 +47,6 @@ import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.DpOffset
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
@@ -626,9 +621,8 @@ fun CreateAccount(navController: NavHostController) {
                                 viewModel.showSuccessSnackbar = true
                                 coroutineScope.launch {
 
-                                    registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.selectedCity,
-                                        viewModel.selectedState, viewModel.phoneNumber, viewModel.password, viewModel.confirmPassword)
-
+                                    registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.password,
+                                        viewModel.phoneNumber, viewModel.selectedState, viewModel.selectedCity)
 
 
                                     delay(4000)

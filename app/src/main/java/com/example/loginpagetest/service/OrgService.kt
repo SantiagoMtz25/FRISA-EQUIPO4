@@ -18,13 +18,14 @@ interface OrgService {
 
     companion object {
 
-        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/orgs/")
+        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/osc/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(OrgService::class.java)
+
     }
 
-    @POST("add")
+    @POST("register")
     suspend fun addOrg(@Header("Authorization") token: String, @Body osc: OrgRegister) : OrgRegisterResponse
 
     @POST("addgrade")
@@ -35,4 +36,7 @@ interface OrgService {
 
     @GET("oscAverage")
     suspend fun getAverage(@Body average: String?) : OrgAverageResponse
+
+    @GET("getAll")
+    suspend fun getAllOsc(@Body osc: OrgRegister)
 }
