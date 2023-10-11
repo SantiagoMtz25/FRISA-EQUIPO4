@@ -1,6 +1,7 @@
 package com.example.loginpagetest
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.navigation.PageNavigation
-import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 import com.example.loginpagetest.viewmodel.AppViewModel
 import kotlinx.coroutines.delay
@@ -33,8 +33,9 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(appViewModel.isUserLoggedIn()) {
                 delay(2000)
                 appViewModel.isInitialized.collect { result ->
-                    configLoaded.value = result
-
+                    if (result != null) {
+                        configLoaded.value = result
+                    }
                 }
             }
 
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     // verified screens load correctly, THEY DO
                     // configLoaded.value = true
+                    Log.d("MAIN VAL","configLoaded.value = ${configLoaded.value}")
                     PageNavigation(tokenResult = configLoaded.value)
                 }
             }

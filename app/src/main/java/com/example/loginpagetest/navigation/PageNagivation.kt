@@ -1,5 +1,6 @@
 package com.example.loginpagetest.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +31,13 @@ fun PageNavigation (tokenResult: Boolean) {
         startScreen = "testScreen/${tokenResult}"
     } else {
         startScreen = "login"
+        Log.d("STARTING SCREEN", "starting screen = $startScreen")
     }
 
-    NavHost(navController = navController, startDestination = startScreen) {
+    NavHost(
+        navController = navController,
+        startDestination = startScreen
+    ) {
         composable("login") {
             myLoginApp(navController)
         }

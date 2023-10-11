@@ -1,5 +1,6 @@
 package com.example.loginpagetest.screens.loginpage
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -51,10 +52,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
+import com.example.loginpagetest.model.osclogin.OrgLoginResponse
+import com.example.loginpagetest.screens.createaccount.buttonSlider
+import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.ui.theme.LoginPageTestTheme
 import com.example.loginpagetest.util.constants.Constants
 import com.example.loginpagetest.viewmodel.AppViewModel
+import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @Composable
@@ -88,54 +93,38 @@ fun mainLoginPage(
         val customLighterRed = colorResource(id = R.color.almostlogored)
         val customGray = colorResource(id = R.color.logoGray)
         val customPink = colorResource(id = R.color.lightred_pink)
-
         val scrollState = rememberScrollState()
 
+        var isUserAccount by rememberSaveable { mutableStateOf(false) }
         // Login POST
-        val userViewModel =  UserViewModel(UserService.instance)
+        val userViewModel = UserViewModel(UserService.instance)
+        val orgViewModel = OrgViewModel(OrgService.instance)
         val appViewModel: AppViewModel = viewModel()
-
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
-        var passwordVisibility by rememberSaveable { mutableStateOf(true) }
+        var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
-        var successfulLogin by rememberSaveable { mutableStateOf(true) }
-
+        var successfulLogin by rememberSaveable { mutableStateOf(false) }
+        var notSuccessfulLogin by rememberSaveable { mutableStateOf(false) }
         var inviteUser by rememberSaveable { mutableStateOf(false) }
 
-        /*LaunchedEffect(key1 = login.loginResult) {
-            login.loginResult.collect { result ->
-                if (result != null) {
-                    if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
-                        // Admin user login, navigating to admin screen
-                        successfulLogin = true
-                        navController.navigate("testScreen/${loginResult.isAdmin}")
-
-                    } else if (!loginResult.token.isNullOrEmpty()) {
-                        // Regular user login, navigating to regular user screen
-                        successfulLogin = true
-                        navController.navigate("testScreen/${loginResult.isAdmin}")
-
-                    } else {
-                        // Login failed, showing a snack bar
-                        successfulLogin = false
-                    }
-                }
-            }
-        }*/
         val loginResult = remember {
             mutableStateOf(UserLoginResponse())
+        }
+        val orgLoginResult = remember {
+            mutableStateOf(OrgLoginResponse())
         }
         LaunchedEffect(key1 = userViewModel) {
             userViewModel.loginResult.collect { result ->
                 if (result != null) {
 
                     loginResult.value = result
-
-                    /*if (loginResult.value?.message != null){
-                        snackbarHostState.showSnackbar(loginResult.value.message.toString())
-                    }*/
+                    Log.d("LOGIN VAL","configLoaded.value = ${loginResult.value}")
+                    // successfulLogin = !loginResult.value.token.isNullOrEmpty()
+                    if (loginResult.value?.message != null) {
+                        //snackbarHostState.showSnackbar(loginResult.value.message.toString())
+                    }
 
                     loginResult.value.token?.let {
                         // snackbarHostState.showSnackbar("Login exitoso...")
@@ -155,7 +144,51 @@ fun mainLoginPage(
                     }
                     // Navigate to the main screen and pass isAdmin to load different
                     // components in those pages UI/UX
-                    navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                    if (loginResult.value.isAdmin != null &&
+                        loginResult.value.token != null &&
+                        loginResult.value.message != null
+                        ) {
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                    } else {
+                        Log.d("CHECKPOINT", "I reached here")
+                    }
+                }
+            }
+        }
+        LaunchedEffect(key1 = orgViewModel) {
+            orgViewModel.orgLoginResult.collect { result ->
+                if (result != null) {
+
+                    orgLoginResult.value = result
+                    Log.d("LOGIN VAL","configLoaded.value = ${orgLoginResult.value}")
+                    // successfulLogin = !loginResult.value.token.isNullOrEmpty()
+                    if (loginResult.value?.message != null){
+                        //snackbarHostState.showSnackbar(loginResult.value.message.toString())
+                    }
+
+                    orgLoginResult.value.token?.let {
+                        // snackbarHostState.showSnackbar("Login exitoso...")
+                        appViewModel.storeValueInDataStore(it, Constants.TOKEN)
+                        appViewModel.setToken(it)
+                        appViewModel.setLoggedIn(true)
+                        if (onLoggedInChanged != null) {
+                            onLoggedInChanged(true)
+                        }
+                        // navController.navigate("Privacy")
+
+                        // Log.d("DATASTORE", "Token saved: ${it}")
+                    }
+                    orgLoginResult.value.isAdmin.let {
+                        appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
+                        appViewModel.setIsAdmin(it)
+                    }
+
+                    if (orgLoginResult.value.isAdmin != null &&
+                        orgLoginResult.value.token != null &&
+                        orgLoginResult.value.message != null
+                        ) {
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                    }
                 }
             }
         }
@@ -178,55 +211,107 @@ fun mainLoginPage(
                 color = Color.Black
             )
         )
-        Spacer(modifier = Modifier.height(28.dp))
-        // Email input
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-            colors = TextFieldDefaults.textFieldColors(
-                cursorColor = customRed,
-                focusedIndicatorColor = customPink,
-                unfocusedIndicatorColor = customGray,
-                focusedLabelColor = customLighterRed
-            ),
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Email,
-                    contentDescription = "Email Icon",
-                    tint = customLighterRed
-                )
-            },
-            // modifier = Modifier.background(customGray) // Change this to your desired background color
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Password input
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            colors = TextFieldDefaults.textFieldColors(
-                cursorColor = customRed,
-                focusedIndicatorColor = customPink,
-                unfocusedIndicatorColor = customGray,
-                focusedLabelColor = customLighterRed
-            ),
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Lock,
-                    contentDescription = "Lock Icon",
-                    tint = customLighterRed
-                )
-            }
-            // modifier = Modifier.background(customGray) // Change this to your desired background color
-        )
+
+        buttonSlider { isChecked ->
+            isUserAccount = isChecked
+        }
+        if (isUserAccount) {
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email User") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Email,
+                        contentDescription = "Email Icon",
+                        tint = customLighterRed
+                    )
+                },
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Password input
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password User") },
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = "Lock Icon",
+                        tint = customLighterRed
+                    )
+                }
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+        } else {
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email OSC") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Email,
+                        contentDescription = "Email Icon",
+                        tint = customLighterRed
+                    )
+                },
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Password input
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password OSC") },
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = customRed,
+                    focusedIndicatorColor = customPink,
+                    unfocusedIndicatorColor = customGray,
+                    focusedLabelColor = customLighterRed
+                ),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = "Lock Icon",
+                        tint = customLighterRed
+                    )
+                }
+                // modifier = Modifier.background(customGray) // Change this to your desired background color
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Row {
             MaterialTheme(
@@ -234,9 +319,11 @@ fun mainLoginPage(
             ) {
                 Button(
                     onClick = {
-                        userViewModel.loginUser(email, password)
-
-
+                        if (isUserAccount) {
+                            userViewModel.loginUser(email, password)
+                        } else {
+                            orgViewModel.loginOrg(email, password)
+                        }
                         /*successfulLogin = true
                         loginResult.isAdmin = false
                         navController.navigate("testScreen/${loginResult.isAdmin}")*/
@@ -276,18 +363,18 @@ fun mainLoginPage(
         }
 
         // Wrong login snack-bar message for user
-        LaunchedEffect(!successfulLogin) {
-            if (!successfulLogin) {
+        LaunchedEffect(notSuccessfulLogin) {
+            if (notSuccessfulLogin) {
                 scrollState.animateScrollTo(scrollState.maxValue)
             }
         }
-        if (!successfulLogin) {
+        if (notSuccessfulLogin) {
             Snackbar(
                 modifier = Modifier
                     .padding(16.dp)
                     .background(Color.Green),
                 action = {
-                    TextButton(onClick = { successfulLogin = true }) {
+                    TextButton(onClick = { notSuccessfulLogin = true }) {
                         androidx.compose.material.Text(
                             "Dismiss",
                             color = Color.White,

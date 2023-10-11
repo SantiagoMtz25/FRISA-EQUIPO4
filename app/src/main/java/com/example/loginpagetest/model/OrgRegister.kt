@@ -1,7 +1,5 @@
 package com.example.loginpagetest.model
 
-import com.example.loginpagetest.screens.homepage.Category
-
 data class OrgRegister(
     val name: String,
     val adminName: String,

@@ -10,15 +10,21 @@ import com.example.loginpagetest.model.OrgRegisterResponse
 import com.example.loginpagetest.model.OrgUpdateAccount
 import com.example.loginpagetest.model.OrgUpdateAccountResponse
 import com.example.loginpagetest.model.getoscaverage.OrgAverageResponse
+import com.example.loginpagetest.model.osclogin.OrgLogin
+import com.example.loginpagetest.model.osclogin.OrgLoginResponse
 import com.example.loginpagetest.service.OrgService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class OrgViewModel(private val orgService: OrgService) : ViewModel() {
 
     private val _orgRegisterResult = MutableStateFlow<OrgRegisterResponse?>(null)
     val orgRegisterResult: StateFlow<OrgRegisterResponse?> = _orgRegisterResult
+
+    private val _orgLoginResult = MutableStateFlow<OrgLoginResponse?>(null)
+    val orgLoginResult: StateFlow<OrgLoginResponse?> = _orgLoginResult
 
     private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
     val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
@@ -49,12 +55,54 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
         }
     }
 
+    fun loginOrg (
+        email: String, password: String
+    ) {
+        _orgLoginResult.value = null
+
+        val org = OrgLogin(email, password)
+
+        viewModelScope.launch {
+            var response: OrgLoginResponse
+
+            try {
+                response = orgService.loginOrg(org)
+                _orgLoginResult.value = response
+                Log.d("RESPONSE", response.token.toString())
+            } catch (e: HttpException) {
+
+                when (e.code()) {
+
+                    401 -> {
+                        Log.d("RESPONSE", e.localizedMessage)
+                        val errorMessage = "Credenciales incorrectas"
+                        val errorResponse = OrgLoginResponse(null, errorMessage)
+                        _orgLoginResult.value = errorResponse
+                    }
+
+                    else -> {
+                        Log.d("RESPONSE", e.localizedMessage)
+                        val errorMessage = e.localizedMessage
+                        val errorResponse = OrgLoginResponse(null, errorMessage)
+                        _orgLoginResult.value = errorResponse
+                    }
+                }
+            }
+            catch (e: Exception){
+                Log.d("RESPONSE", e.localizedMessage)
+                val errorMessage = e.localizedMessage
+                val errorResponse = OrgLoginResponse(null, errorMessage)
+                _orgLoginResult.value = errorResponse
+            }
+        }
+    }
+
     fun addOrganization(
         token: String,
         org: OrgRegister
     ) {
 
-        viewModelScope.launch {
+            //viewModelScope.launch {
             //var response: OrgRegisterResponse? = null
             /*try {
                 response = orgService.addOrg(name, adminName, rfc, description, phoneNumber, state, city, email, webpage)
@@ -64,19 +112,19 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
             } catch (e: Exception) {
                 Log.d("RESPONSE", e.localizedMessage)
             }*/
-            viewModelScope.launch {
-                var response: OrgRegisterResponse
-                try {
-                    response = orgService.addOrg(token, org)
-                    _orgRegisterResult.value = response
-                } catch (e: Exception) {
+        viewModelScope.launch {
+            var response: OrgRegisterResponse
+            try {
+                response = orgService.addOrg(token, org)
+                _orgRegisterResult.value = response
+            } catch (e: Exception) {
 
-                    var errorResponse = OrgRegisterResponse("")
-                    errorResponse.message = e.localizedMessage
-                    _orgRegisterResult.value = errorResponse
-                }
+                var errorResponse = OrgRegisterResponse("")
+                errorResponse.message = e.localizedMessage
+                _orgRegisterResult.value = errorResponse
             }
         }
+
     }
 
     fun orgUpdateAccount (
