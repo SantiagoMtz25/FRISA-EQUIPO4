@@ -65,14 +65,14 @@ fun CreateAccount(navController: NavHostController) {
     val registerOSC = OrgViewModel(OrgService.instance)
     val appViewModel: AppViewModel = viewModel()
 
-    LaunchedEffect(key1 = registerUser.registrationResult) {
+    LaunchedEffect(key1 = registerUser) {
         registerUser.registrationResult.collect { result ->
             if (result != null) {
                 navController.navigate("login")
             }
         }
     }
-    LaunchedEffect(key1 = registerOSC.orgRegisterResult) {
+    LaunchedEffect(key1 = registerOSC) {
         registerOSC.orgRegisterResult.collect { result ->
             if (result != null) {
                 navController.navigate("login")
@@ -619,22 +619,23 @@ fun CreateAccount(navController: NavHostController) {
                                 viewModel.password == viewModel.confirmPassword
                             ) {
                                 viewModel.showSuccessSnackbar = true
+                                //coroutineScope.launch {
+
+                                registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.password,
+                                    viewModel.phoneNumber, viewModel.selectedState, viewModel.selectedCity)
+
                                 coroutineScope.launch {
-
-                                    registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.password,
-                                        viewModel.phoneNumber, viewModel.selectedState, viewModel.selectedCity)
-
-
-                                    delay(4000)
-                                    viewModel.name = ""
-                                    viewModel.lastName = ""
-                                    viewModel.email = ""
-                                    viewModel.password = ""
-                                    viewModel.confirmPassword = ""
-                                    viewModel.phoneNumber = ""
-                                    viewModel.selectedState = ""
-                                    viewModel.selectedCity = ""
+                                    delay(3000)
                                 }
+                                /*viewModel.name = ""
+                                viewModel.lastName = ""
+                                viewModel.email = ""
+                                viewModel.password = ""
+                                viewModel.confirmPassword = ""
+                                viewModel.phoneNumber = ""
+                                viewModel.selectedState = ""
+                                viewModel.selectedCity = ""*/
+                                // }
                             } else {
                                 viewModel.showSnackbar = true
                             }
@@ -921,28 +922,30 @@ fun CreateAccount(navController: NavHostController) {
 
                             ) {
                                 oscViewModel.showSuccessSnackbar = true
+                                // coroutineScope.launch {
+
+                                val organization = OrgRegister(
+                                    oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
+                                    oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
+                                    oscViewModel.email, oscViewModel.webpage, oscViewModel.category
+                                )
+                                // double check this
+                                registerOSC.addOrganization(appViewModel.getToken(), organization)
+
                                 coroutineScope.launch {
-
-                                    val organization = OrgRegister(
-                                        oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
-                                        oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
-                                        oscViewModel.email, oscViewModel.webpage, oscViewModel.category
-                                    )
-                                    // double check this
-                                    registerOSC.addOrganization(appViewModel.getToken(), organization)
-
-                                    delay(4000)
-                                    navController.navigate("login")
-                                    oscViewModel.name = ""
-                                    oscViewModel.adminName = ""
-                                    oscViewModel.rfc = ""
-                                    oscViewModel.description = ""
-                                    oscViewModel.phoneNumber = ""
-                                    oscViewModel.selectedState = ""
-                                    oscViewModel.selectedCity = ""
-                                    oscViewModel.email = ""
-                                    oscViewModel.category = ""
+                                    delay(3000)
                                 }
+
+                                /*oscViewModel.name = ""
+                                oscViewModel.adminName = ""
+                                oscViewModel.rfc = ""
+                                oscViewModel.description = ""
+                                oscViewModel.phoneNumber = ""
+                                oscViewModel.selectedState = ""
+                                oscViewModel.selectedCity = ""
+                                oscViewModel.email = ""
+                                oscViewModel.category = ""*/
+                                //}
                             } else {
                                 oscViewModel.showSnackbar = true
                             }

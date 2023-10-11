@@ -1,6 +1,7 @@
 package com.example.loginpagetest
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     // verified screens load correctly, THEY DO
                     // configLoaded.value = true
+                    Log.d("MAIN VAL","configLoaded.value = ${configLoaded.value}")
                     PageNavigation(tokenResult = configLoaded.value)
                 }
             }

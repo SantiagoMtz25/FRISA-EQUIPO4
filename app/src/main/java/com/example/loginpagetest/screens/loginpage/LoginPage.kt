@@ -1,5 +1,6 @@
 package com.example.loginpagetest.screens.loginpage
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -99,37 +100,15 @@ fun mainLoginPage(
         val userViewModel = UserViewModel(UserService.instance)
         val orgViewModel = OrgViewModel(OrgService.instance)
         val appViewModel: AppViewModel = viewModel()
-
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
-        var passwordVisibility by rememberSaveable { mutableStateOf(true) }
+        var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
         var successfulLogin by rememberSaveable { mutableStateOf(false) }
         var notSuccessfulLogin by rememberSaveable { mutableStateOf(false) }
-
         var inviteUser by rememberSaveable { mutableStateOf(false) }
 
-        /*LaunchedEffect(key1 = login.loginResult) {
-            login.loginResult.collect { result ->
-                if (result != null) {
-                    if (!loginResult.token.isNullOrEmpty() && loginResult.isAdmin) {
-                        // Admin user login, navigating to admin screen
-                        successfulLogin = true
-                        navController.navigate("testScreen/${loginResult.isAdmin}")
-
-                    } else if (!loginResult.token.isNullOrEmpty()) {
-                        // Regular user login, navigating to regular user screen
-                        successfulLogin = true
-                        navController.navigate("testScreen/${loginResult.isAdmin}")
-
-                    } else {
-                        // Login failed, showing a snack bar
-                        successfulLogin = false
-                    }
-                }
-            }
-        }*/
         val loginResult = remember {
             mutableStateOf(UserLoginResponse())
         }
@@ -141,11 +120,11 @@ fun mainLoginPage(
                 if (result != null) {
 
                     loginResult.value = result
-
+                    Log.d("LOGIN VAL","configLoaded.value = ${loginResult.value}")
                     // successfulLogin = !loginResult.value.token.isNullOrEmpty()
-                    /*if (loginResult.value?.message != null){
-                        snackbarHostState.showSnackbar(loginResult.value.message.toString())
-                    }*/
+                    if (loginResult.value?.message != null) {
+                        //snackbarHostState.showSnackbar(loginResult.value.message.toString())
+                    }
 
                     loginResult.value.token?.let {
                         // snackbarHostState.showSnackbar("Login exitoso...")
@@ -165,7 +144,14 @@ fun mainLoginPage(
                     }
                     // Navigate to the main screen and pass isAdmin to load different
                     // components in those pages UI/UX
-                    navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                    if (loginResult.value.isAdmin != null &&
+                        loginResult.value.token != null &&
+                        loginResult.value.message != null
+                        ) {
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                    } else {
+                        Log.d("CHECKPOINT", "I reached here")
+                    }
                 }
             }
         }
@@ -174,11 +160,11 @@ fun mainLoginPage(
                 if (result != null) {
 
                     orgLoginResult.value = result
-
+                    Log.d("LOGIN VAL","configLoaded.value = ${orgLoginResult.value}")
                     // successfulLogin = !loginResult.value.token.isNullOrEmpty()
-                    /*if (loginResult.value?.message != null){
-                        snackbarHostState.showSnackbar(loginResult.value.message.toString())
-                    }*/
+                    if (loginResult.value?.message != null){
+                        //snackbarHostState.showSnackbar(loginResult.value.message.toString())
+                    }
 
                     orgLoginResult.value.token?.let {
                         // snackbarHostState.showSnackbar("Login exitoso...")
@@ -196,9 +182,13 @@ fun mainLoginPage(
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
                     }
-                    // Navigate to the main screen and pass isAdmin to load different
-                    // components in those pages UI/UX
-                    navController.navigate("testScreen/${loginResult.value.isAdmin}")
+
+                    if (orgLoginResult.value.isAdmin != null &&
+                        orgLoginResult.value.token != null &&
+                        orgLoginResult.value.message != null
+                        ) {
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                    }
                 }
             }
         }
