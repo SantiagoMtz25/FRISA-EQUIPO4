@@ -20,23 +20,24 @@ import com.example.loginpagetest.screens.inviteuser.inviteUser
 import com.example.loginpagetest.screens.myosc.myOSC
 import com.example.loginpagetest.screens.oscpage.OSCPage
 import com.example.loginpagetest.screens.test.MainScreen
+import com.example.loginpagetest.viewmodel.AppViewModel
 
 @Composable
-fun PageNavigation (tokenResult: Boolean) {
+fun PageNavigation (appViewModel: AppViewModel) {
     val navController = rememberNavController()
 
-    var startScreen by remember { mutableStateOf("") }
+    // var startScreen by remember { mutableStateOf("") }
 
-    if (tokenResult) {
+    /*if (tokenResult) {
         startScreen = "testScreen/${tokenResult}"
     } else {
         startScreen = "login"
         Log.d("STARTING SCREEN", "starting screen = $startScreen")
-    }
+    }*/
 
     NavHost(
         navController = navController,
-        startDestination = startScreen
+        startDestination = "login"
     ) {
         composable("login") {
             myLoginApp(navController)

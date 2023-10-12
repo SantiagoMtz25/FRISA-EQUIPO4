@@ -93,7 +93,7 @@ fun CreateAccount(navController: NavHostController) {
         var isUserAccount by rememberSaveable { mutableStateOf(false) }
 
         Column {
-            CustomTopBar(title = "Create User Account", navController = navController, screen = "login")
+            CustomTopBar(title = "Crear Cuenta", navController = navController, screen = "login")
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -455,7 +455,7 @@ fun CreateAccount(navController: NavHostController) {
                     isUserAccount = isChecked
                 }
                 if (isUserAccount) {
-                    CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Name",
+                    CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Nombre",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.AccountBox,
@@ -463,7 +463,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Last Name",
+                    CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Apellido",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.AccountBox,
@@ -471,7 +471,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Email", keyboardType = KeyboardType.Email,
+                    CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Correo", keyboardType = KeyboardType.Email,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -479,7 +479,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -487,7 +487,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirm Password", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirmar Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -495,7 +495,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Phone Number", keyboardType = KeyboardType.Phone,
+                    CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Teléfono", keyboardType = KeyboardType.Phone,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
@@ -511,7 +511,7 @@ fun CreateAccount(navController: NavHostController) {
                         OutlinedTextField(
                             value = viewModel.selectedState,
                             onValueChange = { /* Ignored for readOnly */ },
-                            label = { Text("State") },
+                            label = { Text("Estado") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -557,7 +557,7 @@ fun CreateAccount(navController: NavHostController) {
                         OutlinedTextField(
                             value = viewModel.selectedCity,
                             onValueChange = { /* Ignored for readOnly */ },
-                            label = { Text("City") },
+                            label = { Text("Ciudad") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -591,7 +591,7 @@ fun CreateAccount(navController: NavHostController) {
                                     Text(text = city)
                                 }
                             } ?: DropdownMenuItem(onClick = { }) {
-                                Text(text = "No cities available")
+                                Text(text = "No hay ciudades disponibles")
                             }
                         }
                     }
@@ -640,7 +640,7 @@ fun CreateAccount(navController: NavHostController) {
                                 viewModel.showSnackbar = true
                             }
                         }) {
-                            Text("Create Account", color = Color.White)
+                            Text("Crear Cuenta", color = Color.White)
                         }
 
                         if (viewModel.showSnackbar && !viewModel.showSuccessSnackbar) {
@@ -651,14 +651,14 @@ fun CreateAccount(navController: NavHostController) {
                                 action = {
                                     TextButton(onClick = { viewModel.showSnackbar = false }) {
                                         Text(
-                                            "Dismiss",
+                                            "Quitar",
                                             color = Color.White,
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
                                 }
                             ) {
-                                Text("Fill all fields and ensure passwords match", color = Color.White)
+                                Text("Llene todos los campos y asegurese que las contraseñas coinciden", color = Color.White)
                             }
                         }
 
@@ -670,7 +670,7 @@ fun CreateAccount(navController: NavHostController) {
                                 action = {
                                     TextButton(onClick = { viewModel.showSuccessSnackbar = false }) {
                                         Text(
-                                            "Dismiss",
+                                            "Quitar",
                                             color = Color.White,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -680,13 +680,13 @@ fun CreateAccount(navController: NavHostController) {
                                 // According to me this will create the return of the UserRegistrationResponse
                                 // Text(text = "${registerUser.protectedResult}")
 
-                                Text("Thank you! Account created successfully", color = Color.White)
+                                Text("Gracias! Cuenta creada exitosamente", color = Color.White)
                             }
                         }
                     }
                 } else {
                     // add here the osc create account screen
-                    CreateAccountTextField(value = oscViewModel.name, onValueChange = { oscViewModel.name = it }, label = "OSC Name",
+                    CreateAccountTextField(value = oscViewModel.name, onValueChange = { oscViewModel.name = it }, label = "OSC Nombre",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.AccountBox,
@@ -694,7 +694,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.adminName, onValueChange = { oscViewModel.adminName = it }, label = "Administrator Name",
+                    CreateAccountTextField(value = oscViewModel.adminName, onValueChange = { oscViewModel.adminName = it }, label = "Administrador Nombre",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
@@ -702,7 +702,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.rfc, onValueChange = { oscViewModel.rfc = it }, label = "RFC (if available)",
+                    CreateAccountTextField(value = oscViewModel.rfc, onValueChange = { oscViewModel.rfc = it }, label = "RFC (si dispone)",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Check,
@@ -710,7 +710,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.description, onValueChange = { oscViewModel.description = it }, label = "Description",
+                    CreateAccountTextField(value = oscViewModel.description, onValueChange = { oscViewModel.description = it }, label = "Descripción",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
@@ -718,7 +718,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.phoneNumber, onValueChange = { oscViewModel.phoneNumber = it }, keyboardType = KeyboardType.Phone ,label = "Phone Number",
+                    CreateAccountTextField(value = oscViewModel.phoneNumber, onValueChange = { oscViewModel.phoneNumber = it }, keyboardType = KeyboardType.Phone ,label = "Teléfono",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
@@ -726,7 +726,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, keyboardType = KeyboardType.Email, label = "Email",
+                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, keyboardType = KeyboardType.Email, label = "Correo",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -734,7 +734,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.webpage, onValueChange = { oscViewModel.webpage = it }, label = "Webpage Link",
+                    CreateAccountTextField(value = oscViewModel.webpage, onValueChange = { oscViewModel.webpage = it }, label = "Link Página Web",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Info,
@@ -742,15 +742,6 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    /*CreateAccountTextField(value = oscViewModel.category, onValueChange = { oscViewModel.category = it }, label = "Category",
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.List,
-                                contentDescription = "Category Icon",
-                                tint = customLighterRed
-                            )
-                        })*/
-
                     var expanded by rememberSaveable { mutableStateOf(false) }
                     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -777,7 +768,7 @@ fun CreateAccount(navController: NavHostController) {
                             modifier = Modifier.fillMaxWidth(),
                             value = categories[selectedIndex],
                             onValueChange = { /* do nothing as we are changing the value using dropdown selections */ },
-                            label = { Text("Category") },
+                            label = { Text("Categoría") },
                             colors = TextFieldDefaults.textFieldColors(
                                 cursorColor = Color.Transparent,
                                 focusedIndicatorColor = Color.Transparent,
@@ -814,7 +805,7 @@ fun CreateAccount(navController: NavHostController) {
                             value = oscViewModel.selectedState,
                             onValueChange = {  },
                             // readOnly = true,
-                            label = { Text("State") },
+                            label = { Text("Estado") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
@@ -858,7 +849,7 @@ fun CreateAccount(navController: NavHostController) {
                         OutlinedTextField(
                             value = oscViewModel.selectedCity,
                             onValueChange = { /* Ignored for readOnly */ },
-                            label = { Text("City") },
+                            label = { Text("Ciudad") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -892,7 +883,7 @@ fun CreateAccount(navController: NavHostController) {
                                     Text(text = city)
                                 }
                             } ?: DropdownMenuItem(onClick = { }) {
-                                Text(text = "No cities available")
+                                Text(text = "No hay ciudades disponibles")
                             }
                         }
                     }
@@ -950,7 +941,7 @@ fun CreateAccount(navController: NavHostController) {
                                 oscViewModel.showSnackbar = true
                             }
                         }) {
-                            Text("Create Account", color = Color.White)
+                            Text("Crear Cuenta", color = Color.White)
                         }
 
                         if (oscViewModel.showSnackbar && !oscViewModel.showSuccessSnackbar) {
@@ -961,14 +952,14 @@ fun CreateAccount(navController: NavHostController) {
                                 action = {
                                     TextButton(onClick = { oscViewModel.showSnackbar = false }) {
                                         Text(
-                                            "Dismiss",
+                                            "Quitar",
                                             color = Color.White,
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
                                 }
                             ) {
-                                Text("Fill all fields correctly", color = Color.White)
+                                Text("Llene los apartados correctamente", color = Color.White)
                             }
                         }
 
@@ -980,14 +971,14 @@ fun CreateAccount(navController: NavHostController) {
                                 action = {
                                     TextButton(onClick = { oscViewModel.showSuccessSnackbar = false }) {
                                         Text(
-                                            "Dismiss",
+                                            "Quitar",
                                             color = Color.White,
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
                                 }
                             ) {
-                                Text("Your submission has been received, if successful you will be reached out.", color = Color.White)
+                                Text("Su solicitud se ha enviado, se le notificara el resultado por correo.", color = Color.White)
                             }
                         }
                     }

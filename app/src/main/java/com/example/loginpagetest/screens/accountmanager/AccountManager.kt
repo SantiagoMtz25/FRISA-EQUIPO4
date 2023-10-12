@@ -93,7 +93,7 @@ fun accountManager(navController: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Your Account", color = Color.White) },
+                title = { Text("Mi Cuenta", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
@@ -133,8 +133,8 @@ fun accountManager(navController: NavHostController) {
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Text("OSC Name: OSC John Doe")
-                            Text("Admin Name: John Doe")
+                            Text("OSC Nombre: OSC John Doe")
+                            Text("Admin Nombre: John Doe")
                         }
                     }
 
@@ -148,7 +148,7 @@ fun accountManager(navController: NavHostController) {
                             contentColor = Color.White
                         )
                     ) {
-                        Text("Update Information")
+                        Text("Actualizar Información")
                     }
 
                     if (areFieldsVisible) {
@@ -163,7 +163,7 @@ fun accountManager(navController: NavHostController) {
                             ) {
                                 CreateAccountTextField(value = oscViewModel.selectedState,
                                     onValueChange = { oscViewModel.selectedState = it },
-                                    label = "Change State",
+                                    label = "Cambiar Estado",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.LocationOn,
@@ -174,7 +174,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = oscViewModel.selectedCity,
                                     onValueChange = { oscViewModel.selectedCity = it },
-                                    label = "Change City",
+                                    label = "Cambiar Ciudad",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Home,
@@ -185,7 +185,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = oscViewModel.phoneNumber,
                                     onValueChange = { oscViewModel.phoneNumber = it },
-                                    label = "Change Number",
+                                    label = "Cambiar Teléfono",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Phone,
@@ -196,7 +196,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = oscViewModel.description,
                                     onValueChange = { oscViewModel.description = it },
-                                    label = "Change Description",
+                                    label = "Cambiar Descripción",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Menu,
@@ -207,7 +207,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = oscViewModel.rfc,
                                     onValueChange = { oscViewModel.rfc = it },
-                                    label = "RFC Change",
+                                    label = "Cambiar RFC",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.AccountBox,
@@ -218,7 +218,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = oscViewModel.webpage,
                                     onValueChange = { oscViewModel.webpage = it },
-                                    label = "Webpage Change",
+                                    label = "Cambiar Link Página Web",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Send,
@@ -229,7 +229,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = oscViewModel.category,
                                     onValueChange = { oscViewModel.category = it },
-                                    label = "Category Change",
+                                    label = "Cambiar Categoría",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Send,
@@ -268,7 +268,7 @@ fun accountManager(navController: NavHostController) {
                                             contentColor = Color.White
                                         )
                                     ) {
-                                        Text("Save Changes")
+                                        Text("Guardar Cambios")
                                     }
                                 }
                             }
@@ -294,8 +294,8 @@ fun accountManager(navController: NavHostController) {
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Text("Name: John Doe")
-                            Text("Email: john.doe@example.com")
+                            Text("Nombre: John Doe")
+                            Text("Correo: john.doe@example.com")
                         }
                     }
 
@@ -309,7 +309,7 @@ fun accountManager(navController: NavHostController) {
                             contentColor = Color.White
                         )
                     ) {
-                        Text("Update Information")
+                        Text("Actualizar Información")
                     }
 
                     if (areFieldsVisible) {
@@ -324,7 +324,7 @@ fun accountManager(navController: NavHostController) {
                             ) {
                                 CreateAccountTextField(value = viewModel.selectedState,
                                     onValueChange = { viewModel.selectedState = it },
-                                    label = "Change State",
+                                    label = "Cambiar Estado",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.LocationOn,
@@ -335,7 +335,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = viewModel.selectedCity,
                                     onValueChange = { viewModel.selectedCity = it },
-                                    label = "Change City",
+                                    label = "Cambiar Ciudad",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Home,
@@ -346,7 +346,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = viewModel.phoneNumber,
                                     onValueChange = { viewModel.phoneNumber = it },
-                                    label = "Change Number",
+                                    label = "Cambiar Teléfono",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Phone,
@@ -357,7 +357,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = viewModel.password,
                                     onValueChange = { viewModel.password = it },
-                                    label = "Change Password",
+                                    label = "Cambiar Contraseña",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Lock,
@@ -368,7 +368,7 @@ fun accountManager(navController: NavHostController) {
                                 )
                                 CreateAccountTextField(value = viewModel.confirmPassword,
                                     onValueChange = { viewModel.confirmPassword = it },
-                                    label = "Confirm Change",
+                                    label = "Confirmar Contraseña",
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Default.Lock,
@@ -404,7 +404,7 @@ fun accountManager(navController: NavHostController) {
                                             contentColor = Color.White
                                         )
                                     ) {
-                                        Text("Save Changes")
+                                        Text("Guardar Cambios")
                                     }
                                 }
                             }

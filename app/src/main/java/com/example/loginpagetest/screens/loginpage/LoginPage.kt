@@ -135,8 +135,9 @@ fun mainLoginPage(
                             onLoggedInChanged(true)
                         }
                         // navController.navigate("Privacy")
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
 
-                        // Log.d("DATASTORE", "Token saved: ${it}")
+                        Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     loginResult.value.isAdmin.let {
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
@@ -144,14 +145,6 @@ fun mainLoginPage(
                     }
                     // Navigate to the main screen and pass isAdmin to load different
                     // components in those pages UI/UX
-                    if (loginResult.value.isAdmin != null &&
-                        loginResult.value.token != null &&
-                        loginResult.value.message != null
-                        ) {
-                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
-                    } else {
-                        Log.d("CHECKPOINT", "I reached here")
-                    }
                 }
             }
         }
@@ -175,19 +168,13 @@ fun mainLoginPage(
                             onLoggedInChanged(true)
                         }
                         // navController.navigate("Privacy")
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
 
                         // Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     orgLoginResult.value.isAdmin.let {
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
-                    }
-
-                    if (orgLoginResult.value.isAdmin != null &&
-                        orgLoginResult.value.token != null &&
-                        orgLoginResult.value.message != null
-                        ) {
-                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
                     }
                 }
             }
@@ -219,7 +206,7 @@ fun mainLoginPage(
             TextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email User") },
+                label = { Text("Correo Usuario") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                 colors = TextFieldDefaults.textFieldColors(
@@ -242,7 +229,7 @@ fun mainLoginPage(
             TextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password User") },
+                label = { Text("Contraseña Usuario") },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
@@ -267,7 +254,7 @@ fun mainLoginPage(
             TextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email OSC") },
+                label = { Text("Correo OSC") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                 colors = TextFieldDefaults.textFieldColors(
@@ -290,7 +277,7 @@ fun mainLoginPage(
             TextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password OSC") },
+                label = { Text("Contraseña OSC") },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
@@ -328,9 +315,9 @@ fun mainLoginPage(
                         loginResult.isAdmin = false
                         navController.navigate("testScreen/${loginResult.isAdmin}")*/
                     },
-                    modifier = Modifier.width(100.dp)
+                    modifier = Modifier.width(140.dp)
                 ) {
-                    Text("Login")
+                    Text("Iniciar Sesión")
                 }
             }
             Spacer(modifier = Modifier.width(14.dp))
@@ -341,9 +328,9 @@ fun mainLoginPage(
                     onClick = {
                         navController.navigate("create_account")
                     },
-                    modifier = Modifier.width(165.dp)
+                    modifier = Modifier.width(140.dp)
                 ) {
-                    Text("Create Account")
+                    Text("Crear Cuenta")
                 }
             }
         }
@@ -356,9 +343,9 @@ fun mainLoginPage(
                     inviteUser = true
                     navController.navigate("inviteUser/${inviteUser}")
                 },
-                modifier = Modifier.width(145.dp)
+                modifier = Modifier.width(160.dp)
             ) {
-                Text("Invite User")
+                Text("Usuario Invitado")
             }
         }
 
@@ -376,14 +363,14 @@ fun mainLoginPage(
                 action = {
                     TextButton(onClick = { notSuccessfulLogin = true }) {
                         androidx.compose.material.Text(
-                            "Dismiss",
+                            "Quitar",
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
             ) {
-                androidx.compose.material.Text("Email or Password are incorrect", color = Color.White)
+                androidx.compose.material.Text("Correo o contraseña incorrectos.", color = Color.White)
             }
         }
         LaunchedEffect(successfulLogin) {
@@ -399,14 +386,14 @@ fun mainLoginPage(
                 action = {
                     TextButton(onClick = { successfulLogin = false }) {
                         androidx.compose.material.Text(
-                            "Dismiss",
+                            "Quitar",
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
             ) {
-                androidx.compose.material.Text("Login Successful", color = Color.White)
+                androidx.compose.material.Text("Inicio de sesión exitoso", color = Color.White)
             }
         }
     }

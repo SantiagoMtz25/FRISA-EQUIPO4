@@ -27,16 +27,16 @@ interface UserService {
 
     companion object {
         // place our link here from FL0 server once api is uploaded
-        val instance: UserService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/users/")
+        val instance: UserService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/auth/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UserService::class.java)
     }
 
-    @POST("register")
+    @POST("user_register")
     suspend fun insertUser(@Body user: UserRegister): UserRegistrationResponse
 
-    @POST("login")
+    @POST("user_login")
     suspend fun loginUser(@Body user: UserLogin): UserLoginResponse
 
     @POST("addfavourite")

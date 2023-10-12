@@ -63,7 +63,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
 
             // Menu Items
             Text(
-                text = "Home",
+                text = "Catálogo ",
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -75,7 +75,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             if (isAdmin) {
                 // Load something else here
                 Text(
-                    text = "My Organization",
+                    text = "Mi Organización",
                     fontSize = 18.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -86,7 +86,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                 )
             } else {
                 Text(
-                    text = "My Favorites",
+                    text = "Mis Favoritos",
                     fontSize = 18.sp,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,7 +98,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             }
             //Divider(modifier = Modifier.padding(horizontal = 16.dp))
             Text(
-                text = "My Account",
+                text = "Mi Cuenta",
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,7 +111,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             Divider(modifier = Modifier.padding(horizontal = 16.dp))
             // Future adds can go here
             Text(
-                text = "About App",
+                text = "Acerca de la App",
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,7 +122,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             )
             //Divider(modifier = Modifier.padding(horizontal = 16.dp))
             Text(
-                text = "Log Out",
+                text = "Cerrar Sesión",
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()

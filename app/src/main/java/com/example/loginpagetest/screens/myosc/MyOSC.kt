@@ -76,7 +76,7 @@ fun myOSC (navController: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("MyOSC Control Panel", color = Color.White) },
+                title = { Text("Panel de Control", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
@@ -115,8 +115,8 @@ fun myOSC (navController: NavHostController) {
                         contentDescription = "Profile Picture",
                         modifier = Modifier.size(100.dp)
                     )
-                    Text("OSC Name: OSC John Doe")
-                    Text("Admin Name: Admin John Doe")
+                    Text("Nombre OSC: OSC John Doe")
+                    Text("Nombre Admin: Admin John Doe")
                 }
             }
             Card(
@@ -130,7 +130,7 @@ fun myOSC (navController: NavHostController) {
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        text = "Average:",
+                        text = "Promedio:",
                         fontSize = 20.sp,
                         modifier = Modifier
                             .fillMaxWidth()

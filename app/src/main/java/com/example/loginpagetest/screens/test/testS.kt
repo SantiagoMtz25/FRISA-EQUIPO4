@@ -28,7 +28,7 @@ fun MainScreen(content: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Welcome", color = Color.White)},
+                title = { Text("Bienvenid@", color = Color.White)},
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {

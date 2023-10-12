@@ -73,11 +73,11 @@ fun myFavourites(content: NavHostController) {
     val userViewModel = UserViewModel(UserService.instance)
 
     var eventsList = listOf(
-        Event("Event 1", "2023-10-01", "Salud","This is a short description of Event 1."),
-        Event("Event 2", "2023-11-01", "Educación","This is a short description of Event 2."),
-        Event("Event 3", "2023-12-01", "Derechos humanos","This is a short description of Event 3."),
-        Event("Event 4", "2023-12-01", "Transporte Público","This is a short description of Event 4."),
-        Event("Event 5", "2023-12-01", "Medio Ambiente","This is a short description of Event 5.")
+        Event("Evento 1", "2023-10-01", "Salud","This is a short description of Event 1."),
+        Event("Evento 2", "2023-11-01", "Educación","This is a short description of Event 2."),
+        Event("Evento 3", "2023-12-01", "Derechos humanos","This is a short description of Event 3."),
+        Event("Evento 4", "2023-12-01", "Transporte Público","This is a short description of Event 4."),
+        Event("Evento 5", "2023-12-01", "Medio Ambiente","This is a short description of Event 5.")
     )
     val filteredEvents by derivedStateOf {
         if (searchQuery.isEmpty()) eventsList else eventsList.filter { it.category == searchQuery }
@@ -104,7 +104,7 @@ fun myFavourites(content: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Your favourites", color = Color.White) },
+                title = { Text("Mis Favoritos", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
@@ -143,7 +143,7 @@ fun myFavourites(content: NavHostController) {
             }
 
             Text(
-                text = "Recent News", fontSize = 20.sp,
+                text = "Noticias Recientes", fontSize = 20.sp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
@@ -199,7 +199,7 @@ fun myFavourites(content: NavHostController) {
                                                 .background(myColor)
                                         )
                                         Text(
-                                            "OSC Number #$currentItemIndex",
+                                            "Número de OSC #$currentItemIndex",
                                             style = TextStyle(
                                                 fontSize = 20.sp,
                                                 fontWeight = FontWeight.Bold,
@@ -209,7 +209,7 @@ fun myFavourites(content: NavHostController) {
                                         )
 
                                         Text(
-                                            "Welcome to OSC Number #$currentItemIndex\n" +
+                                            "Bienvenid@ a la OSC número #$currentItemIndex\n" +
                                                     "We would like to share that we have reached our most important goal of reaching to ...\n" +
                                                     "For the past year and a half, we have been working on a project called ... which sought to ...\n\n"
                                                         .trimIndent(),
@@ -234,7 +234,7 @@ fun myFavourites(content: NavHostController) {
             }
             Spacer(modifier = Modifier.height(14.dp))
             Text(
-                text = "Upcoming Events", fontSize = 20.sp,
+                text = "Próximos Eventos", fontSize = 20.sp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),

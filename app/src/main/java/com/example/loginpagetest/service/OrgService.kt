@@ -20,17 +20,17 @@ interface OrgService {
 
     companion object {
 
-        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/osc/")
+        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/auth/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(OrgService::class.java)
 
     }
 
-    @POST("register")
+    @POST("osc_register")
     suspend fun addOrg(@Header("Authorization") token: String, @Body osc: OrgRegister) : OrgRegisterResponse
 
-    @POST("loginOrg")
+    @POST("osc_login")
     suspend fun loginOrg(@Body org: OrgLogin) : OrgLoginResponse
 
     @POST("addgrade")

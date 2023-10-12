@@ -11,7 +11,7 @@ fun inviteUser (navController: NavHostController) {
     val inviteUser: Boolean = navController.currentBackStackEntry
         ?.arguments?.getBoolean("inviteUser") ?: false
     Column {
-        CustomTopBar(title = "Welcome", navController = navController, screen = "login")
+        CustomTopBar(title = "Bienvenid@", navController = navController, screen = "login")
         OrganizationsCatalogue(content = navController, inviteUser, isAdmin = false)
     }
 }

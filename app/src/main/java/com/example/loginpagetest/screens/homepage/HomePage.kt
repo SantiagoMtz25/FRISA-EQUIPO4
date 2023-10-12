@@ -54,9 +54,14 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
         "Cultura" to listOf("Org cultural 1", "Org cultural 2", "Org cultural 3"),
         "Servicios Asistenciales" to listOf("Org de servicios 1", "Org de servicios 2", "Org de servicios 3")
     )
-    val filteredAndSortedCategories = organizationsMap.keys.filter {
-        it.contains(searchQuery, ignoreCase = true)
-    }.sortedBy { it != searchQuery }
+    val filteredAndSortedCategories: Map<String, List<String>> = organizationsMap
+        .mapValues { entry ->
+            entry.value.filter {
+                it.contains(searchQuery, ignoreCase = true) || entry.key.contains(searchQuery, ignoreCase = true)
+            }
+        }
+        .filter { it.value.isNotEmpty() }
+
     var starFilter by remember { mutableIntStateOf(0) }
 
     Column {
@@ -70,7 +75,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 singleLine = true,
-                label = { Text("Search for OSC") },
+                label = { Text("Buscar OSC") },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Search
                 ),
@@ -116,14 +121,14 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             .padding(16.dp)
                             .background(color = Color.White, shape = RoundedCornerShape(8.dp))
                     ) {
-                        Text(text = "Filters", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Filtros", style = MaterialTheme.typography.bodyMedium)
                         Divider()
                         // Name Filter
-                        Text("Name:")
+                        /*Text("Nombre:")
                         OutlinedTextField(
                             value = "",
                             onValueChange = { /*Handle Name Filter Change*/ },
-                            label = { Text("Name") },
+                            label = { Text("Nombre") },
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -142,11 +147,11 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             )
                         )
                         // Location Filter
-                        Text("Location:")
+                        Text("Ubicación:")
                         OutlinedTextField(
                             value = "",
                             onValueChange = { /*Handle Name Filter Change*/ },
-                            label = { Text("Name") },
+                            label = { Text("Ubicación") },
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -163,9 +168,9 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     // Handle on Done Clicked
                                 }
                             )
-                        )
+                        )*/
                         // Category Filter
-                        Text("Category:")
+                        Text("Categoría:")
                         LazyColumn {
                             items(organizationsMap.keys.toList()) { category ->
                                 val isSelected = category == selectedCategory
@@ -187,7 +192,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                         }
                         Divider()
                         // Star Filter
-                        Text("Stars:")
+                        Text("Estrellas:")
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -206,7 +211,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                         ) {
                             Button(onClick = { isPopupVisible = false }) {
-                                Text("Apply")
+                                Text("Buscar")
                             }
                         }
                     }
@@ -232,7 +237,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            items(filteredAndSortedCategories) { category ->
+            items(filteredAndSortedCategories.keys.toList()) { category ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -262,8 +267,8 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                 }
                 if (!isAdmin) {
                     if (selectedCategory == category) {
-                        organizationsMap[category]?.forEach { organization ->
-                            Card(
+                        filteredAndSortedCategories[category]?.forEach { organization ->
+                        Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
@@ -359,4 +364,3 @@ fun Chip(tag: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
         Text(text = tag)
     }
 }
-

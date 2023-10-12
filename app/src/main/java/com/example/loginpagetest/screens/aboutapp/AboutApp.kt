@@ -59,7 +59,7 @@ fun aboutApp(content: NavHostController) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("About App", color = Color.White) },
+                title = { Text("Acerca de la App", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {
@@ -85,16 +85,16 @@ fun aboutApp(content: NavHostController) {
             modifier = Modifier.padding(16.dp)
         ) {
             item {
-                Text("OSC Catalogue", style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center))
+                Text("Catálogo OSC", style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center))
             }
             item {
-                Text("Version 1.0.0", style = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center, color = customgray))
+                Text("Versión 1.0.0", style = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center, color = customgray))
             }
             item {
                 Text(
-                "Welcome to OSC Catalogue!\n\n" +
-                    "This app is designed to connect users with OSCs in México and to promote greater civic participation.\n\n" +
-                    "Explore a catalogue of OSCs and find opportunities to engage in various citizenship activities through different categories.\n\n"
+                "Bienvenid@ al Catálogo OSC!\n\n" +
+                        "Esta aplicación está diseñada para conectar a los usuarios con las OSCs en México y promover una mayor participación cívica.\n\n" +
+                        "Explora un catálogo de OSCs y encuentra oportunidades para participar en diversas actividades ciudadanas a través de diferentes categorías.\n\n"
                 .trimIndent(),
                     style = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Justify),
                     modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
@@ -102,7 +102,7 @@ fun aboutApp(content: NavHostController) {
             }
             item {
                 Text(
-                    text = "For further information contact us through email: ",
+                    text = "Para más información contáctanos por correo: ",
                     style = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Justify, color = customgray)
                 )
             }
@@ -143,7 +143,7 @@ fun aboutApp(content: NavHostController) {
             }
             item {
                 Text(
-                    text = "\nOr visit our webpage at: ",
+                    text = "\nO visita nuestra página web en:",
                     style = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center, color = customgray)
                 )
             }
