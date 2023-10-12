@@ -47,7 +47,7 @@ fun buttonSlider(onSwitchToggled: (Boolean) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "User Account",
+                    text = "Cuenta Usuario",
                     color = if (!isSwitchChecked) Color.White else Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -57,7 +57,7 @@ fun buttonSlider(onSwitchToggled: (Boolean) -> Unit) {
                 )
 
                 Text(
-                    text = "OSC Account",
+                    text = "Cuenta OSC",
                     color = if (isSwitchChecked) Color.White else Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,

@@ -88,7 +88,7 @@ fun OSCPage(content: NavHostController) {
     var savedStarRank by rememberSaveable { mutableIntStateOf(0) }
 
     Column {
-        CustomTopBar2(title = "OSC Page", navController = content)
+        CustomTopBar2(title = "Página OSC", navController = content)
 
         Card(
             modifier = Modifier
@@ -119,9 +119,9 @@ fun OSCPage(content: NavHostController) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text(text = "Name", fontWeight = FontWeight.Bold)
-                        Text(text = "Location")
-                        Text(text = "Category")
+                        Text(text = "Nombre", fontWeight = FontWeight.Bold)
+                        Text(text = "Ubicación")
+                        Text(text = "Categoría")
                     }
                 }
 
@@ -181,7 +181,7 @@ fun OSCPage(content: NavHostController) {
                     var dialNumberTrigger by remember { mutableStateOf(false) }
 
                     Text(
-                        text = "Phone: $phoneNumber",
+                        text = "Teléfono: $phoneNumber",
                         modifier = Modifier.clickable {
                             dialNumber // This will trigger the LaunchedEffect below
                         }
@@ -199,7 +199,7 @@ fun OSCPage(content: NavHostController) {
                         }
                     )
                     Text(
-                        text = "Email: $email",
+                        text = "Correo: $email",
                         modifier = Modifier.clickable {
                             openEmailTrigger = true
                         }
@@ -275,7 +275,7 @@ fun OSCPage(content: NavHostController) {
                 }*/
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
-                Text("Rank the OSC:")
+                Text("Califica la OSC:")
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -293,7 +293,7 @@ fun OSCPage(content: NavHostController) {
                                         editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
                                         editor.apply()
                                     } else {
-                                        Toast.makeText(context, "You need to wait 24 hours before ranking again.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "Debe esperar 24 horas para volver a calificar.", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                                 .padding(7.dp)

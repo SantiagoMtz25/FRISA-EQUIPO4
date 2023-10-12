@@ -116,14 +116,14 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             .padding(16.dp)
                             .background(color = Color.White, shape = RoundedCornerShape(8.dp))
                     ) {
-                        Text(text = "Filters", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Filtros", style = MaterialTheme.typography.bodyMedium)
                         Divider()
                         // Name Filter
-                        Text("Name:")
+                        Text("Nombre:")
                         OutlinedTextField(
                             value = "",
                             onValueChange = { /*Handle Name Filter Change*/ },
-                            label = { Text("Name") },
+                            label = { Text("Nombre") },
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -142,11 +142,11 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             )
                         )
                         // Location Filter
-                        Text("Location:")
+                        Text("Ubicación:")
                         OutlinedTextField(
                             value = "",
                             onValueChange = { /*Handle Name Filter Change*/ },
-                            label = { Text("Name") },
+                            label = { Text("Nombre") },
                             singleLine = true,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -165,7 +165,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             )
                         )
                         // Category Filter
-                        Text("Category:")
+                        Text("Categoría:")
                         LazyColumn {
                             items(organizationsMap.keys.toList()) { category ->
                                 val isSelected = category == selectedCategory
@@ -187,7 +187,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                         }
                         Divider()
                         // Star Filter
-                        Text("Stars:")
+                        Text("Estrellas:")
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -206,7 +206,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                             colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                         ) {
                             Button(onClick = { isPopupVisible = false }) {
-                                Text("Apply")
+                                Text("Buscar")
                             }
                         }
                     }

@@ -219,7 +219,7 @@ fun mainLoginPage(
             TextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email User") },
+                label = { Text("Correo Usuario") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                 colors = TextFieldDefaults.textFieldColors(
@@ -242,7 +242,7 @@ fun mainLoginPage(
             TextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password User") },
+                label = { Text("Contraseña Usuario") },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
@@ -267,7 +267,7 @@ fun mainLoginPage(
             TextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email OSC") },
+                label = { Text("Correo OSC") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                 colors = TextFieldDefaults.textFieldColors(
@@ -290,7 +290,7 @@ fun mainLoginPage(
             TextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password OSC") },
+                label = { Text("Contraseña OSC") },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
@@ -330,7 +330,7 @@ fun mainLoginPage(
                     },
                     modifier = Modifier.width(100.dp)
                 ) {
-                    Text("Login")
+                    Text("Iniciar Sesión")
                 }
             }
             Spacer(modifier = Modifier.width(14.dp))
@@ -343,7 +343,7 @@ fun mainLoginPage(
                     },
                     modifier = Modifier.width(165.dp)
                 ) {
-                    Text("Create Account")
+                    Text("Crear Cuenta")
                 }
             }
         }
@@ -358,7 +358,7 @@ fun mainLoginPage(
                 },
                 modifier = Modifier.width(145.dp)
             ) {
-                Text("Invite User")
+                Text("Usuario Invitado")
             }
         }
 
@@ -376,14 +376,14 @@ fun mainLoginPage(
                 action = {
                     TextButton(onClick = { notSuccessfulLogin = true }) {
                         androidx.compose.material.Text(
-                            "Dismiss",
+                            "Quitar",
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
             ) {
-                androidx.compose.material.Text("Email or Password are incorrect", color = Color.White)
+                androidx.compose.material.Text("Correo o contraseña incorrectos.", color = Color.White)
             }
         }
         LaunchedEffect(successfulLogin) {
@@ -399,14 +399,14 @@ fun mainLoginPage(
                 action = {
                     TextButton(onClick = { successfulLogin = false }) {
                         androidx.compose.material.Text(
-                            "Dismiss",
+                            "Quitar",
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
             ) {
-                androidx.compose.material.Text("Login Successful", color = Color.White)
+                androidx.compose.material.Text("Inicio de sesión exitoso", color = Color.White)
             }
         }
     }
