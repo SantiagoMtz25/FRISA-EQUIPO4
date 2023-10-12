@@ -135,8 +135,9 @@ fun mainLoginPage(
                             onLoggedInChanged(true)
                         }
                         // navController.navigate("Privacy")
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
 
-                        // Log.d("DATASTORE", "Token saved: ${it}")
+                        Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     loginResult.value.isAdmin.let {
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
@@ -144,14 +145,6 @@ fun mainLoginPage(
                     }
                     // Navigate to the main screen and pass isAdmin to load different
                     // components in those pages UI/UX
-                    if (loginResult.value.isAdmin != null &&
-                        loginResult.value.token != null &&
-                        loginResult.value.message != null
-                        ) {
-                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
-                    } else {
-                        Log.d("CHECKPOINT", "I reached here")
-                    }
                 }
             }
         }
@@ -175,19 +168,13 @@ fun mainLoginPage(
                             onLoggedInChanged(true)
                         }
                         // navController.navigate("Privacy")
+                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
 
                         // Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     orgLoginResult.value.isAdmin.let {
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
-                    }
-
-                    if (orgLoginResult.value.isAdmin != null &&
-                        orgLoginResult.value.token != null &&
-                        orgLoginResult.value.message != null
-                        ) {
-                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
                     }
                 }
             }

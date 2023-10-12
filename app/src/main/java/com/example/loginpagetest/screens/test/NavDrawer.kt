@@ -63,7 +63,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
 
             // Menu Items
             Text(
-                text = "Catálogo",
+                text = "Catálogo ",
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
