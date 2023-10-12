@@ -328,7 +328,7 @@ fun mainLoginPage(
                         loginResult.isAdmin = false
                         navController.navigate("testScreen/${loginResult.isAdmin}")*/
                     },
-                    modifier = Modifier.width(100.dp)
+                    modifier = Modifier.width(140.dp)
                 ) {
                     Text("Iniciar Sesión")
                 }
@@ -341,7 +341,7 @@ fun mainLoginPage(
                     onClick = {
                         navController.navigate("create_account")
                     },
-                    modifier = Modifier.width(165.dp)
+                    modifier = Modifier.width(140.dp)
                 ) {
                     Text("Crear Cuenta")
                 }
@@ -356,7 +356,7 @@ fun mainLoginPage(
                     inviteUser = true
                     navController.navigate("inviteUser/${inviteUser}")
                 },
-                modifier = Modifier.width(145.dp)
+                modifier = Modifier.width(160.dp)
             ) {
                 Text("Usuario Invitado")
             }

@@ -658,7 +658,7 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
-                                Text("Llené todos los campos y asegurese que las contraseñas coinciden", color = Color.White)
+                                Text("Llene todos los campos y asegurese que las contraseñas coinciden", color = Color.White)
                             }
                         }
 
