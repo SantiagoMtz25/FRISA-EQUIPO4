@@ -38,7 +38,6 @@ import com.example.loginpagetest.viewmodel.UserViewModel
 fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAdmin: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
-    val customLighterRed = colorResource(id = R.color.almostlogored)
     val customGray = colorResource(id = R.color.logoGray)
     val customPink = colorResource(id = R.color.lightred_pink)
     var searchQuery by remember { mutableStateOf("") }

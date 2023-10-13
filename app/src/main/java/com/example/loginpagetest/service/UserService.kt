@@ -33,7 +33,7 @@ interface UserService {
             .create(UserService::class.java)
     }
 
-    @POST("user_register")
+    @POST("userregister")
     suspend fun insertUser(@Body user: UserRegister): UserRegistrationResponse
 
     @POST("user_login")

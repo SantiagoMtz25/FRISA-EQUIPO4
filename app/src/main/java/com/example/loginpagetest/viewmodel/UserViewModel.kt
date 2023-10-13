@@ -3,7 +3,6 @@ package com.example.loginpagetest.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavourites

@@ -50,12 +50,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.loginpagetest.screens.createaccount.CreateAccountTextField
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun accountManager(navController: NavHostController) {
+fun accountManager(navController: NavHostController, appViewModel: AppViewModel) {
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
@@ -72,32 +73,24 @@ fun accountManager(navController: NavHostController) {
     LaunchedEffect(key1 = userVM.updateAccountResult) {
         userVM.updateAccountResult.collect { result ->
             if (result != null) {
-                // message of account updated, do not allow user to update every  single time
+
             }
         }
     }
     LaunchedEffect(key1 = orgVM.updateAccountResult) {
         orgVM.updateAccountResult.collect { result ->
             if (result != null) {
-                // same as the previous one
+
             }
         }
     }
 
-    var name by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var selectedState by remember { mutableStateOf("") }
     var selectedCity by remember { mutableStateOf("") }
-    var isStateDropdownExpanded by remember { mutableStateOf(false) }
-    var isCityDropdownExpanded by remember { mutableStateOf(false) }
-    var showSnackbar by remember { mutableStateOf(false) }
-    var showSuccessSnackbar by remember { mutableStateOf(false) }
 
-    var adminName by remember { mutableStateOf("") }
     var rfc by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var webpage by remember { mutableStateOf("") }

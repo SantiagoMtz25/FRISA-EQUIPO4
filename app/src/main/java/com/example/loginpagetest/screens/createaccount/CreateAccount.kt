@@ -46,6 +46,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
 import com.example.loginpagetest.model.OrgRegister
+import com.example.loginpagetest.model.OrgRegisterResponse
+import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.AppViewModel
@@ -54,21 +56,45 @@ import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateAccount(navController: NavHostController) {
-    val registerUser = UserViewModel(UserService.instance)
-    val registerOSC = OrgViewModel(OrgService.instance)
-    val appViewModel: AppViewModel = viewModel()
+fun CreateAccount(navController: NavHostController, appViewModel: AppViewModel) {
+    val userViewModel = UserViewModel(UserService.instance)
+    val orgViewModel = OrgViewModel(OrgService.instance)
+    // val appViewModel: AppViewModel = viewModel()
 
-    LaunchedEffect(key1 = registerUser) {
-        registerUser.registrationResult.collect { result ->
+    var name by remember { mutableStateOf("Santiago") }
+    var lastName by remember { mutableStateOf("Martinez") }
+    var email by remember { mutableStateOf("santimtzv01@gmail.com") }
+    var password by remember { mutableStateOf("1234") }
+    var confirmPassword by remember { mutableStateOf("1234") }
+    var phoneNumber by remember { mutableStateOf("477") }
+    var selectedState by remember { mutableStateOf("Guanajuato") }
+    var selectedCity by remember { mutableStateOf("Leon") }
+    var isStateDropdownExpanded by remember { mutableStateOf(false) }
+    var isCityDropdownExpanded by remember { mutableStateOf(false) }
+    var showSnackbar by remember { mutableStateOf(false) }
+    var showSuccessSnackbar by remember { mutableStateOf(false) }
+
+    var adminName by remember { mutableStateOf("Admin Nombre Ejemplo") }
+    var rfc by remember { mutableStateOf("LOGJ580812RH7") }
+    var description by remember { mutableStateOf("Esta organización trata de...") }
+    var webpage by remember { mutableStateOf("www.ejemploosc.com.mx") }
+    var category by remember { mutableStateOf("Salud") }
+
+    val registrationResult = remember { mutableStateOf(UserRegistrationResponse()) }
+    val orgRegistrationResult = remember { mutableStateOf(OrgRegisterResponse()) }
+
+    LaunchedEffect(key1 = userViewModel) {
+        userViewModel.registrationResult.collect { result ->
             if (result != null) {
+                registrationResult.value = result
                 navController.navigate("login")
             }
         }
     }
-    LaunchedEffect(key1 = registerOSC) {
-        registerOSC.orgRegisterResult.collect { result ->
+    LaunchedEffect(key1 = orgViewModel) {
+        orgViewModel.orgRegisterResult.collect { result ->
             if (result != null) {
+                orgRegistrationResult.value = result
                 navController.navigate("login")
             }
         }
@@ -85,25 +111,6 @@ fun CreateAccount(navController: NavHostController) {
         val customGray = colorResource(id = R.color.logoGray)
         val customPink = colorResource(id = R.color.lightred_pink)
         var isUserAccount by rememberSaveable { mutableStateOf(false) }
-
-        var name by remember { mutableStateOf("") }
-        var lastName by remember { mutableStateOf("") }
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        var confirmPassword by remember { mutableStateOf("") }
-        var phoneNumber by remember { mutableStateOf("") }
-        var selectedState by remember { mutableStateOf("") }
-        var selectedCity by remember { mutableStateOf("") }
-        var isStateDropdownExpanded by remember { mutableStateOf(false) }
-        var isCityDropdownExpanded by remember { mutableStateOf(false) }
-        var showSnackbar by remember { mutableStateOf(false) }
-        var showSuccessSnackbar by remember { mutableStateOf(false) }
-
-        var adminName by remember { mutableStateOf("") }
-        var rfc by remember { mutableStateOf("") }
-        var description by remember { mutableStateOf("") }
-        var webpage by remember { mutableStateOf("") }
-        var category by remember { mutableStateOf("") }
 
         Column {
             CustomTopBar(title = "Crear Cuenta", navController = navController, screen = "login")
@@ -617,30 +624,20 @@ fun CreateAccount(navController: NavHostController) {
                             if (name.isNotEmpty() &&
                                 lastName.isNotEmpty() &&
                                 email.isNotEmpty() &&
-                                selectedCity.isNotEmpty() &&
-                                selectedState.isNotEmpty() &&
-                                phoneNumber.isNotEmpty() &&
                                 password.isNotEmpty() &&
+                                confirmPassword.isNotEmpty() &&
+                                phoneNumber.isNotEmpty() &&
+                                selectedState.isNotEmpty() &&
+                                selectedCity.isNotEmpty() &&
                                 password == confirmPassword
                             ) {
                                 showSuccessSnackbar = true
-                                //coroutineScope.launch {
-
-                                registerUser.addUser(name, lastName, email, password,
+                                coroutineScope.launch {
+                                    delay(1500)
+                                }
+                                userViewModel.addUser(name, lastName, email, password,
                                     phoneNumber, selectedState, selectedCity)
 
-                                coroutineScope.launch {
-                                    delay(3000)
-                                }
-                                /*name = ""
-                                lastName = ""
-                                email = ""
-                                password = ""
-                                confirmPassword = ""
-                                phoneNumber = ""
-                                selectedState = ""
-                                selectedCity = ""*/
-                                // }
                             } else {
                                 showSnackbar = true
                             }
@@ -682,9 +679,6 @@ fun CreateAccount(navController: NavHostController) {
                                     }
                                 }
                             ) {
-                                // According to me this will create the return of the UserRegistrationResponse
-                                // Text(text = "${registerUser.protectedResult}")
-
                                 Text("Gracias! Cuenta creada exitosamente", color = Color.White)
                             }
                         }
@@ -699,7 +693,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = adminName, onValueChange = { adminName = it }, label = "Administrador Nombre",
+                    CreateAccountTextField(value = adminName, onValueChange = { adminName = it }, label = "Nombre Administrador",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
@@ -918,30 +912,16 @@ fun CreateAccount(navController: NavHostController) {
 
                             ) {
                                 showSuccessSnackbar = true
-                                // coroutineScope.launch {
-
                                 val organization = OrgRegister(
                                     name, adminName, rfc, description,
                                     phoneNumber, selectedState, selectedCity,
                                     email, webpage, category
                                 )
-                                // double check this
-                                registerOSC.addOrganization(appViewModel.getToken(), organization)
-
                                 coroutineScope.launch {
-                                    delay(3000)
+                                    delay(1500)
                                 }
+                                orgViewModel.addOrganization(appViewModel.getToken(), organization)
 
-                                /*name = ""
-                                adminName = ""
-                                rfc = ""
-                                description = ""
-                                phoneNumber = ""
-                                selectedState = ""
-                                selectedCity = ""
-                                email = ""
-                                category = ""*/
-                                //}
                             } else {
                                 showSnackbar = true
                             }

@@ -41,17 +41,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.test.DrawerContent
 import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun myOSC (navController: NavHostController) {
+fun myOSC (navController: NavHostController, appViewModel: AppViewModel) {
     val isAdmin: Boolean = navController.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
 

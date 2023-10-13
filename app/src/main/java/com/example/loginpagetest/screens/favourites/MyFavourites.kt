@@ -57,12 +57,13 @@ import com.example.loginpagetest.screens.homepage.Chip
 import com.example.loginpagetest.screens.myosc.Event
 import com.example.loginpagetest.screens.test.DrawerContent
 import com.example.loginpagetest.service.UserService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
-fun myFavourites(content: NavHostController) {
+fun myFavourites(content: NavHostController, appViewModel: AppViewModel) {
     val scrollState = rememberScrollState()
     var searchQuery by remember { mutableStateOf("") }
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }

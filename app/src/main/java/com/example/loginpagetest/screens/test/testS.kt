@@ -11,18 +11,18 @@ import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
+import com.example.loginpagetest.viewmodel.AppViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(content: NavHostController) {
+fun MainScreen(content: NavHostController, appViewModel: AppViewModel) {
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
-    // Retrieving if administrator logged in
-    val isAdmin: Boolean = content.currentBackStackEntry
-        ?.arguments?.getBoolean("isAdmin") ?: false
+    /*val isAdmin: Boolean = content.currentBackStackEntry
+        ?.arguments?.getBoolean("isAdmin") ?: false*/
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -46,10 +46,10 @@ fun MainScreen(content: NavHostController) {
             )
         },
         drawerContent = {
-            DrawerContent(content, isAdmin)
+            DrawerContent(content, appViewModel.isAdmin())
         }
     ) {
 
-        OrganizationsCatalogue(content, inviteUser = false, !isAdmin)
+        OrganizationsCatalogue(content, inviteUser = false, !appViewModel.isAdmin())
     }
 }

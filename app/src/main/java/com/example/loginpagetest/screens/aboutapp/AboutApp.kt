@@ -41,10 +41,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.core.content.ContextCompat.startActivity
 import com.example.loginpagetest.screens.test.DrawerContent
+import com.example.loginpagetest.viewmodel.AppViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun aboutApp(content: NavHostController) {
+fun aboutApp(content: NavHostController, appViewModel: AppViewModel) {
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))

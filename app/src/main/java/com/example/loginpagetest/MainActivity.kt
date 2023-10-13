@@ -40,19 +40,16 @@ fun RotatingLoadingView(modifier: Modifier = Modifier) {
         }
     }
 
-    // Make sure to cancel when this composable is no longer needed
     DisposableEffect(rotatingView) {
         onDispose {
             rotatingView.stopAnimation()
         }
     }
-
     AndroidView({ rotatingView }, modifier = modifier)
 }
 
 class MainActivity : ComponentActivity() {
 
-    // Add the token checks to avoid login screen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
