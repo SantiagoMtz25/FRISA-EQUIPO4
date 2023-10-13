@@ -86,9 +86,9 @@ class MainActivity : ComponentActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Text("loading")
-                            Spacer(modifier = Modifier.height(16.dp)) // Space between text and loader
-                            RotatingLoadingView(modifier = Modifier.size(50.dp)) // Adjust the size as needed
+                            Text("Iniciando")
+                            Spacer(modifier = Modifier.height(16.dp))
+                            RotatingLoadingView(modifier = Modifier.size(75.dp))
                         }
                     } else {
                         PageNavigation(appViewModel)

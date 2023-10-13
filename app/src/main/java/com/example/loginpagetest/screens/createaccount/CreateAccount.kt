@@ -37,13 +37,11 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,16 +49,12 @@ import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.AppViewModel
-import com.example.loginpagetest.viewmodel.CreateOSCViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccount(navController: NavHostController) {
-    val viewModel: CreateAccountViewModel = viewModel()
-    val oscViewModel: CreateOSCViewModel = viewModel()
-
     val registerUser = UserViewModel(UserService.instance)
     val registerOSC = OrgViewModel(OrgService.instance)
     val appViewModel: AppViewModel = viewModel()
@@ -92,6 +86,25 @@ fun CreateAccount(navController: NavHostController) {
         val customPink = colorResource(id = R.color.lightred_pink)
         var isUserAccount by rememberSaveable { mutableStateOf(false) }
 
+        var name by remember { mutableStateOf("") }
+        var lastName by remember { mutableStateOf("") }
+        var email by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+        var confirmPassword by remember { mutableStateOf("") }
+        var phoneNumber by remember { mutableStateOf("") }
+        var selectedState by remember { mutableStateOf("") }
+        var selectedCity by remember { mutableStateOf("") }
+        var isStateDropdownExpanded by remember { mutableStateOf(false) }
+        var isCityDropdownExpanded by remember { mutableStateOf(false) }
+        var showSnackbar by remember { mutableStateOf(false) }
+        var showSuccessSnackbar by remember { mutableStateOf(false) }
+
+        var adminName by remember { mutableStateOf("") }
+        var rfc by remember { mutableStateOf("") }
+        var description by remember { mutableStateOf("") }
+        var webpage by remember { mutableStateOf("") }
+        var category by remember { mutableStateOf("") }
+
         Column {
             CustomTopBar(title = "Crear Cuenta", navController = navController, screen = "login")
             Column(
@@ -102,14 +115,6 @@ fun CreateAccount(navController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                val focusManager = LocalFocusManager.current
-                // utilizar view model para guardar valores
-                /*var selectedState by viewModel.selectedState.observeAsState(initial = "")
-                var selectedCity by viewModel.selectedCity.observeAsState(initial = "")
-                var isStateDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-                var isCityDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-                var showSnackbar by rememberSaveable { mutableStateOf(false) }*/
-
                 val chihuahuaMunicipalities = listOf(
                     "Ahumada", "Aldama", "Allende", "Aquiles Serdán", "Ascensión",
                     "Bachíniva", "Balleza", "Batopilas", "Bocoyna", "Buenaventura",
@@ -455,7 +460,7 @@ fun CreateAccount(navController: NavHostController) {
                     isUserAccount = isChecked
                 }
                 if (isUserAccount) {
-                    CreateAccountTextField(value = viewModel.name, onValueChange = { viewModel.name = it }, label = "Nombre",
+                    CreateAccountTextField(value = name, onValueChange = { name = it }, label = "Nombre",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.AccountBox,
@@ -463,7 +468,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.lastName, onValueChange = { viewModel.lastName = it }, label = "Apellido",
+                    CreateAccountTextField(value = lastName, onValueChange = { lastName = it }, label = "Apellido",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.AccountBox,
@@ -471,7 +476,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.email, onValueChange = { viewModel.email = it }, label = "Correo", keyboardType = KeyboardType.Email,
+                    CreateAccountTextField(value = email, onValueChange = { email = it }, label = "Correo", keyboardType = KeyboardType.Email,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -479,7 +484,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.password, onValueChange = { viewModel.password = it }, label = "Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    CreateAccountTextField(value = password, onValueChange = { password = it }, label = "Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -487,7 +492,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.confirmPassword, onValueChange = { viewModel.confirmPassword = it }, label = "Confirmar Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                    CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirmar Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
@@ -495,7 +500,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = viewModel.phoneNumber, onValueChange = { viewModel.phoneNumber = it }, label = "Teléfono", keyboardType = KeyboardType.Phone,
+                    CreateAccountTextField(value = phoneNumber, onValueChange = { phoneNumber = it }, label = "Teléfono", keyboardType = KeyboardType.Phone,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
@@ -509,14 +514,14 @@ fun CreateAccount(navController: NavHostController) {
                             .padding(top = 8.dp, bottom = 8.dp)
                     ) {
                         OutlinedTextField(
-                            value = viewModel.selectedState,
+                            value = selectedState,
                             onValueChange = { /* Ignored for readOnly */ },
                             label = { Text("Estado") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) viewModel.isStateDropdownExpanded =
+                                    if (focusState.isFocused) isStateDropdownExpanded =
                                         true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
@@ -534,14 +539,14 @@ fun CreateAccount(navController: NavHostController) {
                             },
                         )
                         DropdownMenu(
-                            expanded = viewModel.isStateDropdownExpanded,
-                            onDismissRequest = { viewModel.isStateDropdownExpanded = false }
+                            expanded =  isStateDropdownExpanded,
+                            onDismissRequest = { isStateDropdownExpanded = false }
                         ) {
                             mapStates.keys.forEach { state ->
                                 DropdownMenuItem(onClick = {
-                                    viewModel.isStateDropdownExpanded = false
-                                    viewModel.selectedState = state
-                                    viewModel.selectedCity = "Select City" // Reset the city selection
+                                    isStateDropdownExpanded = false
+                                    selectedState = state
+                                    selectedCity = "Select City" // Reset the city selection
                                 }) {
                                     Text(text = state)
                                 }
@@ -555,14 +560,14 @@ fun CreateAccount(navController: NavHostController) {
                             .padding(top = 8.dp, bottom = 8.dp)
                     ) {
                         OutlinedTextField(
-                            value = viewModel.selectedCity,
+                            value = selectedCity,
                             onValueChange = { /* Ignored for readOnly */ },
                             label = { Text("Ciudad") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) viewModel.isCityDropdownExpanded =
+                                    if (focusState.isFocused) isCityDropdownExpanded =
                                         true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
@@ -580,13 +585,13 @@ fun CreateAccount(navController: NavHostController) {
                             },
                         )
                         DropdownMenu(
-                            expanded = viewModel.isCityDropdownExpanded,
-                            onDismissRequest = { viewModel.isCityDropdownExpanded = false }
+                            expanded = isCityDropdownExpanded,
+                            onDismissRequest = { isCityDropdownExpanded = false }
                         ) {
-                            mapStates[viewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
+                            mapStates[selectedState]?.forEach { city ->  // Get cities for the selected state
                                 DropdownMenuItem(onClick = {
-                                    viewModel.isCityDropdownExpanded = false
-                                    viewModel.selectedCity = city
+                                    isCityDropdownExpanded = false
+                                    selectedCity = city
                                 }) {
                                     Text(text = city)
                                 }
@@ -595,12 +600,12 @@ fun CreateAccount(navController: NavHostController) {
                             }
                         }
                     }
-                    LaunchedEffect(viewModel.showSnackbar, viewModel.showSuccessSnackbar) {
+                    LaunchedEffect(showSnackbar, showSuccessSnackbar) {
                         // If snackbar is shown, scroll all the way down
-                        if (viewModel.showSnackbar) {
+                        if (showSnackbar) {
                             scrollState.animateScrollTo(scrollState.maxValue)
                         }
-                        if (viewModel.showSuccessSnackbar) {
+                        if (showSuccessSnackbar) {
                             scrollState.animateScrollTo(scrollState.maxValue)
                         }
                     }
@@ -609,47 +614,47 @@ fun CreateAccount(navController: NavHostController) {
                         colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                     ) {
                         Button(onClick = {
-                            if (viewModel.name.isNotEmpty() &&
-                                viewModel.lastName.isNotEmpty() &&
-                                viewModel.email.isNotEmpty() &&
-                                viewModel.selectedCity.isNotEmpty() &&
-                                viewModel.selectedState.isNotEmpty() &&
-                                viewModel.phoneNumber.isNotEmpty() &&
-                                viewModel.password.isNotEmpty() &&
-                                viewModel.password == viewModel.confirmPassword
+                            if (name.isNotEmpty() &&
+                                lastName.isNotEmpty() &&
+                                email.isNotEmpty() &&
+                                selectedCity.isNotEmpty() &&
+                                selectedState.isNotEmpty() &&
+                                phoneNumber.isNotEmpty() &&
+                                password.isNotEmpty() &&
+                                password == confirmPassword
                             ) {
-                                viewModel.showSuccessSnackbar = true
+                                showSuccessSnackbar = true
                                 //coroutineScope.launch {
 
-                                registerUser.addUser(viewModel.name, viewModel.lastName, viewModel.email, viewModel.password,
-                                    viewModel.phoneNumber, viewModel.selectedState, viewModel.selectedCity)
+                                registerUser.addUser(name, lastName, email, password,
+                                    phoneNumber, selectedState, selectedCity)
 
                                 coroutineScope.launch {
                                     delay(3000)
                                 }
-                                /*viewModel.name = ""
-                                viewModel.lastName = ""
-                                viewModel.email = ""
-                                viewModel.password = ""
-                                viewModel.confirmPassword = ""
-                                viewModel.phoneNumber = ""
-                                viewModel.selectedState = ""
-                                viewModel.selectedCity = ""*/
+                                /*name = ""
+                                lastName = ""
+                                email = ""
+                                password = ""
+                                confirmPassword = ""
+                                phoneNumber = ""
+                                selectedState = ""
+                                selectedCity = ""*/
                                 // }
                             } else {
-                                viewModel.showSnackbar = true
+                                showSnackbar = true
                             }
                         }) {
                             Text("Crear Cuenta", color = Color.White)
                         }
 
-                        if (viewModel.showSnackbar && !viewModel.showSuccessSnackbar) {
+                        if (showSnackbar && !showSuccessSnackbar) {
                             Snackbar(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .background(Color.Red),
                                 action = {
-                                    TextButton(onClick = { viewModel.showSnackbar = false }) {
+                                    TextButton(onClick = { showSnackbar = false }) {
                                         Text(
                                             "Quitar",
                                             color = Color.White,
@@ -662,13 +667,13 @@ fun CreateAccount(navController: NavHostController) {
                             }
                         }
 
-                        if (viewModel.showSuccessSnackbar) {
+                        if (showSuccessSnackbar) {
                             Snackbar(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .background(Color.Green),
                                 action = {
-                                    TextButton(onClick = { viewModel.showSuccessSnackbar = false }) {
+                                    TextButton(onClick = { showSuccessSnackbar = false }) {
                                         Text(
                                             "Quitar",
                                             color = Color.White,
@@ -686,7 +691,7 @@ fun CreateAccount(navController: NavHostController) {
                     }
                 } else {
                     // add here the osc create account screen
-                    CreateAccountTextField(value = oscViewModel.name, onValueChange = { oscViewModel.name = it }, label = "OSC Nombre",
+                    CreateAccountTextField(value = name, onValueChange = { name = it }, label = "OSC Nombre",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.AccountBox,
@@ -694,7 +699,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.adminName, onValueChange = { oscViewModel.adminName = it }, label = "Administrador Nombre",
+                    CreateAccountTextField(value = adminName, onValueChange = { adminName = it }, label = "Administrador Nombre",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
@@ -702,7 +707,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.rfc, onValueChange = { oscViewModel.rfc = it }, label = "RFC (si dispone)",
+                    CreateAccountTextField(value = rfc, onValueChange = { rfc = it }, label = "RFC (si dispone)",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Check,
@@ -710,7 +715,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.description, onValueChange = { oscViewModel.description = it }, label = "Descripción",
+                    CreateAccountTextField(value = description, onValueChange = { description = it }, label = "Descripción",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Home,
@@ -718,7 +723,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.phoneNumber, onValueChange = { oscViewModel.phoneNumber = it }, keyboardType = KeyboardType.Phone ,label = "Teléfono",
+                    CreateAccountTextField(value = phoneNumber, onValueChange = { phoneNumber = it }, keyboardType = KeyboardType.Phone ,label = "Teléfono",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Phone,
@@ -726,7 +731,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.email, onValueChange = { oscViewModel.email = it }, keyboardType = KeyboardType.Email, label = "Correo",
+                    CreateAccountTextField(value = email, onValueChange = { email = it }, keyboardType = KeyboardType.Email, label = "Correo",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Email,
@@ -734,7 +739,7 @@ fun CreateAccount(navController: NavHostController) {
                                 tint = customLighterRed
                             )
                         })
-                    CreateAccountTextField(value = oscViewModel.webpage, onValueChange = { oscViewModel.webpage = it }, label = "Link Página Web",
+                    CreateAccountTextField(value = webpage, onValueChange = { webpage = it }, label = "Link Página Web",
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Info,
@@ -787,7 +792,7 @@ fun CreateAccount(navController: NavHostController) {
                             categories.forEachIndexed { index, category ->
                                 DropdownMenuItem(onClick = {
                                     selectedIndex = index
-                                    oscViewModel.category = category
+                                    // category = category
                                     expanded = false
                                 }) {
                                     Text(text = category)
@@ -802,14 +807,14 @@ fun CreateAccount(navController: NavHostController) {
                             .padding(top = 8.dp, bottom = 8.dp)
                     ) {
                         OutlinedTextField(
-                            value = oscViewModel.selectedState,
+                            value = selectedState,
                             onValueChange = {  },
                             // readOnly = true,
                             label = { Text("Estado") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) oscViewModel.isStateDropdownExpanded =
+                                    if (focusState.isFocused) isStateDropdownExpanded =
                                         true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
@@ -827,14 +832,14 @@ fun CreateAccount(navController: NavHostController) {
                             },
                         )
                         DropdownMenu(
-                            expanded = oscViewModel.isStateDropdownExpanded,
-                            onDismissRequest = { oscViewModel.isStateDropdownExpanded = false }
+                            expanded = isStateDropdownExpanded,
+                            onDismissRequest = { isStateDropdownExpanded = false }
                         ) {
                             mapStates.keys.forEach { state ->
                                 DropdownMenuItem(onClick = {
-                                    oscViewModel.isStateDropdownExpanded = false
-                                    oscViewModel.selectedState = state
-                                    oscViewModel.selectedCity = "Select City" // Reset the city selection
+                                    isStateDropdownExpanded = false
+                                    selectedState = state
+                                    selectedCity = "Select City" // Reset the city selection
                                 }) {
                                     Text(text = state)
                                 }
@@ -847,14 +852,14 @@ fun CreateAccount(navController: NavHostController) {
                             .padding(top = 8.dp, bottom = 8.dp)
                     ) {
                         OutlinedTextField(
-                            value = oscViewModel.selectedCity,
+                            value = selectedCity,
                             onValueChange = { /* Ignored for readOnly */ },
                             label = { Text("Ciudad") },
                             readOnly = true,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged { focusState ->
-                                    if (focusState.isFocused) oscViewModel.isCityDropdownExpanded =
+                                    if (focusState.isFocused) isCityDropdownExpanded =
                                         true
                                 },
                             colors = TextFieldDefaults.textFieldColors(
@@ -872,13 +877,13 @@ fun CreateAccount(navController: NavHostController) {
                             },
                         )
                         DropdownMenu(
-                            expanded = oscViewModel.isCityDropdownExpanded,
-                            onDismissRequest = { oscViewModel.isCityDropdownExpanded = false }
+                            expanded = isCityDropdownExpanded,
+                            onDismissRequest = { isCityDropdownExpanded = false }
                         ) {
-                            mapStates[oscViewModel.selectedState]?.forEach { city ->  // Get cities for the selected state
+                            mapStates[selectedState]?.forEach { city ->  // Get cities for the selected state
                                 DropdownMenuItem(onClick = {
-                                    oscViewModel.isCityDropdownExpanded = false
-                                    oscViewModel.selectedCity = city
+                                    isCityDropdownExpanded = false
+                                    selectedCity = city
                                 }) {
                                     Text(text = city)
                                 }
@@ -887,12 +892,12 @@ fun CreateAccount(navController: NavHostController) {
                             }
                         }
                     }
-                    LaunchedEffect(oscViewModel.showSnackbar, oscViewModel.showSuccessSnackbar) {
+                    LaunchedEffect(showSnackbar, showSuccessSnackbar) {
                         // If snackbar is shown, scroll all the way down
-                        if (oscViewModel.showSnackbar) {
+                        if (showSnackbar) {
                             scrollState.animateScrollTo(scrollState.maxValue)
                         }
-                        if (oscViewModel.showSuccessSnackbar) {
+                        if (showSuccessSnackbar) {
                             scrollState.animateScrollTo(scrollState.maxValue)
                         }
                     }
@@ -901,24 +906,24 @@ fun CreateAccount(navController: NavHostController) {
                         colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                     ) {
                         Button(onClick = {
-                            if (oscViewModel.name.isNotEmpty() &&
-                                oscViewModel.adminName.isNotEmpty() &&
-                                oscViewModel.description.isNotEmpty() &&
-                                oscViewModel.phoneNumber.isNotEmpty() &&
-                                oscViewModel.selectedState.isNotEmpty() &&
-                                oscViewModel.selectedCity.isNotEmpty() &&
-                                oscViewModel.email.isNotEmpty() &&
-                                oscViewModel.webpage.isNotEmpty() &&
-                                oscViewModel.category.isNotEmpty()
+                            if (name.isNotEmpty() &&
+                                adminName.isNotEmpty() &&
+                                description.isNotEmpty() &&
+                                phoneNumber.isNotEmpty() &&
+                                selectedState.isNotEmpty() &&
+                                selectedCity.isNotEmpty() &&
+                                email.isNotEmpty() &&
+                                webpage.isNotEmpty() &&
+                                category.isNotEmpty()
 
                             ) {
-                                oscViewModel.showSuccessSnackbar = true
+                                showSuccessSnackbar = true
                                 // coroutineScope.launch {
 
                                 val organization = OrgRegister(
-                                    oscViewModel.name, oscViewModel.adminName, oscViewModel.rfc, oscViewModel.description,
-                                    oscViewModel.phoneNumber, oscViewModel.selectedState, oscViewModel.selectedCity,
-                                    oscViewModel.email, oscViewModel.webpage, oscViewModel.category
+                                    name, adminName, rfc, description,
+                                    phoneNumber, selectedState, selectedCity,
+                                    email, webpage, category
                                 )
                                 // double check this
                                 registerOSC.addOrganization(appViewModel.getToken(), organization)
@@ -927,30 +932,30 @@ fun CreateAccount(navController: NavHostController) {
                                     delay(3000)
                                 }
 
-                                /*oscViewModel.name = ""
-                                oscViewModel.adminName = ""
-                                oscViewModel.rfc = ""
-                                oscViewModel.description = ""
-                                oscViewModel.phoneNumber = ""
-                                oscViewModel.selectedState = ""
-                                oscViewModel.selectedCity = ""
-                                oscViewModel.email = ""
-                                oscViewModel.category = ""*/
+                                /*name = ""
+                                adminName = ""
+                                rfc = ""
+                                description = ""
+                                phoneNumber = ""
+                                selectedState = ""
+                                selectedCity = ""
+                                email = ""
+                                category = ""*/
                                 //}
                             } else {
-                                oscViewModel.showSnackbar = true
+                                showSnackbar = true
                             }
                         }) {
                             Text("Crear Cuenta", color = Color.White)
                         }
 
-                        if (oscViewModel.showSnackbar && !oscViewModel.showSuccessSnackbar) {
+                        if (showSnackbar && !showSuccessSnackbar) {
                             Snackbar(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .background(Color.Red),
                                 action = {
-                                    TextButton(onClick = { oscViewModel.showSnackbar = false }) {
+                                    TextButton(onClick = { showSnackbar = false }) {
                                         Text(
                                             "Quitar",
                                             color = Color.White,
@@ -963,13 +968,13 @@ fun CreateAccount(navController: NavHostController) {
                             }
                         }
 
-                        if (oscViewModel.showSuccessSnackbar) {
+                        if (showSuccessSnackbar) {
                             Snackbar(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .background(Color.Green),
                                 action = {
-                                    TextButton(onClick = { oscViewModel.showSuccessSnackbar = false }) {
+                                    TextButton(onClick = { showSuccessSnackbar = false }) {
                                         Text(
                                             "Quitar",
                                             color = Color.White,
