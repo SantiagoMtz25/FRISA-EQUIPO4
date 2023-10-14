@@ -35,20 +35,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.navigation.CustomTopBar2
-import com.example.loginpagetest.service.OrgService
-import com.example.loginpagetest.service.UserService
-import com.example.loginpagetest.viewmodel.OrgViewModel
-import com.example.loginpagetest.viewmodel.UserViewModel
+import com.example.loginpagetest.viewmodel.AppViewModel
 
 private const val PREFS_NAME = "StarRankingPrefs"
 private const val LAST_RANKING_KEY = "LastRankingTime"
 
 @Composable
-fun OSCPage(content: NavHostController) {
+fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
     var starFilter by remember { mutableIntStateOf(0) }

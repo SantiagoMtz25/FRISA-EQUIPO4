@@ -69,7 +69,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                     .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
-                        content.navigate("testScreen/${isAdmin}")
+                        content.navigate("testScreen")
                     }
             )
             if (isAdmin) {
@@ -81,7 +81,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                         .fillMaxWidth()
                         .padding(16.dp)
                         .clickable {
-                            content.navigate("myOSC/${isAdmin}")
+                            content.navigate("myOSC")
                         }
                 )
             } else {
@@ -92,7 +92,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                         .fillMaxWidth()
                         .padding(16.dp)
                         .clickable {
-                            content.navigate("myfavourites/${isAdmin}")
+                            content.navigate("myfavourites")
                         }
                 )
             }
@@ -104,7 +104,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                     .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
-                        content.navigate("accountManager/${isAdmin}")
+                        content.navigate("accountManager")
                     }
             )
             // Divider
@@ -117,7 +117,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
                     .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
-                        content.navigate("aboutapp/${isAdmin}")
+                        content.navigate("aboutapp")
                     }
             )
             //Divider(modifier = Modifier.padding(horizontal = 16.dp))

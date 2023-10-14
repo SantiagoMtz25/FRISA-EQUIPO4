@@ -63,14 +63,14 @@ import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @Composable
-fun myLoginApp(navController: NavHostController) {
+fun myLoginApp(navController: NavHostController, appViewModel: AppViewModel) {
     LoginPageTestTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            mainLoginPage(navController)
+            mainLoginPage(navController, appViewModel)
         }
     }
 }
@@ -78,7 +78,7 @@ fun myLoginApp(navController: NavHostController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun mainLoginPage(
-    navController: NavHostController,
+    navController: NavHostController, appViewModel: AppViewModel,
     onLoggedInChanged: ((Boolean) -> Unit)? = null
 ) {
     Column(
@@ -99,7 +99,8 @@ fun mainLoginPage(
         // Login POST
         val userViewModel = UserViewModel(UserService.instance)
         val orgViewModel = OrgViewModel(OrgService.instance)
-        val appViewModel: AppViewModel = viewModel()
+        // val appViewModel: AppViewModel = viewModel()
+
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
@@ -143,8 +144,6 @@ fun mainLoginPage(
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
                     }
-                    // Navigate to the main screen and pass isAdmin to load different
-                    // components in those pages UI/UX
                 }
             }
         }

@@ -52,17 +52,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
+import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.screens.homepage.Chip
 import com.example.loginpagetest.screens.myosc.Event
 import com.example.loginpagetest.screens.test.DrawerContent
 import com.example.loginpagetest.service.UserService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
-fun myFavourites(content: NavHostController) {
+fun myFavourites(content: NavHostController, appViewModel: AppViewModel) {
     val scrollState = rememberScrollState()
     var searchQuery by remember { mutableStateOf("") }
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
@@ -82,23 +84,21 @@ fun myFavourites(content: NavHostController) {
     val filteredEvents by derivedStateOf {
         if (searchQuery.isEmpty()) eventsList else eventsList.filter { it.category == searchQuery }
     }
-    val Organizations = remember {
+
+    val getOrganizationsResult = remember {
         mutableStateOf(GetUserFavoriteOrganizationsResponse())
     }
 
     LaunchedEffect(key1 = userViewModel.getUserFavoriteOrgsResult) {
         userViewModel.getUserFavoriteOrgsResult.collect { result ->
             if (result != null) {
-                // collect the list to a variable to then use it
+                // collect the list to a variable to then use it **
                 val organizationsResponse = GetUserFavoriteOrganizationsResponse()
                 organizationsResponse.addAll(result)
-                Organizations.value = organizationsResponse
+                getOrganizationsResult.value = organizationsResponse
             }
         }
     }
-
-    val isAdmin: Boolean = content.currentBackStackEntry
-        ?.arguments?.getBoolean("isAdmin") ?: false
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -122,7 +122,7 @@ fun myFavourites(content: NavHostController) {
             )
         },
         drawerContent = {
-            DrawerContent(content, isAdmin)
+            DrawerContent(content, appViewModel.isAdmin())
         }
     ) {
         Column(
@@ -158,7 +158,6 @@ fun myFavourites(content: NavHostController) {
             ) {
                 val cardHeight = 280.dp
                 val cardWidth = 360.dp
-                val customGray = colorResource(id = R.color.lightgray_beige)
                 val itemsCount = 3
                 val lazyColumnState = rememberLazyListState()
 
@@ -226,7 +225,7 @@ fun myFavourites(content: NavHostController) {
                             modifier = Modifier
                                 .align(Alignment.BottomStart)
                                 .padding(8.dp),
-                            color = Color.Black, // Adjust color as needed
+                            color = Color.Black,
                             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         )
                     }

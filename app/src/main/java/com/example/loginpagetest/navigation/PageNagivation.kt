@@ -1,11 +1,6 @@
 package com.example.loginpagetest.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,58 +35,47 @@ fun PageNavigation (appViewModel: AppViewModel) {
         startDestination = "login"
     ) {
         composable("login") {
-            myLoginApp(navController)
+            myLoginApp(navController, appViewModel)
         }
         /*composable("home") {
             OrganizationsCatalogue(navController)
         }*/
         composable("create_account") {
-            CreateAccount(navController)
+            CreateAccount(navController, appViewModel)
         }
 
-        composable("OSCpage/{inviteUser}/{isAdmin}/{organization}",
+        composable("OSCpage/{inviteUser}/{organization}",
             arguments = listOf(
                 navArgument("inviteUser") { type = NavType.BoolType },
-                navArgument("isAdmin") { type = NavType.BoolType },
                 navArgument("organization") { type = NavType.StringType }
             )
         ) {
-            OSCPage(navController)
+            OSCPage(navController, appViewModel)
         }
 
         // Main screen will the receive the parameter type in order to load different view components
-        composable("testScreen/{isAdmin}",
-            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
-        ) {
-            MainScreen(navController)
+        composable("testScreen") {
+            MainScreen(navController, appViewModel)
         }
-        composable("myfavourites/{isAdmin}",
-            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
-        ) {
-            myFavourites(navController)
+        composable("myfavourites") {
+            myFavourites(navController, appViewModel)
         }
-        composable("aboutapp/{isAdmin}",
-            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
-        ) {
-            aboutApp(navController)
+        composable("aboutapp") {
+            aboutApp(navController, appViewModel)
         }
 
         composable("inviteUser/{inviteUser}",
             arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
         ) {
-            inviteUser(navController)
+            inviteUser(navController, appViewModel) // I do not think I should send it here
         }
 
-        composable("accountManager/{isAdmin}",
-            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
-        ) {
-            accountManager(navController)
+        composable("accountManager") {
+            accountManager(navController, appViewModel)
         }
 
-        composable("myOSC/{isAdmin}",
-            arguments = listOf(navArgument("isAdmin") { type = NavType.BoolType })
-        ) {
-            myOSC(navController)
+        composable("myOSC") {
+            myOSC(navController, appViewModel)
         }
     }
 }

@@ -3,7 +3,8 @@ package com.example.loginpagetest.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.loginpagetest.model.OrgGrade
+import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavourites
@@ -43,6 +44,9 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
 
     private val _getUserFavoriteOrgsResult = MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
     val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> = _getUserFavoriteOrgsResult
+
+    private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
+    val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
 
     // is this like creating account?
     fun addUser(
@@ -115,10 +119,9 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
 
     fun addFavourite (
         token: String?,
-        name: String,
-        category: String
+        oscId: String?
     ) {
-        val addedosc = UserFavourites(token, name, category)
+        val addedosc = UserFavourites(token, oscId)
 
         viewModelScope.launch {
             var response: UserFavouritesResponse
@@ -191,6 +194,26 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                 val errorResponse = e.localizedMessage
                 Log.d("ERROR-API", errorResponse)
                 //_getUserFavoriteOrgsResult.value = errorResponse
+            }
+        }
+    }
+
+    fun addGrade (
+        name: String,
+        average: Float
+    ) {
+        val oscgrade = OrgGrade(name, average)
+
+        viewModelScope.launch {
+            var response: OrgGradeResponse
+            try {
+                response = userService.addGrade(oscgrade)
+                _orgAddGradeResult.value = response
+            } catch (e: Exception) {
+
+                var errorResponse = OrgGradeResponse("")
+                errorResponse.message = e.localizedMessage
+                _orgAddGradeResult.value = errorResponse
             }
         }
     }

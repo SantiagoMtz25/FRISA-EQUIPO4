@@ -42,23 +42,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.test.DrawerContent
-import com.example.loginpagetest.viewmodel.CreateAccountViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.screens.createaccount.CreateAccountTextField
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
-import com.example.loginpagetest.viewmodel.CreateOSCViewModel
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun accountManager(navController: NavHostController) {
+fun accountManager(navController: NavHostController, appViewModel: AppViewModel) {
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
@@ -67,27 +66,37 @@ fun accountManager(navController: NavHostController) {
     val isAdmin: Boolean = navController.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
 
-    val viewModel: CreateAccountViewModel = viewModel()
-    val oscViewModel : CreateOSCViewModel = viewModel()
     var areFieldsVisible by rememberSaveable { mutableStateOf(false) }
 
     val userVM =  UserViewModel(UserService.instance)
     val orgVM = OrgViewModel(OrgService.instance)
+    val appViewModel: AppViewModel = viewModel()
 
     LaunchedEffect(key1 = userVM.updateAccountResult) {
         userVM.updateAccountResult.collect { result ->
             if (result != null) {
-                // message of account updated, do not allow user to update every  single time
+
             }
         }
     }
     LaunchedEffect(key1 = orgVM.updateAccountResult) {
         orgVM.updateAccountResult.collect { result ->
             if (result != null) {
-                // same as the previous one
+
             }
         }
     }
+
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var selectedState by remember { mutableStateOf("") }
+    var selectedCity by remember { mutableStateOf("") }
+
+    var rfc by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var webpage by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -161,8 +170,8 @@ fun accountManager(navController: NavHostController) {
                                     .verticalScroll(rememberScrollState())
                                     .padding(16.dp)
                             ) {
-                                CreateAccountTextField(value = oscViewModel.selectedState,
-                                    onValueChange = { oscViewModel.selectedState = it },
+                                CreateAccountTextField(value = selectedState,
+                                    onValueChange = { selectedState = it },
                                     label = "Cambiar Estado",
                                     icon = {
                                         Icon(
@@ -172,8 +181,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = oscViewModel.selectedCity,
-                                    onValueChange = { oscViewModel.selectedCity = it },
+                                CreateAccountTextField(value = selectedCity,
+                                    onValueChange = { selectedCity = it },
                                     label = "Cambiar Ciudad",
                                     icon = {
                                         Icon(
@@ -183,8 +192,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = oscViewModel.phoneNumber,
-                                    onValueChange = { oscViewModel.phoneNumber = it },
+                                CreateAccountTextField(value = phoneNumber,
+                                    onValueChange = { phoneNumber = it },
                                     label = "Cambiar Teléfono",
                                     icon = {
                                         Icon(
@@ -194,8 +203,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = oscViewModel.description,
-                                    onValueChange = { oscViewModel.description = it },
+                                CreateAccountTextField(value = description,
+                                    onValueChange = { description = it },
                                     label = "Cambiar Descripción",
                                     icon = {
                                         Icon(
@@ -205,8 +214,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = oscViewModel.rfc,
-                                    onValueChange = { oscViewModel.rfc = it },
+                                CreateAccountTextField(value = rfc,
+                                    onValueChange = { rfc = it },
                                     label = "Cambiar RFC",
                                     icon = {
                                         Icon(
@@ -216,8 +225,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = oscViewModel.webpage,
-                                    onValueChange = { oscViewModel.webpage = it },
+                                CreateAccountTextField(value = webpage,
+                                    onValueChange = { webpage = it },
                                     label = "Cambiar Link Página Web",
                                     icon = {
                                         Icon(
@@ -227,8 +236,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = oscViewModel.category,
-                                    onValueChange = { oscViewModel.category = it },
+                                CreateAccountTextField(value = category,
+                                    onValueChange = { category = it },
                                     label = "Cambiar Categoría",
                                     icon = {
                                         Icon(
@@ -245,17 +254,17 @@ fun accountManager(navController: NavHostController) {
                                 ) {
                                     Button(
                                         onClick = {
-                                            if (viewModel.password == viewModel.confirmPassword) {
+                                            if (password == confirmPassword) {
 
                                                 orgVM.orgUpdateAccount(
-                                                    "",
-                                                    oscViewModel.selectedState,
-                                                    oscViewModel.selectedCity,
-                                                    oscViewModel.phoneNumber,
-                                                    oscViewModel.description,
-                                                    oscViewModel.rfc,
-                                                    oscViewModel.webpage,
-                                                    oscViewModel.category
+                                                    appViewModel.getToken(),
+                                                    selectedState,
+                                                    selectedCity,
+                                                    phoneNumber,
+                                                    description,
+                                                    rfc,
+                                                    webpage,
+                                                    category
                                                 )
 
                                                 // Handle save changes click event
@@ -322,8 +331,8 @@ fun accountManager(navController: NavHostController) {
                                     .verticalScroll(rememberScrollState())
                                     .padding(16.dp)
                             ) {
-                                CreateAccountTextField(value = viewModel.selectedState,
-                                    onValueChange = { viewModel.selectedState = it },
+                                CreateAccountTextField(value = selectedState,
+                                    onValueChange = { selectedState = it },
                                     label = "Cambiar Estado",
                                     icon = {
                                         Icon(
@@ -333,8 +342,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = viewModel.selectedCity,
-                                    onValueChange = { viewModel.selectedCity = it },
+                                CreateAccountTextField(value = selectedCity,
+                                    onValueChange = { selectedCity = it },
                                     label = "Cambiar Ciudad",
                                     icon = {
                                         Icon(
@@ -344,8 +353,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = viewModel.phoneNumber,
-                                    onValueChange = { viewModel.phoneNumber = it },
+                                CreateAccountTextField(value = phoneNumber,
+                                    onValueChange = { phoneNumber = it },
                                     label = "Cambiar Teléfono",
                                     icon = {
                                         Icon(
@@ -355,8 +364,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = viewModel.password,
-                                    onValueChange = { viewModel.password = it },
+                                CreateAccountTextField(value = password,
+                                    onValueChange = { password = it },
                                     label = "Cambiar Contraseña",
                                     icon = {
                                         Icon(
@@ -366,8 +375,8 @@ fun accountManager(navController: NavHostController) {
                                         )
                                     }
                                 )
-                                CreateAccountTextField(value = viewModel.confirmPassword,
-                                    onValueChange = { viewModel.confirmPassword = it },
+                                CreateAccountTextField(value = confirmPassword,
+                                    onValueChange = { confirmPassword = it },
                                     label = "Confirmar Contraseña",
                                     icon = {
                                         Icon(
@@ -384,15 +393,15 @@ fun accountManager(navController: NavHostController) {
                                 ) {
                                     Button(
                                         onClick = {
-                                            if (viewModel.password == viewModel.confirmPassword) {
+                                            if (password == confirmPassword) {
                                                 // Handle save changes click event
                                                 userVM.userUpdateAccount(
                                                     "",
-                                                    viewModel.selectedState,
-                                                    viewModel.selectedCity,
-                                                    viewModel.phoneNumber,
-                                                    viewModel.password,
-                                                    viewModel.confirmPassword
+                                                    selectedState,
+                                                    selectedCity,
+                                                    phoneNumber,
+                                                    password,
+                                                    confirmPassword
                                                 )
 
                                             } else {

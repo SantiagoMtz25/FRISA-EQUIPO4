@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Icon
@@ -41,30 +42,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.test.DrawerContent
 import com.example.loginpagetest.service.OrgService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.OrgViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun myOSC (navController: NavHostController) {
-    val isAdmin: Boolean = navController.currentBackStackEntry
-        ?.arguments?.getBoolean("isAdmin") ?: false
+fun myOSC (navController: NavHostController, appViewModel: AppViewModel) {
+    /*val isAdmin: Boolean = navController.currentBackStackEntry
+        ?.arguments?.getBoolean("isAdmin") ?: false*/
 
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
-
-    var average by remember { mutableFloatStateOf(0f) }
+    var isProgressBarVisible by remember { mutableStateOf(false) }
 
     val orgViewModel = OrgViewModel(OrgService.instance)
+    var average by remember { mutableFloatStateOf(0f) }
 
-    LaunchedEffect(key1 = orgViewModel.getAverageResult) {
+    LaunchedEffect(key1 = orgViewModel) {
         orgViewModel.getAverageResult.collect { result ->
             if (result != null) {
                 average = result.average
@@ -94,7 +95,7 @@ fun myOSC (navController: NavHostController) {
             )
         },
         drawerContent = {
-            DrawerContent(navController, isAdmin)
+            DrawerContent(navController, appViewModel.isAdmin())
         }
     ) {
         Column(
@@ -137,8 +138,24 @@ fun myOSC (navController: NavHostController) {
                             .align(Alignment.CenterHorizontally),
                         fontWeight = FontWeight.Bold
                     )
-                    // add average bar here
-                    ProgressBar(average = average)
+                    Button(
+                        onClick = {
+                            // Launch the coroutine to execute getAverage
+                            coroutineScope.launch {
+                                orgViewModel.getAverage(appViewModel.getToken())
+                            }
+                            // Make ProgressBar visible
+                            isProgressBarVisible = true
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text("Ver Mi Promedio")
+                    }
+
+                    // Conditionally display the ProgressBar based on isProgressBarVisible
+                    if (isProgressBarVisible) {
+                        ProgressBar(average = average)
+                    }
                 }
             }
         }
