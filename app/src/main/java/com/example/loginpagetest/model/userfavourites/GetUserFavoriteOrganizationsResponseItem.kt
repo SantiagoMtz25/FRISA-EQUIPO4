@@ -1,8 +1,9 @@
 package com.example.loginpagetest.model.userfavourites
 
 data class GetUserFavoriteOrganizationsResponseItem(
-    val _id: String,
+    val name: String,
     val description: String,
-    val email: String,
-    val name: String
+    val category: String,
+    val webpage: String,
+    val phoneNumber: String
 )

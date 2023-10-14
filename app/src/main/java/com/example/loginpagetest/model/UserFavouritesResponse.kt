@@ -1,5 +1,5 @@
 package com.example.loginpagetest.model
 
 data class UserFavouritesResponse(
-    var message: String = ""
+    var message: String? = null,
 )

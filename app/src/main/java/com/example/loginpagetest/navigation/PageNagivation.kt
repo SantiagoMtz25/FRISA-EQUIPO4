@@ -67,7 +67,7 @@ fun PageNavigation (appViewModel: AppViewModel) {
         composable("inviteUser/{inviteUser}",
             arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
         ) {
-            inviteUser(navController) // I do not think I should send it here
+            inviteUser(navController, appViewModel) // I do not think I should send it here
         }
 
         composable("accountManager") {

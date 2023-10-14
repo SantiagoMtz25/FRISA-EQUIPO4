@@ -14,34 +14,34 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface OrgService {
 
     companion object {
 
-        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/auth/")
+        val instance: OrgService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(OrgService::class.java)
 
     }
 
-    @POST("osc_register")
+    @POST("auth/oscregister")
     suspend fun addOrg(@Header("Authorization") token: String, @Body osc: OrgRegister) : OrgRegisterResponse
 
-    @POST("osc_login")
+    @PUT("auth/osclogin")
     suspend fun loginOrg(@Body org: OrgLogin) : OrgLoginResponse
 
-    @POST("addgrade")
-    suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
+    @PATCH("osc/orgUpdateAccount")
+    suspend fun updateAccount(
+        @Header("Authorization") token: String,
+        @Body orgUpdate: OrgUpdateAccount
+    ) : OrgUpdateAccountResponse
 
-    @POST("orgUpdateAccount")
-    suspend fun updateAccount(@Body orgUpdate: OrgUpdateAccount) : OrgUpdateAccountResponse
+    @GET("osc/getgrade")
+    suspend fun getAverage(@Header("Authorization") token: String) : OrgAverageResponse
 
-    @GET("oscAverage")
-    suspend fun getAverage(@Body average: String?) : OrgAverageResponse
-
-    @GET("getAll")
-    suspend fun getAllOsc(@Body osc: OrgRegister) // Yet to implement
 }

@@ -1,5 +1,8 @@
 package com.example.loginpagetest.service
 
+import com.example.loginpagetest.model.OrgGrade
+import com.example.loginpagetest.model.OrgGradeResponse
+import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavourites
@@ -16,7 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 /* This code defines a UserService interface,
    which is used to create a Retrofit service for handling
@@ -27,30 +33,42 @@ interface UserService {
 
     companion object {
         // place our link here from FL0 server once api is uploaded
-        val instance: UserService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/auth/")
+        val instance: UserService = Retrofit.Builder().baseUrl("https://api-test-frisa-rmex-dev.fl0.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UserService::class.java)
     }
 
-    @POST("userregister")
+    @POST("auth/userregister")
     suspend fun insertUser(@Body user: UserRegister): UserRegistrationResponse
 
-    @POST("user_login")
+    @PUT("auth/userlogin")
     suspend fun loginUser(@Body user: UserLogin): UserLoginResponse
 
-    @POST("addfavourite")
+    @PATCH("users/addFavourite/{organizationId}")
+    suspend fun addFavourite(
+        @Header("Authorization") token: String,
+        @Path("organizationId") organizationId: String
+    ): UserFavouritesResponse
+
+    @PATCH("users/addFavourite/{}")
     suspend fun addFavourite(@Body userFav: UserFavourites) : UserFavouritesResponse
 
-    @POST("removeFavourite")
+    @PATCH("users/removeFavourite")
     suspend fun removeFavourite(@Body userFavRemove: UserFavToDelete) : UserFavToDeleteResponse
 
-    @POST("userUpdateAccount")
+    @PATCH("users/userUpdateAccount")
     suspend fun updateAccount(@Body userUpdate: UserUpdateAccount) : UserUpdateAccountResponse
 
-    @GET("getUserFavoriteOrganizations/")
+    @GET("users/getUserFavoriteOrganizations")
     suspend fun getUserFavoriteOrganization(
         @Header("Authorization") token: String
     ): GetUserFavoriteOrganizationsResponse
+
+    @PATCH("users/gradeorg")
+    suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
+
+    @GET("users/getAll")
+    suspend fun getAllOsc(@Body osc: OrgRegister) // Yet to implement
 
 }

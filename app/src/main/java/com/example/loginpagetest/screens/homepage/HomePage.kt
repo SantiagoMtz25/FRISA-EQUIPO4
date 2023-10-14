@@ -30,12 +30,14 @@ import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.shadow
+import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.service.UserService
+import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAdmin: Boolean) {
+fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostController, inviteUser: Boolean, isAdmin: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
@@ -62,6 +64,18 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
         .filter { it.value.isNotEmpty() }
 
     var starFilter by remember { mutableIntStateOf(0) }
+
+    val userViewModel = UserViewModel(UserService.instance)
+    val addFavouriteResult = remember { mutableStateOf(UserFavouritesResponse()) }
+
+    LaunchedEffect(key1 = userViewModel) {
+        userViewModel.addFavouriteResult.collect { result ->
+            if (result != null) {
+                addFavouriteResult.value = result
+                // maybe print something to let the user know the action was executed
+            }
+        }
+    }
 
     Column {
         Row(
@@ -273,7 +287,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/$inviteUser/${isAdmin}/$organization")
+                                        content.navigate("OSCpage/$inviteUser/$organization")
                                     }
                             ) {
                                 Row(
@@ -297,9 +311,7 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-
-                                        content.navigate("OSCpage/$inviteUser/${isAdmin}/$organization")
-
+                                        content.navigate("OSCpage/$inviteUser/$organization")
                                     }
                             ) {
                                 Row(
@@ -310,7 +322,21 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(text = organization)
-                                    ClickableIcon(organization, category)
+                                    var isClicked by remember { mutableStateOf(false) }
+                                    Icon(
+                                        tint = if (isClicked) Color.Yellow else Color.Gray,
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = null,
+                                        modifier = Modifier.clickable {
+                                            isClicked = !isClicked
+                                            // according to logic of start being clicked or unclicked
+                                            if (isClicked) {
+                                                userViewModel.addFavourite(appViewModel.getToken(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjRiNTk5MjdmZmI5MjYxN2M1ODk2YSIsImlhdCI6MTY5NzIzNzc1NSwiZXhwIjoxNjk3MjQxMzU1fQ.7MSd-An-IYwtsvj3S7tdp32NlimQ9dlKNTvJsNZMiW0")
+                                            } else {
+                                                userViewModel.removeFavourite(appViewModel.getToken(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjRiNTk5MjdmZmI5MjYxN2M1ODk2YSIsImlhdCI6MTY5NzIzNzc1NSwiZXhwIjoxNjk3MjQxMzU1fQ.7MSd-An-IYwtsvj3S7tdp32NlimQ9dlKNTvJsNZMiW0")
+                                            }
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -319,36 +345,6 @@ fun OrganizationsCatalogue(content: NavHostController, inviteUser: Boolean, isAd
             }
         }
     }
-}
-
-@Composable
-fun ClickableIcon(organization: String, selectedCategory: String) {
-    var isClicked by remember { mutableStateOf(false) }
-
-    val user = UserViewModel(UserService.instance)
-
-    LaunchedEffect(key1 = user.addFavouriteResult){
-        user.addFavouriteResult.collect { result ->
-            if (result != null) {
-                // Maybe add a snackbar to says that organization was added to favourites
-            }
-        }
-    }
-
-    Icon(
-        tint = if (isClicked) Color.Yellow else Color.Gray,
-        imageVector = Icons.Default.Star,
-        contentDescription = null,
-        modifier = Modifier.clickable {
-            isClicked = !isClicked
-            // according to logic of start being clicked or unclicked
-            if (isClicked) {
-                user.addFavourite("", organization,"$selectedCategory")
-            } else {
-                user.removeFavourite("", organization)
-            }
-        }
-    )
 }
 
 @Composable

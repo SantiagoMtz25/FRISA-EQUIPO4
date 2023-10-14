@@ -26,31 +26,26 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
     private val _orgLoginResult = MutableStateFlow<OrgLoginResponse?>(null)
     val orgLoginResult: StateFlow<OrgLoginResponse?> = _orgLoginResult
 
-    private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
-    val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
-
     private val _updateAccountResult = MutableStateFlow<OrgUpdateAccountResponse?>(null)
     val updateAccountResult: StateFlow<OrgUpdateAccountResponse?> = _updateAccountResult
 
     private val _getAverageResult = MutableStateFlow<OrgAverageResponse?>(null)
     val getAverageResult: StateFlow<OrgAverageResponse?> = _getAverageResult
 
-    fun addGrade (
-        name: String,
-        average: Float
+    fun addOrganization(
+        token: String,
+        org: OrgRegister
     ) {
-        val oscgrade = OrgGrade(name, average)
-
         viewModelScope.launch {
-            var response: OrgGradeResponse
+            var response: OrgRegisterResponse
             try {
-                response = orgService.addGrade(oscgrade)
-                _orgAddGradeResult.value = response
+                response = orgService.addOrg(token, org)
+                _orgRegisterResult.value = response
             } catch (e: Exception) {
 
-                var errorResponse = OrgGradeResponse("")
+                var errorResponse = OrgRegisterResponse("")
                 errorResponse.message = e.localizedMessage
-                _orgAddGradeResult.value = errorResponse
+                _orgRegisterResult.value = errorResponse
             }
         }
     }
@@ -97,38 +92,8 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
         }
     }
 
-    fun addOrganization(
-        token: String,
-        org: OrgRegister
-    ) {
-
-            //viewModelScope.launch {
-            //var response: OrgRegisterResponse? = null
-            /*try {
-                response = orgService.addOrg(name, adminName, rfc, description, phoneNumber, state, city, email, webpage)
-                _orgRegisterResult.value = response
-                response.message?.let { Log.d("RESPONSE", it) }
-
-            } catch (e: Exception) {
-                Log.d("RESPONSE", e.localizedMessage)
-            }*/
-        viewModelScope.launch {
-            var response: OrgRegisterResponse
-            try {
-                response = orgService.addOrg(token, org)
-                _orgRegisterResult.value = response
-            } catch (e: Exception) {
-
-                var errorResponse = OrgRegisterResponse("")
-                errorResponse.message = e.localizedMessage
-                _orgRegisterResult.value = errorResponse
-            }
-        }
-
-    }
-
     fun orgUpdateAccount (
-        token: String?,
+        token: String,
         state: String,
         city: String,
         phoneNumber: String,
@@ -137,13 +102,13 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
         webpage: String,
         category: String
     ) {
-        val orgUpdate = OrgUpdateAccount(token, state, city, phoneNumber, description, rfc, webpage, category)
+        val orgUpdate = OrgUpdateAccount(state, city, phoneNumber, description, rfc, webpage, category)
 
         viewModelScope.launch {
             var response: OrgUpdateAccountResponse
 
             try {
-                response = orgService.updateAccount(orgUpdate)
+                response = orgService.updateAccount(token, orgUpdate)
                 _updateAccountResult.value = response
             } catch (e: Exception) {
                 var errorResponse = OrgUpdateAccountResponse("")
@@ -153,7 +118,7 @@ class OrgViewModel(private val orgService: OrgService) : ViewModel() {
         }
     }
 
-    fun getAverage (token: String?) {
+    fun getAverage (token: String) {
         viewModelScope.launch {
             val response: OrgAverageResponse
             try {

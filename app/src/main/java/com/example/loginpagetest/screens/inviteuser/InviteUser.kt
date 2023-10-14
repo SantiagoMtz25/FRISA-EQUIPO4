@@ -5,13 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.navigation.CustomTopBar
 import com.example.loginpagetest.screens.homepage.OrganizationsCatalogue
+import com.example.loginpagetest.viewmodel.AppViewModel
 
 @Composable
-fun inviteUser (navController: NavHostController) {
+fun inviteUser (navController: NavHostController, appViewModel: AppViewModel) {
     val inviteUser: Boolean = navController.currentBackStackEntry
         ?.arguments?.getBoolean("inviteUser") ?: false
     Column {
         CustomTopBar(title = "Bienvenid@", navController = navController, screen = "login")
-        OrganizationsCatalogue(content = navController, inviteUser, isAdmin = false)
+        OrganizationsCatalogue(appViewModel, content = navController, inviteUser, isAdmin = false)
     }
 }

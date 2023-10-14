@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(content: NavHostController, appViewModel: AppViewModel) {
+fun MainScreen(navController: NavHostController, appViewModel: AppViewModel) {
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
@@ -46,10 +46,10 @@ fun MainScreen(content: NavHostController, appViewModel: AppViewModel) {
             )
         },
         drawerContent = {
-            DrawerContent(content, appViewModel.isAdmin())
+            DrawerContent(navController, appViewModel.isAdmin())
         }
     ) {
 
-        OrganizationsCatalogue(content, inviteUser = false, !appViewModel.isAdmin())
+        OrganizationsCatalogue(appViewModel, navController, inviteUser = false, !appViewModel.isAdmin())
     }
 }

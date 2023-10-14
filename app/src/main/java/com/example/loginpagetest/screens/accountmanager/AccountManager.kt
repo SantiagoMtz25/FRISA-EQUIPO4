@@ -47,6 +47,7 @@ import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.test.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.screens.createaccount.CreateAccountTextField
 import com.example.loginpagetest.service.OrgService
 import com.example.loginpagetest.service.UserService
@@ -69,6 +70,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
 
     val userVM =  UserViewModel(UserService.instance)
     val orgVM = OrgViewModel(OrgService.instance)
+    val appViewModel: AppViewModel = viewModel()
 
     LaunchedEffect(key1 = userVM.updateAccountResult) {
         userVM.updateAccountResult.collect { result ->
@@ -255,7 +257,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                             if (password == confirmPassword) {
 
                                                 orgVM.orgUpdateAccount(
-                                                    "",
+                                                    appViewModel.getToken(),
                                                     selectedState,
                                                     selectedCity,
                                                     phoneNumber,
