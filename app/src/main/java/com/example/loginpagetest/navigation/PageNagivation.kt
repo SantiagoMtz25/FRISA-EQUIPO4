@@ -21,15 +21,6 @@ import com.example.loginpagetest.viewmodel.AppViewModel
 fun PageNavigation (appViewModel: AppViewModel) {
     val navController = rememberNavController()
 
-    // var startScreen by remember { mutableStateOf("") }
-
-    /*if (tokenResult) {
-        startScreen = "testScreen/${tokenResult}"
-    } else {
-        startScreen = "login"
-        Log.d("STARTING SCREEN", "starting screen = $startScreen")
-    }*/
-
     NavHost(
         navController = navController,
         startDestination = "login"

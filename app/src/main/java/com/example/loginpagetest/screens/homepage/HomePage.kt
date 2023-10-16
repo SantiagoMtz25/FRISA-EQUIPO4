@@ -31,13 +31,14 @@ import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.shadow
 import com.example.loginpagetest.model.UserFavouritesResponse
+import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostController, inviteUser: Boolean, isAdmin: Boolean) {
+fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostController, inviteUser: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
@@ -62,10 +63,23 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
             }
         }
         .filter { it.value.isNotEmpty() }
-
     var starFilter by remember { mutableIntStateOf(0) }
 
     val userViewModel = UserViewModel(UserService.instance)
+
+    var getAllOrganizationsResult by remember { mutableStateOf(GetAllOrganizationsResponse()) }
+
+    LaunchedEffect(Unit) {
+        userViewModel.getAllOsc() // preguntar al profe de esto??
+
+        userViewModel.getAllOrganizationsResult.collect{ result ->
+            if (result != null) {
+                getAllOrganizationsResult = result
+                // in theory this should be the arraylist according to me
+            }
+        }
+    }
+
     val addFavouriteResult = remember { mutableStateOf(UserFavouritesResponse()) }
 
     LaunchedEffect(key1 = userViewModel) {
@@ -278,7 +292,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                         )
                     }
                 }
-                if (!isAdmin) {
+                if (!appViewModel.isAdmin()) {
                     if (selectedCategory == category) {
                         filteredAndSortedCategories[category]?.forEach { organization ->
                         Card(

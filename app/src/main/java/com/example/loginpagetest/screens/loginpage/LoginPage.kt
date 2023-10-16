@@ -48,7 +48,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import com.example.loginpagetest.model.UserLoginResponse
@@ -96,10 +95,9 @@ fun mainLoginPage(
         val scrollState = rememberScrollState()
 
         var isUserAccount by rememberSaveable { mutableStateOf(false) }
-        // Login POST
+
         val userViewModel = UserViewModel(UserService.instance)
         val orgViewModel = OrgViewModel(OrgService.instance)
-        // val appViewModel: AppViewModel = viewModel()
 
         // Variables which will save user entered values
         var email by rememberSaveable { mutableStateOf("") }
@@ -121,22 +119,19 @@ fun mainLoginPage(
                 if (result != null) {
 
                     loginResult.value = result
-                    Log.d("LOGIN VAL","configLoaded.value = ${loginResult.value}")
-                    // successfulLogin = !loginResult.value.token.isNullOrEmpty()
-                    if (loginResult.value?.message != null) {
-                        //snackbarHostState.showSnackbar(loginResult.value.message.toString())
+
+                    if (loginResult.value?.message != null) { // I do nothing
                     }
 
                     loginResult.value.token?.let {
-                        // snackbarHostState.showSnackbar("Login exitoso...")
                         appViewModel.storeValueInDataStore(it, Constants.TOKEN)
                         appViewModel.setToken(it)
                         appViewModel.setLoggedIn(true)
                         if (onLoggedInChanged != null) {
                             onLoggedInChanged(true)
                         }
-                        // navController.navigate("Privacy")
-                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
+
+                        navController.navigate("testScreen")
 
                         Log.d("DATASTORE", "Token saved: ${it}")
                     }
@@ -152,14 +147,11 @@ fun mainLoginPage(
                 if (result != null) {
 
                     orgLoginResult.value = result
-                    Log.d("LOGIN VAL","configLoaded.value = ${orgLoginResult.value}")
-                    // successfulLogin = !loginResult.value.token.isNullOrEmpty()
-                    if (loginResult.value?.message != null){
-                        //snackbarHostState.showSnackbar(loginResult.value.message.toString())
+
+                    if (loginResult.value?.message != null) { // I do nothing
                     }
 
                     orgLoginResult.value.token?.let {
-                        // snackbarHostState.showSnackbar("Login exitoso...")
                         appViewModel.storeValueInDataStore(it, Constants.TOKEN)
                         appViewModel.setToken(it)
                         appViewModel.setLoggedIn(true)
@@ -167,9 +159,9 @@ fun mainLoginPage(
                             onLoggedInChanged(true)
                         }
                         // navController.navigate("Privacy")
-                        navController.navigate("testScreen/${loginResult.value.isAdmin}")
+                        navController.navigate("testScreen")
 
-                        // Log.d("DATASTORE", "Token saved: ${it}")
+                        Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     orgLoginResult.value.isAdmin.let {
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)

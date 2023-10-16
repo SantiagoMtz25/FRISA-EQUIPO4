@@ -3,6 +3,7 @@ package com.example.loginpagetest.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.UserFavToDelete
@@ -15,6 +16,7 @@ import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.model.UserUpdateAccount
 import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.service.UserService
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,11 +44,17 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     private val _updateAccountResult = MutableStateFlow<UserUpdateAccountResponse?>(null)
     val updateAccountResult: StateFlow<UserUpdateAccountResponse?> = _updateAccountResult
 
-    private val _getUserFavoriteOrgsResult = MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
-    val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> = _getUserFavoriteOrgsResult
+    private val _getUserFavoriteOrgsResult =
+        MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
+    val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> =
+        _getUserFavoriteOrgsResult
 
     private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
     val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
+
+    private val _getAllOrganizationsResult = MutableStateFlow<GetAllOrganizationsResponse?>(null)
+    val getAllOrganizationsResult: StateFlow<GetAllOrganizationsResponse?> =
+        _getAllOrganizationsResult
 
     // is this like creating account?
     fun addUser(
@@ -107,8 +115,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                         _loginResult.value = errorResponse
                     }
                 }
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d("RESPONSE", e.localizedMessage)
                 val errorMessage = e.localizedMessage
                 val errorResponse = UserLoginResponse(null, errorMessage)
@@ -117,7 +124,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun addFavourite (
+    fun addFavourite(
         token: String?,
         oscId: String?
     ) {
@@ -138,7 +145,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun removeFavourite (
+    fun removeFavourite(
         token: String?,
         name: String
     ) {
@@ -159,7 +166,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun userUpdateAccount (
+    fun userUpdateAccount(
         token: String? = "",
         state: String,
         city: String,
@@ -167,7 +174,8 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         password: String,
         confirmPassword: String
     ) {
-        val userUpdate = UserUpdateAccount(token, state, city, phoneNumber, password, confirmPassword)
+        val userUpdate =
+            UserUpdateAccount(token, state, city, phoneNumber, password, confirmPassword)
 
         viewModelScope.launch {
             var response: UserUpdateAccountResponse
@@ -198,7 +206,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun addGrade (
+    fun addGrade(
         name: String,
         average: Float
     ) {
@@ -214,6 +222,22 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                 var errorResponse = OrgGradeResponse("")
                 errorResponse.message = e.localizedMessage
                 _orgAddGradeResult.value = errorResponse
+            }
+        }
+    }
+
+    fun getAllOsc (
+
+    ) {
+        viewModelScope.launch {
+            var response: GetAllOrganizationsResponse
+            try {
+                response = userService.getAllOsc()
+                _getAllOrganizationsResult.value = response
+            } catch (e: Exception) {
+                var errorResponse = GetAllOrganizationsResponse()
+                // errorResponse.message = e.localizedMessage
+                _getAllOrganizationsResult.value = errorResponse
             }
         }
     }

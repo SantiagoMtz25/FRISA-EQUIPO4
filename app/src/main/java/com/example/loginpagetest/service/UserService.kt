@@ -13,6 +13,7 @@ import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.model.UserUpdateAccount
 import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -69,6 +70,6 @@ interface UserService {
     suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
 
     @GET("users/getAll")
-    suspend fun getAllOsc(@Body osc: OrgRegister) // Yet to implement
+    suspend fun getAllOsc() : GetAllOrganizationsResponse
 
 }

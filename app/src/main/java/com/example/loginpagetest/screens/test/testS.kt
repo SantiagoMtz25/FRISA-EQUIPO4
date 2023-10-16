@@ -21,8 +21,6 @@ fun MainScreen(navController: NavHostController, appViewModel: AppViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
-    /*val isAdmin: Boolean = content.currentBackStackEntry
-        ?.arguments?.getBoolean("isAdmin") ?: false*/
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -50,6 +48,6 @@ fun MainScreen(navController: NavHostController, appViewModel: AppViewModel) {
         }
     ) {
 
-        OrganizationsCatalogue(appViewModel, navController, inviteUser = false, !appViewModel.isAdmin())
+        OrganizationsCatalogue(appViewModel, navController, inviteUser = false)
     }
 }
