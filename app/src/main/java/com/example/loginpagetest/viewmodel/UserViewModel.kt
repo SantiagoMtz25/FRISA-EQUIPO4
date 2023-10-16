@@ -125,16 +125,14 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     }
 
     fun addFavourite(
-        token: String?,
-        oscId: String?
+        token: String,
+        oscId: String
     ) {
-        val addedosc = UserFavourites(token, oscId)
-
         viewModelScope.launch {
             var response: UserFavouritesResponse
 
             try {
-                response = userService.addFavourite(addedosc)
+                response = userService.addFavourite(token, oscId)
                 _addFavouriteResult.value = response
             } catch (e: Exception) {
 
@@ -146,7 +144,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     }
 
     fun removeFavourite(
-        token: String?,
+        token: String,
         name: String
     ) {
         val osctoremove = UserFavToDelete(token, name)
@@ -155,7 +153,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
             var response: UserFavToDeleteResponse
 
             try {
-                response = userService.removeFavourite(osctoremove)
+                response = userService.removeFavourite(token, osctoremove)
                 _removeFavouriteResult.value = response
             } catch (e: Exception) {
 
@@ -167,21 +165,20 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     }
 
     fun userUpdateAccount(
-        token: String? = "",
+        token: String,
         state: String,
         city: String,
         phoneNumber: String,
         password: String,
         confirmPassword: String
     ) {
-        val userUpdate =
-            UserUpdateAccount(token, state, city, phoneNumber, password, confirmPassword)
+        val userUpdate = UserUpdateAccount(state, city, phoneNumber, password, confirmPassword)
 
         viewModelScope.launch {
             var response: UserUpdateAccountResponse
 
             try {
-                response = userService.updateAccount(userUpdate)
+                response = userService.updateAccount(token, userUpdate)
                 _updateAccountResult.value = response
             } catch (e: Exception) {
                 var errorResponse = UserUpdateAccountResponse("")

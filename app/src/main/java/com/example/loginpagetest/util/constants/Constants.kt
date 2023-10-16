@@ -12,6 +12,7 @@ object Constants {
     val ISADMIN = booleanPreferencesKey("ISADMIN")
     val SIGNED_PRIVACY = booleanPreferencesKey("SIGNED_PRIVACY")
     val NAME = stringPreferencesKey("NAME")
+    val ADMINNAME = stringPreferencesKey("ADMINNAME")
     val EMAIL = stringPreferencesKey("EMAIL")
 
 

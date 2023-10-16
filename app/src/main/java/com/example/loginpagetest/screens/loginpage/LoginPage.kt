@@ -344,6 +344,7 @@ fun mainLoginPage(
         LaunchedEffect(notSuccessfulLogin) {
             if (notSuccessfulLogin) {
                 scrollState.animateScrollTo(scrollState.maxValue)
+                notSuccessfulLogin = false
             }
         }
         if (notSuccessfulLogin) {
@@ -367,6 +368,7 @@ fun mainLoginPage(
         LaunchedEffect(successfulLogin) {
             if (successfulLogin) {
                 scrollState.animateScrollTo(scrollState.maxValue)
+                successfulLogin = false
             }
         }
         if (successfulLogin) {

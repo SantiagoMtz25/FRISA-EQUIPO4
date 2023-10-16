@@ -2,6 +2,7 @@ package com.example.loginpagetest.screens.accountmanager
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,8 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,6 +50,7 @@ import com.example.loginpagetest.R
 import com.example.loginpagetest.screens.test.DrawerContent
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.screens.createaccount.CreateAccountTextField
 import com.example.loginpagetest.service.OrgService
@@ -63,26 +67,22 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val customRed = colorResource(id = R.color.logoRed)
 
-    val isAdmin: Boolean = navController.currentBackStackEntry
-        ?.arguments?.getBoolean("isAdmin") ?: false
-
     var areFieldsVisible by rememberSaveable { mutableStateOf(false) }
 
-    val userVM =  UserViewModel(UserService.instance)
-    val orgVM = OrgViewModel(OrgService.instance)
-    val appViewModel: AppViewModel = viewModel()
+    val userViewModel =  UserViewModel(UserService.instance)
+    val orgViewModel = OrgViewModel(OrgService.instance)
 
-    LaunchedEffect(key1 = userVM.updateAccountResult) {
-        userVM.updateAccountResult.collect { result ->
+    LaunchedEffect(key1 = userViewModel) {
+        userViewModel.updateAccountResult.collect { result ->
             if (result != null) {
-
+                // maybe display message of updated
             }
         }
     }
-    LaunchedEffect(key1 = orgVM.updateAccountResult) {
-        orgVM.updateAccountResult.collect { result ->
+    LaunchedEffect(key1 = orgViewModel) {
+        orgViewModel.updateAccountResult.collect { result ->
             if (result != null) {
-
+                // maybe display message of updated
             }
         }
     }
@@ -97,6 +97,33 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
     var description by remember { mutableStateOf("") }
     var webpage by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
+
+    var wrongPassword by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+    LaunchedEffect(wrongPassword) {
+        if (wrongPassword) {
+            scrollState.animateScrollTo(scrollState.maxValue)
+            wrongPassword = false
+        }
+    }
+    if (wrongPassword) {
+        Snackbar(
+            modifier = Modifier
+                .padding(16.dp)
+                .background(Color.Green),
+            action = {
+                TextButton(onClick = { wrongPassword = false }) {
+                    Text(
+                        "Quitar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        ) {
+            Text("Las contraseñas no coinciden.", color = Color.White)
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -120,10 +147,10 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
             )
         },
         drawerContent = {
-            DrawerContent(navController, isAdmin)
+            DrawerContent(navController, appViewModel.isAdmin())
         },
         content = {
-            if (isAdmin) {
+            if (appViewModel.isAdmin()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -254,23 +281,15 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                 ) {
                                     Button(
                                         onClick = {
-                                            if (password == confirmPassword) {
-
-                                                orgVM.orgUpdateAccount(
-                                                    appViewModel.getToken(),
-                                                    selectedState,
-                                                    selectedCity,
-                                                    phoneNumber,
-                                                    description,
-                                                    rfc,
-                                                    webpage,
-                                                    category
-                                                )
-
-                                                // Handle save changes click event
-                                            } else {
-                                                // Passwords do not match, show an error message
-                                            }
+                                            orgViewModel.orgUpdateAccount(
+                                                appViewModel.getToken(),
+                                                selectedState,
+                                                selectedCity,
+                                                phoneNumber,
+                                                description,
+                                                rfc,
+                                                webpage,
+                                                category)
                                         },
                                         colors = ButtonDefaults.buttonColors(
                                             backgroundColor = customRed,
@@ -394,9 +413,8 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                     Button(
                                         onClick = {
                                             if (password == confirmPassword) {
-                                                // Handle save changes click event
-                                                userVM.userUpdateAccount(
-                                                    "",
+                                                userViewModel.userUpdateAccount(
+                                                    appViewModel.getToken(),
                                                     selectedState,
                                                     selectedCity,
                                                     phoneNumber,
@@ -405,7 +423,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                                 )
 
                                             } else {
-                                                // Passwords do not match, show an error message
+                                                wrongPassword = true
                                             }
                                         },
                                         colors = ButtonDefaults.buttonColors(

@@ -52,14 +52,17 @@ interface UserService {
         @Path("organizationId") organizationId: String
     ): UserFavouritesResponse
 
-    @PATCH("users/addFavourite/{}")
-    suspend fun addFavourite(@Body userFav: UserFavourites) : UserFavouritesResponse
-
     @PATCH("users/removeFavourite")
-    suspend fun removeFavourite(@Body userFavRemove: UserFavToDelete) : UserFavToDeleteResponse
+    suspend fun removeFavourite(
+        @Header("Authorization") token: String,
+        @Body userFavRemove: UserFavToDelete
+    ) : UserFavToDeleteResponse
 
     @PATCH("users/userUpdateAccount")
-    suspend fun updateAccount(@Body userUpdate: UserUpdateAccount) : UserUpdateAccountResponse
+    suspend fun updateAccount(
+        @Header("Authorization") token: String,
+        @Body userUpdate: UserUpdateAccount
+    ) : UserUpdateAccountResponse
 
     @GET("users/getUserFavoriteOrganizations")
     suspend fun getUserFavoriteOrganization(
