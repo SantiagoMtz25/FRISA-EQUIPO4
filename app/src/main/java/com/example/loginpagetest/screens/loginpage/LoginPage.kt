@@ -158,7 +158,7 @@ fun mainLoginPage(
                         if (onLoggedInChanged != null) {
                             onLoggedInChanged(true)
                         }
-                        // navController.navigate("Privacy")
+
                         navController.navigate("testScreen")
 
                         Log.d("DATASTORE", "Token saved: ${it}")

@@ -1,5 +1,7 @@
 package com.example.loginpagetest.model.getall
 
-class GetAllOrganizationsResponse: ArrayList<GetAllOrganizationsResponseItem>() {
+data class GetAllOrganizationsResponse(
+    val data: Map<String, GetAllOrganizationsResponseItem> = emptyMap()
+)
 
-}
+

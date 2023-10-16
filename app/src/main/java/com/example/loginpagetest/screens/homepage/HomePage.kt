@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.shadow
+import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.service.UserService
@@ -76,17 +77,29 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
             if (result != null) {
                 getAllOrganizationsResult = result
                 // in theory this should be the arraylist according to me
+                // list of items (item being org) mapOf() ...
             }
         }
     }
 
     val addFavouriteResult = remember { mutableStateOf(UserFavouritesResponse()) }
 
-    LaunchedEffect(key1 = userViewModel) {
+    LaunchedEffect(key1 = userViewModel.addFavouriteResult) {
         userViewModel.addFavouriteResult.collect { result ->
             if (result != null) {
                 addFavouriteResult.value = result
                 // maybe print something to let the user know the action was executed
+            }
+        }
+    }
+
+    val removeFavouriteResult = remember { mutableStateOf(UserFavToDeleteResponse()) }
+
+    LaunchedEffect(key1 = userViewModel.removeFavouriteResult) {
+        userViewModel.removeFavouriteResult.collect { result ->
+            if (result != null) {
+                removeFavouriteResult.value = result
+                // maybe print a snack-bar or some shit
             }
         }
     }

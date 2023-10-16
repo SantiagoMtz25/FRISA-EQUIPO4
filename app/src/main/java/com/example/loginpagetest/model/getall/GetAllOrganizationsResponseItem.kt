@@ -1,6 +1,6 @@
 package com.example.loginpagetest.model.getall
 
-class GetAllOrganizationsResponseItem (
+data class GetAllOrganizationsResponseItem (
     val name: String,
     val description: String,
     val category: String,

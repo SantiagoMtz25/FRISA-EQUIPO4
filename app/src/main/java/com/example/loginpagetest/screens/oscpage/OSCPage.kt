@@ -48,8 +48,6 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
     var starFilter by remember { mutableIntStateOf(0) }
-    /*val inviteUser: Boolean = content.currentBackStackEntry
-        ?.arguments?.getBoolean("inviteUser") ?: false*/
     val inviteUser: Boolean = content.currentBackStackEntry?.arguments?.getBoolean("inviteUser") ?: false
     val isAdmin: Boolean = content.currentBackStackEntry
         ?.arguments?.getBoolean("isAdmin") ?: false
@@ -75,12 +73,14 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
     val isAllowedToRank = (currentTime - lastRankingTime) > 24 * 60 * 60 * 1000
 
     var selectedStar by rememberSaveable { mutableIntStateOf(0) }
+
     /*LaunchedEffect(selectedStar) {
         //osc.addGrade(organization, selectedStar.toFloat())
         val editor = prefs.edit()
         editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
         editor.apply()
     }*/
+
     var savedStarRank by rememberSaveable { mutableIntStateOf(0) }
 
     Column {
@@ -271,30 +271,32 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
                 }*/
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
-                Text("Califica la OSC:")
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    (1..5).forEach { index ->
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Star $index",
-                            tint = if (savedStarRank >= index) customRed else customGray,
-                            modifier = Modifier
-                                .clickable {
-                                    if (isAllowedToRank) {
-                                        savedStarRank = index
-                                        val editor = prefs.edit()
-                                        editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
-                                        editor.apply()
-                                    } else {
-                                        Toast.makeText(context, "Debe esperar 24 horas para volver a calificar.", Toast.LENGTH_SHORT).show()
+                if (appViewModel.isAdmin()) {
+                    Text("Califica la OSC:")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        (1..5).forEach { index ->
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = "Star $index",
+                                tint = if (savedStarRank >= index) customRed else customGray,
+                                modifier = Modifier
+                                    .clickable {
+                                        if (isAllowedToRank) {
+                                            savedStarRank = index
+                                            val editor = prefs.edit()
+                                            editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
+                                            editor.apply()
+                                        } else {
+                                            Toast.makeText(context, "Debe esperar 24 horas para volver a calificar.", Toast.LENGTH_SHORT).show()
+                                        }
                                     }
-                                }
-                                .padding(7.dp)
-                                .size(40.dp)
-                        )
+                                    .padding(7.dp)
+                                    .size(40.dp)
+                            )
+                        }
                     }
                 }
             }
