@@ -48,10 +48,12 @@ private const val PREFS_NAME = "StarRankingPrefs"
 private const val LAST_RANKING_KEY = "LastRankingTime"
 
 @Composable
-fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
+fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
     var starFilter by remember { mutableIntStateOf(0) }
+    val inviteUser: Boolean = navController.currentBackStackEntry
+        ?.arguments?.getBoolean("inviteUser") ?: false
 
     val userViewModel = UserViewModel(UserService.instance)
     val orgAddGradeResult = remember { mutableStateOf(OrgGradeResponse()) }
@@ -74,7 +76,7 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
     var savedStarRank by rememberSaveable { mutableIntStateOf(0) }
 
     Column {
-        CustomTopBar2(title = "Página OSC", navController = content)
+        CustomTopBar2(title = "Página OSC", navController = navController)
 
         Card(
             modifier = Modifier
@@ -261,7 +263,7 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
                 }*/
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
-                if (appViewModel.isAdmin()) {
+                if (!appViewModel.isAdmin() && !inviteUser) {
                     Text("Califica la OSC:")
                     Row(
                         modifier = Modifier.fillMaxWidth(),

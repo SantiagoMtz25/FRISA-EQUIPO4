@@ -13,6 +13,6 @@ fun inviteUser (navController: NavHostController, appViewModel: AppViewModel) {
         ?.arguments?.getBoolean("inviteUser") ?: false
     Column {
         CustomTopBar(title = "Bienvenid@", navController = navController, screen = "login")
-        OrganizationsCatalogue(appViewModel, content = navController, inviteUser)
+        OrganizationsCatalogue(appViewModel, navController = navController, inviteUser = inviteUser)
     }
 }

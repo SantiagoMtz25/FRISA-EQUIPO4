@@ -39,7 +39,7 @@ import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostController, inviteUser: Boolean) {
+fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostController, inviteUser: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
@@ -305,7 +305,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                         )
                     }
                 }
-                if (!appViewModel.isAdmin()) {
+                if (appViewModel.isAdmin()) {
                     if (selectedCategory == category) {
                         filteredAndSortedCategories[category]?.forEach { organization ->
                         Card(
@@ -314,7 +314,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage")
+                                        navController.navigate("OSCpage/${inviteUser}")
                                     }
                             ) {
                                 Row(
@@ -338,7 +338,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage")
+                                        navController.navigate("OSCpage/${inviteUser}")
                                     }
                             ) {
                                 Row(

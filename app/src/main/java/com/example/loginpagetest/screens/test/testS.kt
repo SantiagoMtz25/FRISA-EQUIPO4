@@ -26,7 +26,7 @@ fun MainScreen(navController: NavHostController, appViewModel: AppViewModel) {
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text("Bienvenid@", color = Color.White)},
+                title = { Text("Bienvenid@ ${appViewModel.getName()}", color = Color.White)},
                 navigationIcon = {
                     IconButton(onClick = {
                         coroutineScope.launch {

@@ -23,7 +23,15 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
     private val isAdmin = mutableStateOf(false)
     private val signedPrivacy = mutableStateOf(false)
 
+    private val name = mutableStateOf("")
+    private val lastName = mutableStateOf("")
+    private val adminName = mutableStateOf("")
+    private val email = mutableStateOf("")
+    private val webpage = mutableStateOf("")
+    private val category = mutableStateOf("")
+
     private val _isInitialized = MutableStateFlow(false)
+
     // Con esta variable podemos saber si el proceso de init ya concluyó
     val isInitialized: StateFlow<Boolean> = _isInitialized
 
@@ -33,18 +41,18 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
             val hasTokenStored = appContext.hasKeyWithValue(Constants.TOKEN)
             val token = appContext.getValueFromDataStore(Constants.TOKEN, "")
             val isAdmin = appContext.getValueFromDataStore(Constants.ISADMIN, false)
-            val signed = appContext.getValueFromDataStore(Constants.SIGNED_PRIVACY,false)
+            val signed = appContext.getValueFromDataStore(Constants.SIGNED_PRIVACY, false)
 
             if (hasTokenStored) {
                 setLoggedIn(true)
                 setToken(token)
                 setIsAdmin(isAdmin)
             }
-            if (signed){
+            if (signed) {
                 setSignedPrivacy()
             }
             _isInitialized.value = true
-            Log.d("POSTVALUE","posting value *** ${_isInitialized.value}")
+            Log.d("POSTVALUE", "posting value *** ${_isInitialized.value}")
 
         }
     }
@@ -56,10 +64,10 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
     }
 
 
-    fun deleteToken(){
+    fun deleteToken() {
         viewModelScope.launch {
             appContext.deleteValue(Constants.TOKEN)
-            token.value =""
+            token.value = ""
             setLoggedOut()
         }
     }
@@ -89,15 +97,58 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
         return isAdmin.value
     }
 
-    fun setIsAdmin(value: Boolean){
+    fun setIsAdmin(value: Boolean) {
         isAdmin.value = value
     }
 
-    fun setSignedPrivacy(){
+    fun setSignedPrivacy() {
         signedPrivacy.value = true
     }
 
-    fun isPrivacySigned(): Boolean{
+    fun isPrivacySigned(): Boolean {
         return signedPrivacy.value
+    }
+
+    // GET and SET methods
+    fun setName (myname: String) {
+        name.value = myname
+    }
+    fun getName(): String {
+        return name.value
+    }
+
+    fun setLastName(lastname: String) {
+        lastName.value = lastname
+    }
+    fun getLastName(): String {
+        return lastName.value
+    }
+
+    fun setAdminName(adminname: String) {
+        adminName.value = adminname
+    }
+    fun getAdminName(): String {
+        return adminName.value
+    }
+
+    fun setEmail(Email: String) {
+        email.value = Email
+    }
+    fun getEmail(): String {
+        return email.value
+    }
+
+    fun setWebpage(WebPage: String) {
+        webpage.value = WebPage
+    }
+    fun getWebpage(): String {
+        return webpage.value
+    }
+
+    fun setCategory(Category: String) {
+        category.value = Category
+    }
+    fun getCategory(): String {
+        return category.value
     }
 }

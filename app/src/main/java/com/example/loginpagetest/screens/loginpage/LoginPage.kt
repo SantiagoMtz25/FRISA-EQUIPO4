@@ -117,27 +117,50 @@ fun mainLoginPage(
         LaunchedEffect(key1 = userViewModel) {
             userViewModel.loginResult.collect { result ->
                 if (result != null) {
+                    Log.d("CONSOLE 1", "Result: $result")
 
                     loginResult.value = result
+
+                    Log.d("CONSOLE 2", "Result: $loginResult")
 
                     if (loginResult.value?.message != null) { // I do nothing
                     }
 
+                    Log.d("CONSOLE 3", "${loginResult.value.message}")
+
                     loginResult.value.token?.let {
+                        Log.d("CONSOLE 4", "${loginResult.value.token}")
                         appViewModel.storeValueInDataStore(it, Constants.TOKEN)
                         appViewModel.setToken(it)
                         appViewModel.setLoggedIn(true)
-                        if (onLoggedInChanged != null) {
+                        /*if (onLoggedInChanged != null) {
                             onLoggedInChanged(true)
-                        }
+                        }*/
 
                         navController.navigate("testScreen")
 
                         Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     loginResult.value.isAdmin.let {
+                        Log.d("CONSOLE 5", "${loginResult.value.isAdmin}")
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
+                    }
+
+                    loginResult.value.name.let {
+                        Log.d("CONSOLE 6", "${loginResult.value.name}")
+                        appViewModel.storeValueInDataStore(it, Constants.NAME)
+                        appViewModel.setName(it)
+                    }
+                    loginResult.value.lastname.let {
+                        Log.d("CONSOLE 7", "${loginResult.value.lastname}")
+                        appViewModel.storeValueInDataStore(it, Constants.LASTNAME)
+                        appViewModel.setLastName(it)
+                    }
+                    loginResult.value.email.let {
+                        Log.d("CONSOLE 8", "${loginResult.value.email}")
+                        appViewModel.storeValueInDataStore(it, Constants.EMAIL)
+                        appViewModel.setEmail(it)
                     }
                 }
             }
@@ -145,13 +168,17 @@ fun mainLoginPage(
         LaunchedEffect(key1 = orgViewModel) {
             orgViewModel.orgLoginResult.collect { result ->
                 if (result != null) {
+                    Log.d("ORGCONSOLE 1", "Result: $result")
 
                     orgLoginResult.value = result
+                    Log.d("ORGCONSOLE 2", "Result: $orgLoginResult")
 
-                    if (loginResult.value?.message != null) { // I do nothing
+                    if (orgLoginResult.value?.message != null) {
                     }
+                    Log.d("ORGCONSOLE 3", "Result: ${orgLoginResult.value.message}")
 
                     orgLoginResult.value.token?.let {
+                        Log.d("ORGCONSOLE 4", "Result: ${orgLoginResult.value.token}")
                         appViewModel.storeValueInDataStore(it, Constants.TOKEN)
                         appViewModel.setToken(it)
                         appViewModel.setLoggedIn(true)
@@ -164,8 +191,35 @@ fun mainLoginPage(
                         Log.d("DATASTORE", "Token saved: ${it}")
                     }
                     orgLoginResult.value.isAdmin.let {
+                        Log.d("ORGCONSOLE 5", "Result: ${orgLoginResult.value.isAdmin}")
                         appViewModel.storeValueInDataStore(it, Constants.ISADMIN)
                         appViewModel.setIsAdmin(it)
+                    }
+
+                    orgLoginResult.value.name.let {
+                        Log.d("ORGCONSOLE 6", "Result: ${orgLoginResult.value.name}")
+                        appViewModel.storeValueInDataStore(it, Constants.NAME)
+                        appViewModel.setName(it)
+                    }
+                    orgLoginResult.value.adminName.let {
+                        Log.d("ORGCONSOLE 7", "Result: ${orgLoginResult.value.adminName}")
+                        appViewModel.storeValueInDataStore(it, Constants.ADMINNAME)
+                        appViewModel.setAdminName(it)
+                    }
+                    orgLoginResult.value.email.let {
+                        Log.d("ORGCONSOLE 8", "Result: ${orgLoginResult.value.email}")
+                        appViewModel.storeValueInDataStore(it, Constants.EMAIL)
+                        appViewModel.setEmail(it)
+                    }
+                    orgLoginResult.value.webpage.let {
+                        Log.d("ORGCONSOLE 9", "Result: ${orgLoginResult.value.webpage}")
+                        appViewModel.storeValueInDataStore(it, Constants.WEBPAGE)
+                        appViewModel.setWebpage(it)
+                    }
+                    orgLoginResult.value.category.let {
+                        Log.d("ORGCONSOLE 10", "Result: ${orgLoginResult.value.category}")
+                        appViewModel.storeValueInDataStore(it, Constants.CATEGORY)
+                        appViewModel.setCategory(it)
                     }
                 }
             }
@@ -189,9 +243,10 @@ fun mainLoginPage(
                 color = Color.Black
             )
         )
-
+        Log.d("CUENTA", "$isUserAccount")
         buttonSlider { isChecked ->
             isUserAccount = isChecked
+            Log.d("CUENTA", "$isUserAccount")
         }
         if (isUserAccount) {
             TextField(
