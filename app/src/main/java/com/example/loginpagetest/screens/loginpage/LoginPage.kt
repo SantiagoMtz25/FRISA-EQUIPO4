@@ -220,6 +220,21 @@ fun mainLoginPage(
                         appViewModel.storeValueInDataStore(it, Constants.CATEGORY)
                         appViewModel.setCategory(it)
                     }
+                    orgLoginResult.value.state.let {
+                        Log.d("ORGCONSOLE 11", "Result: ${orgLoginResult.value.state}")
+                        appViewModel.storeValueInDataStore(it, Constants.STATE)
+                        appViewModel.setState(it)
+                    }
+                    orgLoginResult.value.city.let {
+                        Log.d("ORGCONSOLE 12", "Result: ${orgLoginResult.value.city}")
+                        appViewModel.storeValueInDataStore(it, Constants.CITY)
+                        appViewModel.setCity(it)
+                    }
+                    orgLoginResult.value.phoneNumber.let {
+                        Log.d("ORGCONSOLE 13", "Result: ${orgLoginResult.value.phoneNumber}")
+                        appViewModel.storeValueInDataStore(it, Constants.PHONENUMBER)
+                        appViewModel.setPhoneNumber(it)
+                    }
                 }
             }
         }

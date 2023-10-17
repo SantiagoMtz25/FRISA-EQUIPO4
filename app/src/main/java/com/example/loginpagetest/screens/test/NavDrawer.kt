@@ -46,14 +46,14 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             )
             // Profile Name
             Text(
-                text = "Your Name",
+                text = "${appViewModel.getName()} ${appViewModel.getLastName()}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
             )
             // Profile Email
             Text(
-                text = "youremail@example.com",
+                text = "${appViewModel.getEmail()}",
                 fontSize = 14.sp,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

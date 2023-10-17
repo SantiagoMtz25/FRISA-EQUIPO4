@@ -169,8 +169,8 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Text("OSC Nombre: OSC John Doe")
-                            Text("Admin Nombre: John Doe")
+                            Text("OSC Nombre: ${appViewModel.getName()}")
+                            Text("Admin Nombre: ${appViewModel.getAdminName()}")
                         }
                     }
 
@@ -322,8 +322,8 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Text("Nombre: John Doe")
-                            Text("Correo: john.doe@example.com")
+                            Text("Nombre: ${appViewModel.getName()}")
+                            Text("Correo: ${appViewModel.getEmail()}")
                         }
                     }
 

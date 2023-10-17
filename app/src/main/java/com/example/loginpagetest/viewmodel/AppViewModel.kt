@@ -29,6 +29,9 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
     private val email = mutableStateOf("")
     private val webpage = mutableStateOf("")
     private val category = mutableStateOf("")
+    private val state = mutableStateOf("")
+    private val city = mutableStateOf("")
+    private val phoneNumber = mutableStateOf("")
 
     private val _isInitialized = MutableStateFlow(false)
 
@@ -150,5 +153,26 @@ class AppViewModel(private val appContext: Application) : AndroidViewModel(appCo
     }
     fun getCategory(): String {
         return category.value
+    }
+
+    fun setState(State: String) {
+        state.value = State
+    }
+    fun getState(): String {
+        return state.value
+    }
+
+    fun setCity(City: String) {
+        city.value = City
+    }
+    fun getCity(): String {
+        return city.value
+    }
+
+    fun setPhoneNumber(PhoneNumber: String) {
+        phoneNumber.value = PhoneNumber
+    }
+    fun getPhoneNumber(): String {
+        return phoneNumber.value
     }
 }

@@ -17,6 +17,9 @@ object Constants {
     val EMAIL = stringPreferencesKey("EMAIL")
     val WEBPAGE = stringPreferencesKey("PAGINA WEB")
     val CATEGORY = stringPreferencesKey("CATEGORY")
+    val STATE = stringPreferencesKey("STATE")
+    val CITY = stringPreferencesKey("CITY")
+    val PHONENUMBER = stringPreferencesKey("PHONENUMBER")
 
     val avisoDePrivacidad = """
 AVISO DE PRIVACIDAD

@@ -110,7 +110,7 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
 
                     Column {
                         Text(text = "${appViewModel.getName()}", fontWeight = FontWeight.Bold)
-                        // Text(text = "Ubicación")
+                        Text(text = "${appViewModel.getState()} ${appViewModel.getCity()}")
                         Text(text = "${appViewModel.getCategory()}")
                     }
                 }
@@ -154,7 +154,7 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    val phoneNumber = "123456789"
+                    val phoneNumber = "${appViewModel.getPhoneNumber()}"
                     val dialNumber by rememberUpdatedState(phoneNumber)
                     val facebookUrl = "https://www.facebook.com/facebook"
                     val openFacebook by rememberUpdatedState(facebookUrl)

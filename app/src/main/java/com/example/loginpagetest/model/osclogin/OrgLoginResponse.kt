@@ -8,5 +8,8 @@ data class OrgLoginResponse(
     var adminName: String = "",
     var email: String = "",
     var webpage: String = "",
-    var category: String = ""
+    var category: String = "",
+    var state: String = "",
+    var city: String = "",
+    var phoneNumber: String = ""
 )
