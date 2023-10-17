@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -41,7 +44,6 @@ import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.navigation.CustomTopBar2
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.AppViewModel
-import com.example.loginpagetest.viewmodel.OrgViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 private const val PREFS_NAME = "StarRankingPrefs"
@@ -107,9 +109,9 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text(text = "Nombre", fontWeight = FontWeight.Bold)
-                        Text(text = "Ubicación")
-                        Text(text = "Categoría")
+                        Text(text = "${appViewModel.getName()}", fontWeight = FontWeight.Bold)
+                        // Text(text = "Ubicación")
+                        Text(text = "${appViewModel.getCategory()}")
                     }
                 }
 
@@ -158,7 +160,7 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                     val openFacebook by rememberUpdatedState(facebookUrl)
                     val instagramUrl = "https://www.instagram.com/instagram"
                     val openInstagram by rememberUpdatedState(instagramUrl)
-                    val email = "email@example.com"
+                    val email = "${appViewModel.getEmail()}"
                     val openEmail by rememberUpdatedState(email)
                     val twitterUrl = "https://twitter.com/twitter"
                     val openTwitter by rememberUpdatedState(twitterUrl)
@@ -171,10 +173,10 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                     Text(
                         text = "Teléfono: $phoneNumber",
                         modifier = Modifier.clickable {
-                            dialNumber // This will trigger the LaunchedEffect below
+                            dialNumberTrigger = true // Set the trigger to true to activate LaunchedEffect
                         }
                     )
-                    Text(
+                    /*Text(
                         text = "Facebook: @facebook",
                         modifier = Modifier.clickable {
                             openFacebookTrigger = true
@@ -185,19 +187,19 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                         modifier = Modifier.clickable {
                             openInstagramTrigger = true
                         }
-                    )
+                    )*/
                     Text(
                         text = "Correo: $email",
                         modifier = Modifier.clickable {
                             openEmailTrigger = true
                         }
                     )
-                    Text(
+                    /*Text(
                         text = "Twitter: @twitter",
                         modifier = Modifier.clickable {
                             openTwitterTrigger = true
                         }
-                    )
+                    )*/
                     LaunchedEffect(dialNumberTrigger) {
                         if (dialNumberTrigger) {
                             val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$dialNumber"))
@@ -205,7 +207,7 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                             dialNumberTrigger = false
                         }
                     }
-                    LaunchedEffect(openFacebookTrigger) {
+                    /*LaunchedEffect(openFacebookTrigger) {
                         if (openFacebookTrigger) {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(openFacebook))
                             launchIntent(context, intent)
@@ -218,7 +220,7 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                             launchIntent(context, intent)
                             openInstagramTrigger = false
                         }
-                    }
+                    }*/
                     LaunchedEffect(openEmailTrigger) {
                         if (openEmailTrigger) {
                             val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$openEmail"))
@@ -226,41 +228,37 @@ fun OSCPage(navController: NavHostController, appViewModel: AppViewModel) {
                             openEmailTrigger = false
                         }
                     }
-                    LaunchedEffect(openTwitterTrigger) {
+                    /*LaunchedEffect(openTwitterTrigger) {
                         if (openTwitterTrigger) {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(openTwitter))
                             launchIntent(context, intent)
                             openTwitterTrigger = false
                         }
-                    }
+                    }*/
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                /*MaterialTheme(
+                MaterialTheme(
                     colorScheme = MaterialTheme.colorScheme.copy(primary = customRed, onPrimary = Color.White)
                 ) {
                     Button(
                         onClick = {
-                            val shareContent = """
-                                Name: Name
-                                Location: Location
-                                Category: Category
-                                Description: This is a description...
-                            """.trimIndent()
+                            val webpageContent = appViewModel.getWebpage()
 
                             val sendIntent: Intent = Intent().apply {
                                 action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, shareContent)
+                                putExtra(Intent.EXTRA_TEXT, webpageContent)
                                 type = "text/plain"
                             }
 
                             val shareIntent = Intent.createChooser(sendIntent, null)
-                            startActivityLauncher.launch(shareIntent)
+                            context.startActivity(shareIntent)
                         },
-                        modifier = Modifier.width(100.dp).align(Alignment.CenterHorizontally)
+                        modifier = Modifier.width(150.dp).align(Alignment.CenterHorizontally)
                     ) {
-                        Text("Share")
+                        Text("Compartir")
                     }
-                }*/
+                }
+                Spacer(modifier = Modifier.height(10.dp))
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
                 if (!appViewModel.isAdmin() && !inviteUser) {

@@ -45,6 +45,15 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
     val customGray = colorResource(id = R.color.logoGray)
     val customPink = colorResource(id = R.color.lightred_pink)
     var searchQuery by remember { mutableStateOf("") }
+
+    fun getCategoryOfOrganization(organization: String, organizationsMap: Map<String, List<String>>): String? {
+        for ((category, organizations) in organizationsMap) {
+            if (organization in organizations) {
+                return category
+            }
+        }
+        return null
+    }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val organizationsMap = mapOf(
@@ -113,7 +122,10 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
         ) {
             OutlinedTextField(
                 value = searchQuery,
-                onValueChange = { searchQuery = it },
+                onValueChange = { newValue ->
+                    searchQuery = newValue
+                    selectedCategory = getCategoryOfOrganization(searchQuery, organizationsMap)
+                },
                 singleLine = true,
                 label = { Text("Buscar OSC") },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -305,7 +317,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
                         )
                     }
                 }
-                if (appViewModel.isAdmin()) {
+                if (appViewModel.isAdmin() || inviteUser) {
                     if (selectedCategory == category) {
                         filteredAndSortedCategories[category]?.forEach { organization ->
                         Card(
@@ -386,3 +398,4 @@ fun Chip(tag: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
         Text(text = tag)
     }
 }
+

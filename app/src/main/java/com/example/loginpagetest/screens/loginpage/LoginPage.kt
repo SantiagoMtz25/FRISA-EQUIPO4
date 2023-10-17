@@ -106,7 +106,6 @@ fun mainLoginPage(
 
         var successfulLogin by rememberSaveable { mutableStateOf(false) }
         var notSuccessfulLogin by rememberSaveable { mutableStateOf(false) }
-        var inviteUser by rememberSaveable { mutableStateOf(false) }
 
         val loginResult = remember {
             mutableStateOf(UserLoginResponse())
@@ -386,8 +385,7 @@ fun mainLoginPage(
         ) {
             Button(
                 onClick = {
-                    inviteUser = true
-                    navController.navigate("inviteUser/${inviteUser}")
+                    navController.navigate("inviteUser")
                 },
                 modifier = Modifier.width(160.dp)
             ) {
