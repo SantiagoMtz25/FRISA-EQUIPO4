@@ -199,6 +199,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     }
 
     fun addGrade(
+        token: String,
         orgId: String,
         grade: Int
     ) {
@@ -207,7 +208,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         viewModelScope.launch {
             var response: OrgGradeResponse
             try {
-                response = userService.addGrade(oscgrade)
+                response = userService.addGrade(token, oscgrade)
                 _orgAddGradeResult.value = response
             } catch (e: Exception) {
 
@@ -219,12 +220,12 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     }
 
     fun getAllOsc (
-
+        token: String
     ) {
         viewModelScope.launch {
             var response: GetAllOrganizationsResponse
             try {
-                response = userService.getAllOsc()
+                response = userService.getAllOsc(token)
                 _getAllOrganizationsResult.value = response
             } catch (e: Exception) {
                 var errorResponse = GetAllOrganizationsResponse()

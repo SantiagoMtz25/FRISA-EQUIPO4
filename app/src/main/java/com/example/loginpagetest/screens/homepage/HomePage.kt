@@ -71,7 +71,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
     var getAllOrganizationsResult by remember { mutableStateOf(GetAllOrganizationsResponse()) }
 
     LaunchedEffect(Unit) {
-        userViewModel.getAllOsc() // preguntar al profe de esto??
+        userViewModel.getAllOsc(appViewModel.getToken()) // preguntar al profe de esto??
 
         userViewModel.getAllOrganizationsResult.collect{ result ->
             if (result != null) {

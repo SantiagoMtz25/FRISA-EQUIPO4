@@ -2,10 +2,8 @@ package com.example.loginpagetest.service
 
 import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
-import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
-import com.example.loginpagetest.model.UserFavourites
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
@@ -24,11 +22,6 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-
-/* This code defines a UserService interface,
-   which is used to create a Retrofit service for handling
-   HTTP requests related to user operations.
- */
 
 interface UserService {
 
@@ -70,9 +63,12 @@ interface UserService {
     ): GetUserFavoriteOrganizationsResponse
 
     @PATCH("users/gradeorg")
-    suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
+    suspend fun addGrade(
+        @Header("Authorization") token: String,
+        @Body grade: OrgGrade
+    ) : OrgGradeResponse
 
     @GET("users/getAll")
-    suspend fun getAllOsc() : GetAllOrganizationsResponse
+    suspend fun getAllOsc(@Header("Authorization") token: String) : GetAllOrganizationsResponse
 
 }

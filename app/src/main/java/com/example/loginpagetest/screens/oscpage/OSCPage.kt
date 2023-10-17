@@ -279,7 +279,7 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
                                             val editor = prefs.edit()
                                             editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
                                             editor.apply()
-                                            userViewModel.addGrade("", savedStarRank)
+                                            userViewModel.addGrade(appViewModel.getToken(),"", savedStarRank)
                                         } else {
                                             Toast.makeText(context, "Debe esperar 24 horas para volver a calificar.", Toast.LENGTH_SHORT).show()
                                         }
