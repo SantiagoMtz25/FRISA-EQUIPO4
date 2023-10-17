@@ -6,5 +6,6 @@ data class GetAllOrganizationsResponseItem (
     val description: String,
     val category: String,
     val webpage: String,
-    val phoneNumber: String
+    val phoneNumber: String,
+    val email: String
 )
