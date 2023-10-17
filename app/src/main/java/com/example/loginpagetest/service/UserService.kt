@@ -2,10 +2,8 @@ package com.example.loginpagetest.service
 
 import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
-import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
-import com.example.loginpagetest.model.UserFavourites
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
@@ -13,6 +11,7 @@ import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.model.UserUpdateAccount
 import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,11 +22,6 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-
-/* This code defines a UserService interface,
-   which is used to create a Retrofit service for handling
-   HTTP requests related to user operations.
- */
 
 interface UserService {
 
@@ -51,14 +45,17 @@ interface UserService {
         @Path("organizationId") organizationId: String
     ): UserFavouritesResponse
 
-    @PATCH("users/addFavourite/{}")
-    suspend fun addFavourite(@Body userFav: UserFavourites) : UserFavouritesResponse
-
     @PATCH("users/removeFavourite")
-    suspend fun removeFavourite(@Body userFavRemove: UserFavToDelete) : UserFavToDeleteResponse
+    suspend fun removeFavourite(
+        @Header("Authorization") token: String,
+        @Body userFavRemove: UserFavToDelete
+    ) : UserFavToDeleteResponse
 
     @PATCH("users/userUpdateAccount")
-    suspend fun updateAccount(@Body userUpdate: UserUpdateAccount) : UserUpdateAccountResponse
+    suspend fun updateAccount(
+        @Header("Authorization") token: String,
+        @Body userUpdate: UserUpdateAccount
+    ) : UserUpdateAccountResponse
 
     @GET("users/getUserFavoriteOrganizations")
     suspend fun getUserFavoriteOrganization(
@@ -66,9 +63,12 @@ interface UserService {
     ): GetUserFavoriteOrganizationsResponse
 
     @PATCH("users/gradeorg")
-    suspend fun addGrade(@Body grade: OrgGrade) : OrgGradeResponse
+    suspend fun addGrade(
+        @Header("Authorization") token: String,
+        @Body grade: OrgGrade
+    ) : OrgGradeResponse
 
     @GET("users/getAll")
-    suspend fun getAllOsc(@Body osc: OrgRegister) // Yet to implement
+    suspend fun getAllOsc(@Header("Authorization") token: String) : GetAllOrganizationsResponse
 
 }

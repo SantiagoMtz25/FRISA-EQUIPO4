@@ -7,7 +7,6 @@ import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
-import com.example.loginpagetest.model.UserFavourites
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
@@ -15,6 +14,7 @@ import com.example.loginpagetest.model.UserRegister
 import com.example.loginpagetest.model.UserRegistrationResponse
 import com.example.loginpagetest.model.UserUpdateAccount
 import com.example.loginpagetest.model.UserUpdateAccountResponse
+import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.service.UserService
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +47,10 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
 
     private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
     val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
+
+    private val _getAllOrganizationsResult = MutableStateFlow<GetAllOrganizationsResponse?>(null)
+    val getAllOrganizationsResult: StateFlow<GetAllOrganizationsResponse?> =
+        _getAllOrganizationsResult
 
     // is this like creating account?
     fun addUser(
@@ -107,8 +111,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
                         _loginResult.value = errorResponse
                     }
                 }
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d("RESPONSE", e.localizedMessage)
                 val errorMessage = e.localizedMessage
                 val errorResponse = UserLoginResponse(null, errorMessage)
@@ -117,17 +120,15 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun addFavourite (
-        token: String?,
-        oscId: String?
+    fun addFavourite(
+        token: String,
+        oscId: String
     ) {
-        val addedosc = UserFavourites(token, oscId)
-
         viewModelScope.launch {
             var response: UserFavouritesResponse
 
             try {
-                response = userService.addFavourite(addedosc)
+                response = userService.addFavourite(token, oscId)
                 _addFavouriteResult.value = response
             } catch (e: Exception) {
 
@@ -138,8 +139,8 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun removeFavourite (
-        token: String?,
+    fun removeFavourite(
+        token: String,
         name: String
     ) {
         val osctoremove = UserFavToDelete(token, name)
@@ -148,7 +149,7 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
             var response: UserFavToDeleteResponse
 
             try {
-                response = userService.removeFavourite(osctoremove)
+                response = userService.removeFavourite(token, osctoremove)
                 _removeFavouriteResult.value = response
             } catch (e: Exception) {
 
@@ -159,21 +160,20 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun userUpdateAccount (
-        token: String? = "",
+    fun userUpdateAccount(
+        token: String,
         state: String,
         city: String,
         phoneNumber: String,
-        password: String,
-        confirmPassword: String
+        password: String
     ) {
-        val userUpdate = UserUpdateAccount(token, state, city, phoneNumber, password, confirmPassword)
+        val userUpdate = UserUpdateAccount(state, city, phoneNumber, password)
 
         viewModelScope.launch {
             var response: UserUpdateAccountResponse
 
             try {
-                response = userService.updateAccount(userUpdate)
+                response = userService.updateAccount(token, userUpdate)
                 _updateAccountResult.value = response
             } catch (e: Exception) {
                 var errorResponse = UserUpdateAccountResponse("")
@@ -198,16 +198,17 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         }
     }
 
-    fun addGrade (
-        name: String,
-        average: Float
+    fun addGrade(
+        token: String,
+        orgId: String,
+        grade: Int
     ) {
-        val oscgrade = OrgGrade(name, average)
+        val oscgrade = OrgGrade(orgId, grade)
 
         viewModelScope.launch {
             var response: OrgGradeResponse
             try {
-                response = userService.addGrade(oscgrade)
+                response = userService.addGrade(token, oscgrade)
                 _orgAddGradeResult.value = response
             } catch (e: Exception) {
 
@@ -217,9 +218,23 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
             }
         }
     }
+
+    fun getAllOsc (
+        token: String
+    ) {
+        viewModelScope.launch {
+            var response: GetAllOrganizationsResponse
+            try {
+                response = userService.getAllOsc(token)
+                _getAllOrganizationsResult.value = response
+            } catch (e: Exception) {
+                var errorResponse = GetAllOrganizationsResponse()
+                // errorResponse.message = e.localizedMessage
+                _getAllOrganizationsResult.value = errorResponse
+            }
+        }
+    }
 }
-
-
 /*
 class AppViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

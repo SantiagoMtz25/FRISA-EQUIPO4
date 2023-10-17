@@ -1,6 +1,6 @@
-package com.example.loginpagetest.model.userfavourites
+package com.example.loginpagetest.model.getall
 
-data class GetUserFavoriteOrganizationsResponseItem(
+data class GetAllOrganizationsResponseItem (
     val orgId: String,
     val name: String,
     val description: String,

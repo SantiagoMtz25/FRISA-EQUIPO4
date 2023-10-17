@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
-import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.userfavourites.GetUserFavoriteOrganizationsResponse
 import com.example.loginpagetest.screens.homepage.Chip
 import com.example.loginpagetest.screens.myosc.Event
@@ -65,37 +64,33 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun myFavourites(content: NavHostController, appViewModel: AppViewModel) {
-    val scrollState = rememberScrollState()
     var searchQuery by remember { mutableStateOf("") }
     var drawerState by remember { mutableStateOf(DrawerValue.Closed) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(drawerState))
     val myColor = colorResource(id = R.color.logoRed)
 
-    val userViewModel = UserViewModel(UserService.instance)
-
     var eventsList = listOf(
-        Event("Evento 1", "2023-10-01", "Salud","This is a short description of Event 1."),
-        Event("Evento 2", "2023-11-01", "Educación","This is a short description of Event 2."),
+        Event("Evento 1", "2023-11-10", "Salud","This is a short description of Event 1."),
+        Event("Evento 2", "2023-11-29", "Educación","This is a short description of Event 2."),
         Event("Evento 3", "2023-12-01", "Derechos humanos","This is a short description of Event 3."),
-        Event("Evento 4", "2023-12-01", "Transporte Público","This is a short description of Event 4."),
-        Event("Evento 5", "2023-12-01", "Medio Ambiente","This is a short description of Event 5.")
+        Event("Evento 4", "2023-12-23", "Transporte Público","This is a short description of Event 4."),
+        Event("Evento 5", "2023-12-11", "Medio Ambiente","This is a short description of Event 5.")
     )
     val filteredEvents by derivedStateOf {
         if (searchQuery.isEmpty()) eventsList else eventsList.filter { it.category == searchQuery }
     }
 
-    val getOrganizationsResult = remember {
+    val userViewModel = UserViewModel(UserService.instance)
+    val getUserFavoriteOrgsResult = remember {
         mutableStateOf(GetUserFavoriteOrganizationsResponse())
     }
 
-    LaunchedEffect(key1 = userViewModel.getUserFavoriteOrgsResult) {
+    LaunchedEffect(Unit) {
         userViewModel.getUserFavoriteOrgsResult.collect { result ->
             if (result != null) {
-                // collect the list to a variable to then use it **
-                val organizationsResponse = GetUserFavoriteOrganizationsResponse()
-                organizationsResponse.addAll(result)
-                getOrganizationsResult.value = organizationsResponse
+                getUserFavoriteOrgsResult.value = result
+
             }
         }
     }

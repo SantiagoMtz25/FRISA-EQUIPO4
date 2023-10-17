@@ -30,19 +30,30 @@ import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
 import androidx.compose.material3.Surface
 import androidx.compose.ui.draw.shadow
+import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavouritesResponse
+import com.example.loginpagetest.model.getall.GetAllOrganizationsResponse
 import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.AppViewModel
 import com.example.loginpagetest.viewmodel.UserViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostController, inviteUser: Boolean, isAdmin: Boolean) {
+fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostController, inviteUser: Boolean) {
     var isPopupVisible by remember { mutableStateOf(false) }
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
     val customPink = colorResource(id = R.color.lightred_pink)
     var searchQuery by remember { mutableStateOf("") }
+
+    fun getCategoryOfOrganization(organization: String, organizationsMap: Map<String, List<String>>): String? {
+        for ((category, organizations) in organizationsMap) {
+            if (organization in organizations) {
+                return category
+            }
+        }
+        return null
+    }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val organizationsMap = mapOf(
@@ -62,17 +73,42 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
             }
         }
         .filter { it.value.isNotEmpty() }
-
     var starFilter by remember { mutableIntStateOf(0) }
 
     val userViewModel = UserViewModel(UserService.instance)
+
+    var getAllOrganizationsResult by remember { mutableStateOf(GetAllOrganizationsResponse()) }
+
+    LaunchedEffect(Unit) {
+        userViewModel.getAllOsc(appViewModel.getToken()) // preguntar al profe de esto??
+
+        userViewModel.getAllOrganizationsResult.collect{ result ->
+            if (result != null) {
+                getAllOrganizationsResult = result
+                // in theory this should be the arraylist according to me
+                // list of items (item being org) mapOf() ...
+            }
+        }
+    }
+
     val addFavouriteResult = remember { mutableStateOf(UserFavouritesResponse()) }
 
-    LaunchedEffect(key1 = userViewModel) {
+    LaunchedEffect(key1 = userViewModel.addFavouriteResult) {
         userViewModel.addFavouriteResult.collect { result ->
             if (result != null) {
                 addFavouriteResult.value = result
                 // maybe print something to let the user know the action was executed
+            }
+        }
+    }
+
+    val removeFavouriteResult = remember { mutableStateOf(UserFavToDeleteResponse()) }
+
+    LaunchedEffect(key1 = userViewModel.removeFavouriteResult) {
+        userViewModel.removeFavouriteResult.collect { result ->
+            if (result != null) {
+                removeFavouriteResult.value = result
+                // maybe print a snack-bar or some shit
             }
         }
     }
@@ -86,7 +122,10 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
         ) {
             OutlinedTextField(
                 value = searchQuery,
-                onValueChange = { searchQuery = it },
+                onValueChange = { newValue ->
+                    searchQuery = newValue
+                    selectedCategory = getCategoryOfOrganization(searchQuery, organizationsMap)
+                },
                 singleLine = true,
                 label = { Text("Buscar OSC") },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -278,7 +317,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                         )
                     }
                 }
-                if (!isAdmin) {
+                if (appViewModel.isAdmin() || inviteUser) {
                     if (selectedCategory == category) {
                         filteredAndSortedCategories[category]?.forEach { organization ->
                         Card(
@@ -287,7 +326,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/$inviteUser/$organization")
+                                        navController.navigate("OSCpage/${inviteUser}")
                                     }
                             ) {
                                 Row(
@@ -311,7 +350,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/$inviteUser/$organization")
+                                        navController.navigate("OSCpage/${inviteUser}")
                                     }
                             ) {
                                 Row(
@@ -359,3 +398,4 @@ fun Chip(tag: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
         Text(text = tag)
     }
 }
+

@@ -21,15 +21,6 @@ import com.example.loginpagetest.viewmodel.AppViewModel
 fun PageNavigation (appViewModel: AppViewModel) {
     val navController = rememberNavController()
 
-    // var startScreen by remember { mutableStateOf("") }
-
-    /*if (tokenResult) {
-        startScreen = "testScreen/${tokenResult}"
-    } else {
-        startScreen = "login"
-        Log.d("STARTING SCREEN", "starting screen = $startScreen")
-    }*/
-
     NavHost(
         navController = navController,
         startDestination = "login"
@@ -44,11 +35,9 @@ fun PageNavigation (appViewModel: AppViewModel) {
             CreateAccount(navController, appViewModel)
         }
 
-        composable("OSCpage/{inviteUser}/{organization}",
-            arguments = listOf(
-                navArgument("inviteUser") { type = NavType.BoolType },
-                navArgument("organization") { type = NavType.StringType }
-            )
+        composable(
+            route = "OSCpage/{inviteUser}",
+            arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
         ) {
             OSCPage(navController, appViewModel)
         }
@@ -64,10 +53,8 @@ fun PageNavigation (appViewModel: AppViewModel) {
             aboutApp(navController, appViewModel)
         }
 
-        composable("inviteUser/{inviteUser}",
-            arguments = listOf(navArgument("inviteUser") { type = NavType.BoolType })
-        ) {
-            inviteUser(navController, appViewModel) // I do not think I should send it here
+        composable("inviteUser") {
+            inviteUser(navController, appViewModel, inviteUser = true) // I do not think I should send it here
         }
 
         composable("accountManager") {
