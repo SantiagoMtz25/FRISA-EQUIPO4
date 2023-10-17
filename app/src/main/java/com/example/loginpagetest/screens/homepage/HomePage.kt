@@ -314,7 +314,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/$inviteUser/$organization")
+                                        content.navigate("OSCpage")
                                     }
                             ) {
                                 Row(
@@ -338,7 +338,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, content: NavHostControlle
                                     .padding(start = 20.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
                                     .background(Color.Transparent)
                                     .clickable {
-                                        content.navigate("OSCpage/$inviteUser/$organization")
+                                        content.navigate("OSCpage")
                                     }
                             ) {
                                 Row(

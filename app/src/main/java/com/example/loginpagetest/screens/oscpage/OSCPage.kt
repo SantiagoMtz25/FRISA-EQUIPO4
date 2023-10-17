@@ -37,8 +37,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.loginpagetest.R
+import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.navigation.CustomTopBar2
+import com.example.loginpagetest.service.UserService
 import com.example.loginpagetest.viewmodel.AppViewModel
+import com.example.loginpagetest.viewmodel.OrgViewModel
+import com.example.loginpagetest.viewmodel.UserViewModel
 
 private const val PREFS_NAME = "StarRankingPrefs"
 private const val LAST_RANKING_KEY = "LastRankingTime"
@@ -48,22 +52,17 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
     val customRed = colorResource(id = R.color.logoRed)
     val customGray = colorResource(id = R.color.logoGray)
     var starFilter by remember { mutableIntStateOf(0) }
-    val inviteUser: Boolean = content.currentBackStackEntry?.arguments?.getBoolean("inviteUser") ?: false
-    val isAdmin: Boolean = content.currentBackStackEntry
-        ?.arguments?.getBoolean("isAdmin") ?: false
-    val organization: String = content.currentBackStackEntry
-        ?.arguments?.getString("organization") ?: ""
 
-
-    /*val osc = OrgViewModel(OrgService.instance)
-
-    LaunchedEffect(key1 = osc.orgAddGradeResult) {
-        osc.orgAddGradeResult.collect { result ->
+    val userViewModel = UserViewModel(UserService.instance)
+    val orgAddGradeResult = remember { mutableStateOf(OrgGradeResponse()) }
+    LaunchedEffect(key1 = userViewModel) {
+        userViewModel.orgAddGradeResult.collect { result ->
             if (result != null) {
-                // maybe output grade has been sent, idk
+                orgAddGradeResult.value = result
+
             }
         }
-    }*/
+    }
 
     val context = LocalContext.current
     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -71,15 +70,6 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
     val lastRankingTime = prefs.getLong(LAST_RANKING_KEY, 0L)
     val currentTime = System.currentTimeMillis()
     val isAllowedToRank = (currentTime - lastRankingTime) > 24 * 60 * 60 * 1000
-
-    var selectedStar by rememberSaveable { mutableIntStateOf(0) }
-
-    /*LaunchedEffect(selectedStar) {
-        //osc.addGrade(organization, selectedStar.toFloat())
-        val editor = prefs.edit()
-        editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
-        editor.apply()
-    }*/
 
     var savedStarRank by rememberSaveable { mutableIntStateOf(0) }
 
@@ -289,6 +279,7 @@ fun OSCPage(content: NavHostController, appViewModel: AppViewModel) {
                                             val editor = prefs.edit()
                                             editor.putLong(LAST_RANKING_KEY, System.currentTimeMillis())
                                             editor.apply()
+                                            userViewModel.addGrade("", savedStarRank)
                                         } else {
                                             Toast.makeText(context, "Debe esperar 24 horas para volver a calificar.", Toast.LENGTH_SHORT).show()
                                         }

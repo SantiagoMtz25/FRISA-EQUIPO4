@@ -15,7 +15,6 @@ object Constants {
     val ADMINNAME = stringPreferencesKey("ADMINNAME")
     val EMAIL = stringPreferencesKey("EMAIL")
 
-
     val avisoDePrivacidad = """
 AVISO DE PRIVACIDAD
 

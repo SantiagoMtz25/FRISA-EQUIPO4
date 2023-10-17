@@ -3,12 +3,10 @@ package com.example.loginpagetest.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
-import com.example.loginpagetest.model.UserFavourites
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
 import com.example.loginpagetest.model.UserLoginResponse
@@ -44,10 +42,8 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     private val _updateAccountResult = MutableStateFlow<UserUpdateAccountResponse?>(null)
     val updateAccountResult: StateFlow<UserUpdateAccountResponse?> = _updateAccountResult
 
-    private val _getUserFavoriteOrgsResult =
-        MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
-    val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> =
-        _getUserFavoriteOrgsResult
+    private val _getUserFavoriteOrgsResult = MutableStateFlow<GetUserFavoriteOrganizationsResponse?>(null)
+    val getUserFavoriteOrgsResult: StateFlow<GetUserFavoriteOrganizationsResponse?> = _getUserFavoriteOrgsResult
 
     private val _orgAddGradeResult = MutableStateFlow<OrgGradeResponse?>(null)
     val orgAddGradeResult: StateFlow<OrgGradeResponse?> = _orgAddGradeResult
@@ -169,10 +165,9 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         state: String,
         city: String,
         phoneNumber: String,
-        password: String,
-        confirmPassword: String
+        password: String
     ) {
-        val userUpdate = UserUpdateAccount(state, city, phoneNumber, password, confirmPassword)
+        val userUpdate = UserUpdateAccount(state, city, phoneNumber, password)
 
         viewModelScope.launch {
             var response: UserUpdateAccountResponse
@@ -204,10 +199,10 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
     }
 
     fun addGrade(
-        name: String,
-        average: Float
+        orgId: String,
+        grade: Int
     ) {
-        val oscgrade = OrgGrade(name, average)
+        val oscgrade = OrgGrade(orgId, grade)
 
         viewModelScope.launch {
             var response: OrgGradeResponse

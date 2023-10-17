@@ -1,3 +1,5 @@
 package com.example.loginpagetest.model.userfavourites
 
-class GetUserFavoriteOrganizationsResponse: ArrayList<GetUserFavoriteOrganizationsResponseItem>()
+data class GetUserFavoriteOrganizationsResponse (
+    val data: Map<String, GetUserFavoriteOrganizationsResponseItem> = emptyMap()
+)

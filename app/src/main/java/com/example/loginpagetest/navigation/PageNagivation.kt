@@ -35,12 +35,7 @@ fun PageNavigation (appViewModel: AppViewModel) {
             CreateAccount(navController, appViewModel)
         }
 
-        composable("OSCpage/{inviteUser}/{organization}",
-            arguments = listOf(
-                navArgument("inviteUser") { type = NavType.BoolType },
-                navArgument("organization") { type = NavType.StringType }
-            )
-        ) {
+        composable("OSCpage") {
             OSCPage(navController, appViewModel)
         }
 

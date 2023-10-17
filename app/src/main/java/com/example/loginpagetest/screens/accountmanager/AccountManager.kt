@@ -418,10 +418,8 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                                     selectedState,
                                                     selectedCity,
                                                     phoneNumber,
-                                                    password,
-                                                    confirmPassword
+                                                    password
                                                 )
-
                                             } else {
                                                 wrongPassword = true
                                             }
