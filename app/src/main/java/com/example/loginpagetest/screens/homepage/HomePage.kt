@@ -1,5 +1,6 @@
 package com.example.loginpagetest.screens.homepage
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -77,16 +78,34 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
 
     val userViewModel = UserViewModel(UserService.instance)
 
-    var getAllOrganizationsResult by remember { mutableStateOf(GetAllOrganizationsResponse()) }
+    var getAllOrganizationsResult = remember { mutableStateOf(GetAllOrganizationsResponse()) }
 
     LaunchedEffect(Unit) {
-        userViewModel.getAllOsc(appViewModel.getToken()) // preguntar al profe de esto??
+        userViewModel.getAllOsc(appViewModel.getToken())
+    }
+    LaunchedEffect(key1 = userViewModel) {
 
-        userViewModel.getAllOrganizationsResult.collect{ result ->
+        userViewModel.getAllOrganizationsResult.collect { result ->
             if (result != null) {
-                getAllOrganizationsResult = result
-                // in theory this should be the arraylist according to me
-                // list of items (item being org) mapOf() ...
+                getAllOrganizationsResult.value = result
+
+                // Creating a Map<String, List<String>> to store organizations by category
+                val organizationsByCategory = mutableMapOf<String, MutableList<String>>()
+
+                // Iterating over the received organizations
+                getAllOrganizationsResult.value.data.forEach { organization ->
+                    // If the category already exists, add the organization to it, otherwise create a new list
+                    organizationsByCategory.getOrPut(organization.toString()) { mutableListOf() }.add(
+                        organization.toString()
+                    )
+                }
+
+                // Logging the structured data for verification
+                Log.d("HOMEPAGE", "res: ${getAllOrganizationsResult.value.data}")
+                Log.d("HOMEPAGE", "res: $organizationsByCategory")
+
+                // Optional: If you have a separate state to hold the transformed data, you can set it here
+                // structuredOrganizationsResult.value = organizationsByCategory
             }
         }
     }
@@ -98,6 +117,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
             if (result != null) {
                 addFavouriteResult.value = result
                 // maybe print something to let the user know the action was executed
+                Log.d("FAVOURITE", "val: ${addFavouriteResult.value}")
             }
         }
     }
@@ -109,6 +129,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
             if (result != null) {
                 removeFavouriteResult.value = result
                 // maybe print a snack-bar or some shit
+                Log.d("FAVOURITE", "val: ${removeFavouriteResult.value}")
             }
         }
     }
@@ -368,11 +389,12 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
                                         contentDescription = null,
                                         modifier = Modifier.clickable {
                                             isClicked = !isClicked
+                                            Log.d("CLICKED", "$isClicked")
                                             // according to logic of start being clicked or unclicked
                                             if (isClicked) {
-                                                userViewModel.addFavourite(appViewModel.getToken(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjRiNTk5MjdmZmI5MjYxN2M1ODk2YSIsImlhdCI6MTY5NzIzNzc1NSwiZXhwIjoxNjk3MjQxMzU1fQ.7MSd-An-IYwtsvj3S7tdp32NlimQ9dlKNTvJsNZMiW0")
+                                                userViewModel.addFavourite(appViewModel.getToken(), "6529cf5ff5d1d212d03f896d")
                                             } else {
-                                                userViewModel.removeFavourite(appViewModel.getToken(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjRiNTk5MjdmZmI5MjYxN2M1ODk2YSIsImlhdCI6MTY5NzIzNzc1NSwiZXhwIjoxNjk3MjQxMzU1fQ.7MSd-An-IYwtsvj3S7tdp32NlimQ9dlKNTvJsNZMiW0")
+                                                userViewModel.removeFavourite(appViewModel.getToken(), "6529cf5ff5d1d212d03f896d")
                                             }
                                         }
                                     )

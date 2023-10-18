@@ -1,7 +1,5 @@
 package com.example.loginpagetest.service
 
-import com.example.loginpagetest.model.OrgGrade
-import com.example.loginpagetest.model.OrgGradeResponse
 import com.example.loginpagetest.model.OrgRegister
 import com.example.loginpagetest.model.OrgRegisterResponse
 import com.example.loginpagetest.model.OrgUpdateAccount

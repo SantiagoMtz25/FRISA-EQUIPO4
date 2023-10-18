@@ -141,15 +141,13 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
 
     fun removeFavourite(
         token: String,
-        name: String
+        oscId: String
     ) {
-        val osctoremove = UserFavToDelete(token, name)
-
         viewModelScope.launch {
             var response: UserFavToDeleteResponse
 
             try {
-                response = userService.removeFavourite(token, osctoremove)
+                response = userService.removeFavourite(token, oscId)
                 _removeFavouriteResult.value = response
             } catch (e: Exception) {
 
@@ -203,12 +201,12 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
         orgId: String,
         grade: Int
     ) {
-        val oscgrade = OrgGrade(orgId, grade)
+        val oscgrade = OrgGrade(grade)
 
         viewModelScope.launch {
             var response: OrgGradeResponse
             try {
-                response = userService.addGrade(token, oscgrade)
+                response = userService.addGrade(token, orgId, oscgrade)
                 _orgAddGradeResult.value = response
             } catch (e: Exception) {
 
