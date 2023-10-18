@@ -117,7 +117,7 @@ fun myFavourites(content: NavHostController, appViewModel: AppViewModel) {
             )
         },
         drawerContent = {
-            DrawerContent(content, appViewModel.isAdmin())
+            DrawerContent(content, appViewModel.isAdmin(), appViewModel)
         }
     ) {
         Column(

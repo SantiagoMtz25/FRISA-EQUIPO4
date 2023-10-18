@@ -95,7 +95,7 @@ fun myOSC (navController: NavHostController, appViewModel: AppViewModel) {
             )
         },
         drawerContent = {
-            DrawerContent(navController, appViewModel.isAdmin())
+            DrawerContent(navController, appViewModel.isAdmin(), appViewModel)
         }
     ) {
         Column(
