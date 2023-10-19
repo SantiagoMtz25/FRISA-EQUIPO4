@@ -80,32 +80,14 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
 
     var getAllOrganizationsResult = remember { mutableStateOf(GetAllOrganizationsResponse()) }
 
-    LaunchedEffect(Unit) {
-        userViewModel.getAllOsc(appViewModel.getToken())
-    }
-    LaunchedEffect(key1 = userViewModel) {
+    userViewModel.getAllOsc(appViewModel.getToken())
 
+    LaunchedEffect(key1 = userViewModel.getAllOrganizationsResult) {
         userViewModel.getAllOrganizationsResult.collect { result ->
             if (result != null) {
                 getAllOrganizationsResult.value = result
 
-                // Creating a Map<String, List<String>> to store organizations by category
-                val organizationsByCategory = mutableMapOf<String, MutableList<String>>()
-
-                // Iterating over the received organizations
-                getAllOrganizationsResult.value.data.forEach { organization ->
-                    // If the category already exists, add the organization to it, otherwise create a new list
-                    organizationsByCategory.getOrPut(organization.toString()) { mutableListOf() }.add(
-                        organization.toString()
-                    )
-                }
-
-                // Logging the structured data for verification
-                Log.d("HOMEPAGE", "res: ${getAllOrganizationsResult.value.data}")
-                Log.d("HOMEPAGE", "res: $organizationsByCategory")
-
-                // Optional: If you have a separate state to hold the transformed data, you can set it here
-                // structuredOrganizationsResult.value = organizationsByCategory
+                Log.d("CATALOGO", "${getAllOrganizationsResult.value}")
             }
         }
     }
@@ -392,9 +374,9 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
                                             Log.d("CLICKED", "$isClicked")
                                             // according to logic of start being clicked or unclicked
                                             if (isClicked) {
-                                                userViewModel.addFavourite(appViewModel.getToken(), "6529cf5ff5d1d212d03f896d")
+                                                userViewModel.addFavourite(appViewModel.getToken(), "652f6928a67d0110c1b8516e")
                                             } else {
-                                                userViewModel.removeFavourite(appViewModel.getToken(), "6529cf5ff5d1d212d03f896d")
+                                                userViewModel.removeFavourite(appViewModel.getToken(), "652f6928a67d0110c1b8516e")
                                             }
                                         }
                                     )

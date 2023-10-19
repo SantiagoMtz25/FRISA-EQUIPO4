@@ -44,7 +44,7 @@ interface UserService {
         @Path("organizationId") organizationId: String
     ): UserFavouritesResponse
 
-    @PATCH("users/removeFavorite/{organizationId}")
+    @PATCH("users/removeFavorite    /{organizationId}")
     suspend fun removeFavourite(
         @Header("Authorization") token: String,
         @Path("organizationId") organizationId: String
@@ -69,6 +69,8 @@ interface UserService {
     ) : OrgGradeResponse
 
     @GET("users/getAllOrgs")
-    suspend fun getAllOsc(@Header("Authorization") token: String) : GetAllOrganizationsResponse
+    suspend fun getAllOsc(
+        @Header("Authorization") token: String
+    ) : GetAllOrganizationsResponse
 
 }

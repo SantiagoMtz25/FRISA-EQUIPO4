@@ -225,7 +225,9 @@ class UserViewModel(private val userService: UserService) : ViewModel() {
             try {
                 response = userService.getAllOsc(token)
                 _getAllOrganizationsResult.value = response
+                Log.d("API_REQ", "REQUEST SENT")
             } catch (e: Exception) {
+                Log.d("API_RES", "RES ERROR")
                 var errorResponse = GetAllOrganizationsResponse()
                 // errorResponse.message = e.localizedMessage
                 _getAllOrganizationsResult.value = errorResponse

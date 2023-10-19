@@ -386,7 +386,7 @@ fun mainLoginPage(
             ) {
                 Button(
                     onClick = {
-                        navController.navigate("create_account")
+                        navController.navigate("privacy")
                     },
                     modifier = Modifier.width(140.dp)
                 ) {

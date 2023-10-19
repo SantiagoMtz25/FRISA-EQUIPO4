@@ -61,20 +61,20 @@ fun CreateAccount(navController: NavHostController, appViewModel: AppViewModel) 
     val orgViewModel = OrgViewModel(OrgService.instance)
     // val appViewModel: AppViewModel = viewModel()
 
-    var name by remember { mutableStateOf("Santiago") }
+    var name by remember { mutableStateOf("Org Alta Ejemplo") }
     var lastName by remember { mutableStateOf("Martinez") }
-    var email by remember { mutableStateOf("santimtzv01@gmail.com") }
+    var email by remember { mutableStateOf("ejemploNuevaOSC@gmail.com") }
     var password by remember { mutableStateOf("1234") }
     var confirmPassword by remember { mutableStateOf("1234") }
-    var phoneNumber by remember { mutableStateOf("477") }
-    var selectedState by remember { mutableStateOf("Guanajuato") }
-    var selectedCity by remember { mutableStateOf("Leon") }
+    var phoneNumber by remember { mutableStateOf("123456789") }
+    var selectedState by remember { mutableStateOf("Nuevo León") }
+    var selectedCity by remember { mutableStateOf("Monterrey") }
     var isStateDropdownExpanded by remember { mutableStateOf(false) }
     var isCityDropdownExpanded by remember { mutableStateOf(false) }
     var showSnackbar by remember { mutableStateOf(false) }
     var showSuccessSnackbar by remember { mutableStateOf(false) }
 
-    var adminName by remember { mutableStateOf("Admin Nombre Ejemplo") }
+    var adminName by remember { mutableStateOf("Admin OSC Nombreq") }
     var rfc by remember { mutableStateOf("LOGJ580812RH7") }
     var description by remember { mutableStateOf("Esta organización trata de...") }
     var webpage by remember { mutableStateOf("www.ejemploosc.com.mx") }
@@ -741,6 +741,22 @@ fun CreateAccount(navController: NavHostController, appViewModel: AppViewModel) 
                                 tint = customLighterRed
                             )
                         })
+                    CreateAccountTextField(value = password, onValueChange = { password = it }, label = "Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Lock Icon",
+                                tint = customLighterRed
+                            )
+                        })
+                    CreateAccountTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = "Confirmar Contraseña", keyboardType = KeyboardType.Password, visualTransformation = PasswordVisualTransformation(),
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = "Lock Icon",
+                                tint = customLighterRed
+                            )
+                        })
                     var expanded by rememberSaveable { mutableStateOf(false) }
                     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -908,14 +924,16 @@ fun CreateAccount(navController: NavHostController, appViewModel: AppViewModel) 
                                 selectedCity.isNotEmpty() &&
                                 email.isNotEmpty() &&
                                 webpage.isNotEmpty() &&
-                                category.isNotEmpty()
-
+                                category.isNotEmpty() &&
+                                password.isNotEmpty() &&
+                                confirmPassword.isNotEmpty() &&
+                                password == confirmPassword
                             ) {
                                 showSuccessSnackbar = true
                                 val organization = OrgRegister(
                                     name, adminName, rfc, description,
                                     phoneNumber, selectedState, selectedCity,
-                                    email, webpage, category
+                                    email, webpage, category, password
                                 )
                                 coroutineScope.launch {
                                     delay(1500)

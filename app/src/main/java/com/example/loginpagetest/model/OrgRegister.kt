@@ -10,5 +10,6 @@ data class OrgRegister(
     val city: String,
     val email: String,
     val webpage: String,
-    val category: String
+    val category: String,
+    val password: String
 )
