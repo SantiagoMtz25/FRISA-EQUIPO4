@@ -100,8 +100,8 @@ fun mainLoginPage(
         val orgViewModel = OrgViewModel(OrgService.instance)
 
         // Variables which will save user entered values
-        var email by rememberSaveable { mutableStateOf("") }
-        var password by rememberSaveable { mutableStateOf("") }
+        var email by rememberSaveable { mutableStateOf("santimtzv01@gmail.com") }
+        var password by rememberSaveable { mutableStateOf("1234") }
         var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
         var successfulLogin by rememberSaveable { mutableStateOf(false) }
@@ -386,7 +386,7 @@ fun mainLoginPage(
             ) {
                 Button(
                     onClick = {
-                        navController.navigate("create_account")
+                        navController.navigate("privacy")
                     },
                     modifier = Modifier.width(140.dp)
                 ) {

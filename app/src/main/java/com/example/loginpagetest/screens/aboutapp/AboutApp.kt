@@ -78,7 +78,7 @@ fun aboutApp(content: NavHostController, appViewModel: AppViewModel) {
             )
         },
         drawerContent = {
-            DrawerContent(content, isAdmin)
+            DrawerContent(content, isAdmin, appViewModel)
         }
     ) {
         // write code here

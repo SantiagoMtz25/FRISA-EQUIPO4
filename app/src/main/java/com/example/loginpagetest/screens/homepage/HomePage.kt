@@ -1,5 +1,6 @@
 package com.example.loginpagetest.screens.homepage
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -77,16 +78,16 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
 
     val userViewModel = UserViewModel(UserService.instance)
 
-    var getAllOrganizationsResult by remember { mutableStateOf(GetAllOrganizationsResponse()) }
+    var getAllOrganizationsResult = remember { mutableStateOf(GetAllOrganizationsResponse()) }
 
-    LaunchedEffect(Unit) {
-        userViewModel.getAllOsc(appViewModel.getToken()) // preguntar al profe de esto??
+    userViewModel.getAllOsc(appViewModel.getToken())
 
-        userViewModel.getAllOrganizationsResult.collect{ result ->
+    LaunchedEffect(key1 = userViewModel.getAllOrganizationsResult) {
+        userViewModel.getAllOrganizationsResult.collect { result ->
             if (result != null) {
-                getAllOrganizationsResult = result
-                // in theory this should be the arraylist according to me
-                // list of items (item being org) mapOf() ...
+                getAllOrganizationsResult.value = result
+
+                Log.d("CATALOGO", "${getAllOrganizationsResult.value}")
             }
         }
     }
@@ -98,6 +99,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
             if (result != null) {
                 addFavouriteResult.value = result
                 // maybe print something to let the user know the action was executed
+                Log.d("FAVOURITE", "val: ${addFavouriteResult.value}")
             }
         }
     }
@@ -109,6 +111,7 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
             if (result != null) {
                 removeFavouriteResult.value = result
                 // maybe print a snack-bar or some shit
+                Log.d("FAVOURITE", "val: ${removeFavouriteResult.value}")
             }
         }
     }
@@ -368,11 +371,12 @@ fun OrganizationsCatalogue(appViewModel: AppViewModel, navController: NavHostCon
                                         contentDescription = null,
                                         modifier = Modifier.clickable {
                                             isClicked = !isClicked
+                                            Log.d("CLICKED", "$isClicked")
                                             // according to logic of start being clicked or unclicked
                                             if (isClicked) {
-                                                userViewModel.addFavourite(appViewModel.getToken(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjRiNTk5MjdmZmI5MjYxN2M1ODk2YSIsImlhdCI6MTY5NzIzNzc1NSwiZXhwIjoxNjk3MjQxMzU1fQ.7MSd-An-IYwtsvj3S7tdp32NlimQ9dlKNTvJsNZMiW0")
+                                                userViewModel.addFavourite(appViewModel.getToken(), "652f6928a67d0110c1b8516e")
                                             } else {
-                                                userViewModel.removeFavourite(appViewModel.getToken(), "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjRiNTk5MjdmZmI5MjYxN2M1ODk2YSIsImlhdCI6MTY5NzIzNzc1NSwiZXhwIjoxNjk3MjQxMzU1fQ.7MSd-An-IYwtsvj3S7tdp32NlimQ9dlKNTvJsNZMiW0")
+                                                userViewModel.removeFavourite(appViewModel.getToken(), "652f6928a67d0110c1b8516e")
                                             }
                                         }
                                     )

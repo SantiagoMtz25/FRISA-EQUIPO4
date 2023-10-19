@@ -22,9 +22,7 @@ object Constants {
     val PHONENUMBER = stringPreferencesKey("PHONENUMBER")
 
     val avisoDePrivacidad = """
-AVISO DE PRIVACIDAD
-
-[Nombre de la empresa/organización] respeta su privacidad y se compromete a proteger sus datos personales. Este aviso de privacidad le informa sobre nuestras prácticas de recopilación, uso, divulgación y protección de su información personal.
+FRISA APP respeta su privacidad y se compromete a proteger sus datos personales. Este aviso de privacidad le informa sobre nuestras prácticas de recopilación, uso, divulgación y protección de su información personal.
 
 1. Información que recopilamos:
    - Nombre, dirección, número de teléfono y dirección de correo electrónico.
@@ -51,11 +49,10 @@ AVISO DE PRIVACIDAD
 6. Cambios a este aviso:
    - Podemos actualizar este aviso de privacidad ocasionalmente. La versión más reciente estará disponible en nuestro sitio web.
 
-Si tiene alguna pregunta o inquietud sobre nuestro aviso de privacidad, comuníquese con nosotros a través de [información de contacto].
+Si tiene alguna pregunta o inquietud sobre nuestro aviso de privacidad, comuníquese con nosotros a través de www.frisaapp.com.mx.
 
-Fecha de entrada en vigor: [fecha]
+Fecha de entrada en vigor: 18 de octubre del 2023.
 
-[Nombre de la empresa/organización]
+FRISA APP / CATÁLOGO OSC
 """
-
 }

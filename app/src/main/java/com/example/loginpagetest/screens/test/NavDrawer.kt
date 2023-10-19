@@ -12,8 +12,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,10 +29,8 @@ import com.example.loginpagetest.R
 import com.example.loginpagetest.viewmodel.AppViewModel
 
 @Composable
-fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
+fun DrawerContent(content: NavHostController, isAdmin: Boolean, appViewModel: AppViewModel) {
     val myColor = colorResource(id = R.color.lightred_pink)
-
-    val appViewModel: AppViewModel = viewModel()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -47,6 +49,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             // Profile Name
             Text(
                 text = "${appViewModel.getName()} ${appViewModel.getLastName()}",
+                color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
@@ -54,6 +57,7 @@ fun DrawerContent(content: NavHostController, isAdmin: Boolean) {
             // Profile Email
             Text(
                 text = "${appViewModel.getEmail()}",
+                color = Color.Black,
                 fontSize = 14.sp,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

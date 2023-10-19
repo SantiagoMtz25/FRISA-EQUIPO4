@@ -2,7 +2,6 @@ package com.example.loginpagetest.service
 
 import com.example.loginpagetest.model.OrgGrade
 import com.example.loginpagetest.model.OrgGradeResponse
-import com.example.loginpagetest.model.UserFavToDelete
 import com.example.loginpagetest.model.UserFavToDeleteResponse
 import com.example.loginpagetest.model.UserFavouritesResponse
 import com.example.loginpagetest.model.UserLogin
@@ -39,16 +38,16 @@ interface UserService {
     @PUT("auth/userlogin")
     suspend fun loginUser(@Body user: UserLogin): UserLoginResponse
 
-    @PATCH("users/addFavourite/{organizationId}")
+    @PATCH("users/addFavorite/{organizationId}")
     suspend fun addFavourite(
         @Header("Authorization") token: String,
         @Path("organizationId") organizationId: String
     ): UserFavouritesResponse
 
-    @PATCH("users/removeFavourite")
+    @PATCH("users/removeFavorite    /{organizationId}")
     suspend fun removeFavourite(
         @Header("Authorization") token: String,
-        @Body userFavRemove: UserFavToDelete
+        @Path("organizationId") organizationId: String
     ) : UserFavToDeleteResponse
 
     @PATCH("users/userUpdateAccount")
@@ -62,13 +61,16 @@ interface UserService {
         @Header("Authorization") token: String
     ): GetUserFavoriteOrganizationsResponse
 
-    @PATCH("users/gradeorg")
+    @PATCH("users/gradeorg/{organizationId}")
     suspend fun addGrade(
         @Header("Authorization") token: String,
+        @Path("organizationId") organizationId: String,
         @Body grade: OrgGrade
     ) : OrgGradeResponse
 
-    @GET("users/getAll")
-    suspend fun getAllOsc(@Header("Authorization") token: String) : GetAllOrganizationsResponse
+    @GET("users/getAllOrgs")
+    suspend fun getAllOsc(
+        @Header("Authorization") token: String
+    ) : GetAllOrganizationsResponse
 
 }

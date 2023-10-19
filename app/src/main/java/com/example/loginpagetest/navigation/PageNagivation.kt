@@ -14,6 +14,7 @@ import com.example.loginpagetest.screens.favourites.myFavourites
 import com.example.loginpagetest.screens.inviteuser.inviteUser
 import com.example.loginpagetest.screens.myosc.myOSC
 import com.example.loginpagetest.screens.oscpage.OSCPage
+import com.example.loginpagetest.screens.privacyscreen.PrivacyMessage
 import com.example.loginpagetest.screens.test.MainScreen
 import com.example.loginpagetest.viewmodel.AppViewModel
 
@@ -33,6 +34,9 @@ fun PageNavigation (appViewModel: AppViewModel) {
         }*/
         composable("create_account") {
             CreateAccount(navController, appViewModel)
+        }
+        composable("privacy") {
+            PrivacyMessage(navController, appViewModel)
         }
 
         composable(

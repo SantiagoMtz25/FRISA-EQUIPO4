@@ -44,7 +44,7 @@ fun MainScreen(navController: NavHostController, appViewModel: AppViewModel) {
             )
         },
         drawerContent = {
-            DrawerContent(navController, appViewModel.isAdmin())
+            DrawerContent(navController, appViewModel.isAdmin(), appViewModel)
         }
     ) {
 

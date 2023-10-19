@@ -1,6 +1,7 @@
 package com.example.loginpagetest.screens.accountmanager
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -76,6 +77,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
         userViewModel.updateAccountResult.collect { result ->
             if (result != null) {
                 // maybe display message of updated
+                Log.d("UPDATE", "${result.message}")
             }
         }
     }
@@ -83,6 +85,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
         orgViewModel.updateAccountResult.collect { result ->
             if (result != null) {
                 // maybe display message of updated
+                Log.d("UPDATE", "${result.message}")
             }
         }
     }
@@ -147,7 +150,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
             )
         },
         drawerContent = {
-            DrawerContent(navController, appViewModel.isAdmin())
+            DrawerContent(navController, appViewModel.isAdmin(), appViewModel)
         },
         content = {
             if (appViewModel.isAdmin()) {
@@ -169,7 +172,7 @@ fun accountManager(navController: NavHostController, appViewModel: AppViewModel)
                                 contentDescription = "Profile Picture",
                                 modifier = Modifier.size(100.dp)
                             )
-                            Text("OSC Nombre: ${appViewModel.getName()}")
+                            Text("OSC Nombre: ${appViewModel.getName()} ${appViewModel.getLastName()}")
                             Text("Admin Nombre: ${appViewModel.getAdminName()}")
                         }
                     }
